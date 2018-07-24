@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#######################################
+# rnaseq-pipeline.pl
+# John Garbe
+# December 2015
+#
+# This is a wrapper bash script that loads required modules and adds the PATH and then calls the latest version of the real pipeline script
+#
+########################################
+
+# Determine the location of this file
+SOURCE=$(if [ -z "${BASH_SOURCE[0]}" ]; then echo $1; else echo ${BASH_SOURCE[0]}; fi)
+gpdir=`dirname \$(readlink -f "\$SOURCE")`
+gpdir=`dirname $gpdir`
+
+# Define the location where the pipelines are installed as the folder above the folder containing this file
+export GOPHER_PIPELINES="$gpdir";
+# Set this to the location where gopher-pipeline/bin is installed
+bindir="$GOPHER_PIPELINES/bin";
+# Set this to the location where gopher-pipeline/software is installed
+softwaredir="$GOPHER_PIPELINES/software";
+
+### Load modules ###
+module load fastqc
+module load trimmomatic
+module load parallel
+module load riss_util
+module load samtools
+module load R/3.3.3
+module load cufflinks
+module load picard
+module load python/2.7.1
+module load hisat2/2.1.0
+module load tophat/2.0.13
+
+### Add non-module software ###
+# gopher-pipelines
+PATH="$bindir:$PATH";
+# subread featureCounts
+PATH="$softwaredir/subread/bin/:$PATH";
+# Picard
+export PICARD="/panfs/roc/itascasoft/picard/2.3.0/";
+# gopher-biotools
+PATH="$softwaredir/gopher-biotools:$PATH";
+
+### Other environment modifications ### 
+# Enable parallel to run across nodes
+export PARALLEL="--workdir . --env PATH --env LD_LIBRARY_PATH --env LOADEDMODULES --env _LMFILES_ --env MODULE_VERSION --env MODULEPATH --env MODULEVERSION_STACK --env MODULESHOME --env OMP_DYNAMICS --env OMP_MAX_ACTIVE_LEVELS --env OMP_NESTED --env OMP_NUM_THREADS --env OMP_SCHEDULE --env OMP_STACKSIZE --env OMP_THREAD_LIMIT --env OMP_WAIT_POLICY --env TRIMMOMATIC --env PICARD --env GOPHER_PIPELINES"
+
+### Run pipeline ###
+rnaseq-pipeline.pl $@
