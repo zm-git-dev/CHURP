@@ -17,13 +17,27 @@ class Pipeline(object):
         check_dirs(): Check that directories exist and can be written to
 
     """
-    def __init__(self, fq, out):
+    def __init__(self, args):
         """Initialize the pipeline object with user-supplied inputs. The
         general pipeline attributes that get set here are:
             - path to FASTQ folder
             - Output directory"""
-        self.fq_dir = fq
-        self.outdir = out
+        self.fq_dir = args['fq_folder']
+        self.outdir = args['output_dir']
         # We will always want to run FastQC on the data.
         self.required_mods = ['fastqc']
         return
+
+    def check_dirs(self):
+        """Check that the directories exist and are readable and writeable. This
+        will raise an error if we cannot find the fastq directory, or the
+        output directory cannot be written to."""
+        pass
+
+    def preapre_samplesheet(self, ss=None):
+        """Read the provided UMGC report sheet and build a list of Sample
+        objects that will go downstream to the actual job submission routine.
+        Optionally, if 'ss' not provided, we will attempt to build one by
+        searching the fastq folder and matching filenames. This is not the
+        preferred way, though."""
+        pass

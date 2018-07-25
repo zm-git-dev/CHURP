@@ -33,10 +33,7 @@ def brnaseq(args):
     """This function loads the bulk RNAseq pipeline module, and runs through the
     steps for bulk RNAseq analysis."""
     from GopherPipelines.Pipelines import BulkRNAseq
-    p = BulkRNAseq.BulkRNAseqPipeline(
-        args['fq_folder'],
-        args['output_dir'],
-        args['no_trim'])
+    p = BulkRNAseq.BulkRNAseqPipeline(args)
     print(p)
     return
 

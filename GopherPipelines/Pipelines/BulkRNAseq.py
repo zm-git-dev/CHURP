@@ -21,17 +21,17 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'Modules: ' + ','.join(self.required_mods)])
         return s
 
-    def __init__(self, fq, out, notrim):
+    def __init__(self, args):
         """Initialize the pipeline object. We will call the general
         Pipeline.__init__() here, as well as set some specific pipeline
         attributes."""
         # We call the parent class init() here
-        super().__init__(fq, out)
+        super().__init__(args)
         # Add hisat2, samtools, and R to the list of required modules. Also
         # add trimmomatic, conditionally
-        self.required_mods.append('hisat2')
-        self.required_mods.append('samtools')
-        self.required_mods.append('R')
-        if not notrim:
+        self.required_mods.extend(
+            ('hisat2', 'samtools', 'R')
+            )
+        if not args['no_trim']:
             self.required_mods.append('trimmomatic')
         return
