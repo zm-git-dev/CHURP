@@ -50,8 +50,8 @@ def add_args(ap):
         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
         default='INFO')
     ap_opt.add_argument(
-        '--trim',
-        help='If supplied, trim reads with Trimmomatic.',
+        '--no-trim',
+        help='If supplied, do not trim reads with Trimmomatic.',
         action='store_true',
         default=False)
     ap_opt.add_argument(

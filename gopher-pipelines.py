@@ -29,6 +29,18 @@ except AssertionError:
     exit(2)
 
 
+def brnaseq(args):
+    """This function loads the bulk RNAseq pipeline module, and runs through the
+    steps for bulk RNAseq analysis."""
+    from GopherPipelines.Pipelines import BulkRNAseq
+    p = BulkRNAseq.BulkRNAseqPipeline(
+        args['fq_folder'],
+        args['output_dir'],
+        args['no_trim'])
+    print(p)
+    return
+
+
 def main():
     """The main function. This function is a very high-level function, and
     it should really only have the logic and structure of the pipeline that is
@@ -39,7 +51,9 @@ def main():
         exit(3)
     else:
         pipe_args = args.pipeline_args()
-        print(pipe_args)
+        # Choose which pipeline to run here
+        if pipe_args['pipeline'] == 'bulk_rnaseq':
+            brnaseq(pipe_args)
     return
 
 

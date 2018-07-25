@@ -31,7 +31,8 @@ def dir_writeable(d):
 
 def dir_empty(d):
     """Return true if a directory is empty and false if it has files or other
-    diretories under it."""
+    diretories under it. Note that this will return True if a directory does
+    not exist, so it should be verified to exist before being queried here."""
     p = pathlib.Path(d)
     # get all files and directories under the supplied path. This thankfully is
     # a generator object, so we won't have to worry about the method listing

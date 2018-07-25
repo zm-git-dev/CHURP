@@ -17,7 +17,7 @@ handling of options with dashes in them."""
 
 def add_args(ap):
     """Takes an ArgumentParser object, and adds some arguments to it. These will
-    be for the bulk RNAseq pipeline."""
+    be for the single cell RNAseq pipeline."""
     ap_req = ap.add_argument_group(
         'Required Arguments')
     ap_req.add_argument(
