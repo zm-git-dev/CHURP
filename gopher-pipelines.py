@@ -38,7 +38,7 @@ def main():
         args.usage()
         exit(3)
     else:
-        pipe_args = args.parse_arguments()
+        pipe_args = args.pipeline_args()
         print(pipe_args)
     return
 
