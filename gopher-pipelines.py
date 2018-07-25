@@ -16,7 +16,7 @@ import os
 import argparse
 # Import the package here
 try:
-    from GopherPipelines.ArgHandling import ArgumentParser
+    from GopherPipelines.ArgHandling import args
     from GopherPipelines import FileOps
     from GopherPipelines import Pipelines
     from GopherPipelines import SampleSheet
@@ -37,12 +37,13 @@ def main():
     it should really only have the logic and structure of the pipeline that is
     invoked. The modules and accessory functions within the package should
     do all the actual work."""
-    arguments = ArgumentParser.parse_arguments()
-    if not arguments:
-        ArgumentParser.usage()
+    if not sys.argv[1:]:
+        args.usage()
         exit(3)
-
-    pass
+    else:
+        pipe_args = args.parse_arguments()
+        print(pipe_args)
+    return
 
 
 main()

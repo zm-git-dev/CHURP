@@ -4,6 +4,7 @@ a huge function, so we will isolate it into this script for ease of development
 and maintenance."""
 
 import argparse
+from GopherPipelines.FileOps import default_dirs
 
 
 def usage():
@@ -81,7 +82,7 @@ def parse_arguments():
         '--output-dir',
         '-o',
         help='Output directory.',
-        default=None)
+        default=default_dirs.default_output('bulk_rnaseq'))
     bulk_rnaseq_parser_opt.add_argument(
         '--threads',
         '-t',
@@ -91,11 +92,11 @@ def parse_arguments():
     bulk_rnaseq_parser_opt.add_argument(
         '--extra-trimmomatic-opts',
         help='Extra Trimmomatic options. Must be passed as a quoted string.',
-        default=None)
+        default='')
     bulk_rnaseq_parser_opt.add_argument(
         '--extra-hisat2-opts',
         help='Extra HISAT2 options. Must be passed as a quoted string.',
-        default=None)
+        default='')
 
     args = parser.parse_args()
     # argparse uses a weird Namespace object - we use vars() to turn it into a
