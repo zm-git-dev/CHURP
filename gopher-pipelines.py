@@ -17,9 +17,6 @@ import argparse
 # Import the package here
 try:
     from GopherPipelines.ArgHandling import args
-    from GopherPipelines import FileOps
-    from GopherPipelines import Pipelines
-    from GopherPipelines import SampleSheet
 except ImportError:
     sys.stderr.write('Error - GopherPipelines package cannot be not found!\n')
     exit(1)

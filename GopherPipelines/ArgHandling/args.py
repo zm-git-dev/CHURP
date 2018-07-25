@@ -7,6 +7,19 @@ import argparse
 from GopherPipelines.FileOps import default_dirs
 
 
+# Longer help messages as constants
+PIPE_HELP = 'Gopher-pipelines for high-throughput sequencing data analysis.'
+BRNASEQ_HELP = 'Bulk RNAseq analysis, including QC, mapping, and expression.'
+EXTRA_OPT_HELP = """Must be passed as a quoted string with = after the option.
+
+Example:
+
+--extra-trimmomatic-opts="-phred64 -threads 4".
+
+This is unfortunately due to a known bug in argparse that prevents proper
+handling of options with dashes in them."""
+
+
 def usage():
     """Print a usage message for the pipeline. This is invoked when there are no
     arguments supplied to the script."""
@@ -33,7 +46,7 @@ def parse_arguments():
     implement a series of subcommands, one for each pipeline. Each pipeline
     will have its own set of arguments."""
     parser = argparse.ArgumentParser(
-        description='Gopher-pipelines for high-throughput sequencing data analysis.',
+        description=PIPE_HELP,
         add_help=True)
     # Add a sub-parser for the subcommands. These will be the pipelines.
     pipe_parser = parser.add_subparsers(
@@ -44,7 +57,7 @@ def parse_arguments():
     # This is the bulk_rnaseq parser
     bulk_rnaseq_parser = pipe_parser.add_parser(
         'bulk_rnaseq',
-        help='Bulk RNAseq analysis (QC, mapping, expression counts)',
+        help=BRNASEQ_HELP,
         add_help=False)
     # Next, we want to make argument groups to override the default names of
     # "optional" and "positional"
@@ -74,14 +87,20 @@ def parse_arguments():
         help='Show this help message and exit.',
         action='help')
     bulk_rnaseq_parser_opt.add_argument(
+        '--verbosity',
+        '-v',
+        help='Minimum level of logging to show. Default INFO.',
+        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+        default='INFO')
+    bulk_rnaseq_parser_opt.add_argument(
         '--trim',
-        help='Trim reads with Trimmomatic?',
+        help='If supplied, trim reads with Trimmomatic.',
         action='store_true',
         default=False)
     bulk_rnaseq_parser_opt.add_argument(
         '--output-dir',
         '-o',
-        help='Output directory.',
+        help='Output directory. Defaults to global scratch.',
         default=default_dirs.default_output('bulk_rnaseq'))
     bulk_rnaseq_parser_opt.add_argument(
         '--threads',
@@ -91,11 +110,13 @@ def parse_arguments():
         default=1)
     bulk_rnaseq_parser_opt.add_argument(
         '--extra-trimmomatic-opts',
-        help='Extra Trimmomatic options. Must be passed as a quoted string.',
+        help='Extra Trimmomatic options. ' + EXTRA_OPT_HELP,
+        type=str,
         default='')
     bulk_rnaseq_parser_opt.add_argument(
         '--extra-hisat2-opts',
-        help='Extra HISAT2 options. Must be passed as a quoted string.',
+        help='Extra HISAT2 options. ' + EXTRA_OPT_HELP,
+        type=str,
         default='')
 
     args = parser.parse_args()
