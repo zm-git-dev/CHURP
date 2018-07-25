@@ -8,7 +8,13 @@ programs exist and checking sample lists."""
 class Pipeline(object):
     """Define the Pipeline object. The following attributes are set:
 
+        self.fq_dir (pathlib.Path): The path to the FASTQ directory
+        self.outdir (pathlib.Path): The output directory
+        self.required_mods (list): List of required software modules
+
     The following methods are also defined:
+
+        check_dirs(): Check that directories exist and can be written to
 
     """
     def __init__(self, fq, out):
