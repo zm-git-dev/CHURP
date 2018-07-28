@@ -35,3 +35,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         if not args['no_trim']:
             self.required_mods.append('trimmomatic')
         return
+
+    def summarize_counts(self):
+        """Genearate counts from a list of BAM files and write them into a
+        scratch directory. Return the filename to the counts."""
+        pass

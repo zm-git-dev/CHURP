@@ -41,3 +41,14 @@ class Pipeline(object):
         searching the fastq folder and matching filenames. This is not the
         preferred way, though."""
         pass
+
+    def setup_workdir(self):
+        """Make the output directory and make sure that the needed materials
+        are present."""
+        pass
+
+    def prepare_qsub(self):
+        """Take the pipeline attributes and prepare the qsub call. This drop the
+        variables for scratch directory, samplesheet, and index into the qsub
+        call."""
+        pass
