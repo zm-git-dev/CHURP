@@ -1,8 +1,6 @@
 #!/bin/bash -l
 #PBS -l nodes=1:ppn=8,mem=16gb,walltime=24:00:00
 
-#TODO: test each command
-
 # Parse SampleSheet using $PBS_ARRAYID
 # Assume there is a header line, so for ID n, the sample is n+1
 # Sample Sheet: SampleNM, R1, R2, Trim (yes or no), TrimmomaticOption, Hisat2Index, Hisat2Option, GTF/GFF
@@ -28,28 +26,47 @@ cd ${SAMPLENM}
 
 # start workflow with check point
 # Set Up a log file instead (?)
-[ ! -f fastqc.done]
+if [ ! -f fastqc.done]; then
     fastqc -t 2 ${R1FILE} ${R2FILE}
     touch fastqc.done
-[ $TRIM = "yes" ]
-    [ ! -f trimmomatic.done ]
-        java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads 8 -basein $R1FILE -baseout ${SAMPLENM} $TIRMOPTS
+fi
+
+# To use -basein option, fastq file must be in format *_R1_*.fastq and *_R2_*.fastq
+if [ $TRIM = "yes" ]; then
+    if [ ! -f trimmomatic.done ]; then
+        java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads 8 -basein $R1FILE -baseout ${SAMPLENM} $TRIMOPTS 2>trim.log
         touch trimmomatic.done
-    [ ! -f fastqc.trim.done ]
+    fi
+    if [ ! -f fastqc.trim.done ]; then
         fastqc -t 2 ${SAMPLENM}_1P ${SAMPLENM}_2P
         touch fastqc.trim.done
-[ ! -f hisat2.done ]
+    fi
+fi
+
+if [ ! -f hisat2.done ]; then
     if [ $TRIM = "yes" ]; then
         hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 ${SAMPLENM}_1P -2 ${SAMPLENM}_2P -S ${SAMPLENM}.sam
     else:
         hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 $R1FILE -2 $R2FILE -S ${SAMPLENM}.sam
     fi
     touch hisat2.done
+fi
+
 # use samtools to remove unmapped reads, could be done in picard too.
-[ ! -f samtools.done ]
+if [ ! -f samtools.done ]; then
     samtools view -bh -F 4 -@ 8 ${SAMPLENM}.sam | samtools sort -o ${SAMPLENM}.sorted.bam -@ 8 -O bam -T temp 
     samtools index ${SAMPLENM}.sorted.bam
     touch samtools.done
-[ ! -f picard.done ]
-    $PTOOL/picard.jar MarkDuplicates I=${SAMPLENM}.sorted.bam O=${SAMPLENM}.cleaned.bam M=${SAMPLENM}.matrix REMOVE_DUPLICATES=true 
+fi
+
+#TODO: test picard funtions, all the other functions work fine.
+if [ ! -f picard.done ]; then
+    $PTOOL/picard.jar MarkDuplicates \
+        I=${SAMPLENM}.sorted.bam \
+        O=${SAMPLENM}.cleaned.bam \
+        M=${SAMPLENM}.matrix \
+        REMOVE_DUPLICATES=true 
     touch picard.done
+fi
+
+touch ${SAMPLENM}.done
