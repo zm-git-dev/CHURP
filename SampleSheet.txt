@@ -1,0 +1,4 @@
+SampleNM|FastqR1files|FastqR2file|WorkingDir|Hisat2index OtherOptions
+S1|/Dummy/1_R1.fastq|/Dummy/1_R2.fastq||/Dummy/genome
+S2|/Dummy/2_R1.fastq|/Dummy/2_R2.fastq|/Dummy/WorkDir2|/Dummy/genome
+S3|/Dummy/3_R1.fastq|||/Dummy/genome|Trim
