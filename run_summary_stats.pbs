@@ -1,0 +1,40 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=4,mem=16gb,walltime=8:00:00
+
+# load necessary modules
+module load subread R cufflinks
+
+cd ${WORKDIR}
+
+mkdir allsamples
+
+cd allsamples
+
+# make all bam files accessible from the allsample directory
+mkdir bams
+
+cd bams
+
+ln -s ${WORKDIR}/singlesamples/*/*.bam .
+
+# do FPKM counting using cufflinks
+for file in `ls *.bam`; do
+    cuffquant ${GTFFILE} $f
+    mv abundances.cxb $f.cxb
+done
+
+cuffnorm ${GTFFILE} *.cxb -o ../cuffnorm_out
+
+# do Subread count in R
+R --vanilla CMD Batch < subread.r
+
+# do TPM count in R
+R --vanilla CMD Batch < tpm.r
+
+# prepare for EdgeR, DESeq2 etc analysis
+R --vanilla CMD BATCH < prep.r
+
+cd ..
+
+ln -s cuffnorm_out/genes.fpkm_table.renamed samples.fpkms.txt
+

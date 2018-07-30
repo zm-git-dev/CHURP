@@ -5,7 +5,7 @@
 # Assume there is a header line, so for ID n, the sample is n+1
 # Sample Sheet: SampleNM, R1, R2, Trim (yes or no), TrimmomaticOption, Hisat2Index, Hisat2Option, GTF/GFF
 IN=`head -n $((${PBS_ARRAYID}+1)) ${SampleSheet} | tail -1`
-while IFS="\t" read -ra OPTS; do 
+while IFS="|" read -ra OPTS; do 
     SAMPLENM=${OPTS[0]}
     R1FILE=${OPTS[1]}    
     R2FILE=${OPTS[2]}
@@ -45,9 +45,9 @@ fi
 
 if [ ! -f hisat2.done ]; then
     if [ $TRIM = "yes" ]; then
-        hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 ${SAMPLENM}_1P -2 ${SAMPLENM}_2P -S ${SAMPLENM}.sam
-    else:
-        hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 $R1FILE -2 $R2FILE -S ${SAMPLENM}.sam
+        hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 ${SAMPLENM}_1P -2 ${SAMPLENM}_2P -S ${SAMPLENM}.sam 2>alignment.summary
+    else
+        hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 $R1FILE -2 $R2FILE -S ${SAMPLENM}.sam 2>alignment.summary
     fi
     touch hisat2.done
 fi
