@@ -14,7 +14,10 @@ class Pipeline(object):
 
     The following methods are also defined:
 
-        check_dirs(): Check that directories exist and can be written to
+        check_dirs(): Check that directories exist and can be written to.
+        prepare_samplesheet(): Initialize a SampleSheet object and populate it
+        setup_workdir(): Prepare the working directory
+        prepare_qsub(): Build the qsub command line
 
     """
     def __init__(self, args):

@@ -36,6 +36,10 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             self.required_mods.append('trimmomatic')
         return
 
+    def summarize_fastqc(self):
+        """Summarize the FASTQC reports for the run."""
+        pass
+
     def summarize_counts(self):
         """Genearate counts from a list of BAM files and write them into a
         scratch directory. Return the filename to the counts."""
