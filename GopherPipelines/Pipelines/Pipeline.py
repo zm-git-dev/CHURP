@@ -5,6 +5,9 @@ analysis pipelines that we will build: setting dependencies, checking that
 programs exist and checking sample lists."""
 
 
+from GopherPipelines.ArgHandling import set_verbosity
+
+
 class Pipeline(object):
     """Define the Pipeline object. The following attributes are set:
 
@@ -29,29 +32,40 @@ class Pipeline(object):
         self.outdir = args['output_dir']
         # We will always want to run FastQC on the data.
         self.required_mods = ['fastqc']
+        self.logger = set_verbosity.verb(args['verbosity'], args['pipeline'])
+        self.logger.debug('Args: %s', args)
         return
 
     def check_dirs(self):
         """Check that the directories exist and are readable and writeable. This
         will raise an error if we cannot find the fastq directory, or the
         output directory cannot be written to."""
+        self.logger.info('Checking directories.')
+        self.logger.debug('Output dir: ' + str(self.outdir))
         pass
 
-    def preapre_samplesheet(self, ss=None):
+    def prepare_samplesheet(self, ss=None):
         """Read the provided UMGC report sheet and build a list of Sample
         objects that will go downstream to the actual job submission routine.
         Optionally, if 'ss' not provided, we will attempt to build one by
         searching the fastq folder and matching filenames. This is not the
         preferred way, though."""
+        self.logger.info('Preparing samplesheet.')
+        if not ss:
+            self.logger.debug('Attempting to build one from ' + str(self.fq_dir))
+        else:
+            self.logger.info('Parsing ' + str(ss))
         pass
 
     def setup_workdir(self):
         """Make the output directory and make sure that the needed materials
         are present."""
+        self.logger.info('Setting up working direcotry.')
         pass
 
     def prepare_qsub(self):
         """Take the pipeline attributes and prepare the qsub call. This drop the
         variables for scratch directory, samplesheet, and index into the qsub
         call."""
+        self.logger.info('Setting up qsub command.')
         pass

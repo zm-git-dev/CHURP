@@ -35,10 +35,12 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             )
         if not args['no_trim']:
             self.required_mods.append('trimmomatic')
+        self.logger.info('New BulkRNASeqPipeline object.')
         return
 
     def summarize_fastqc(self):
         """Summarize the FASTQC reports for the run."""
+        self.logger.info('Summarizing FastQC runs.')
         pass
 
     def summarize_counts(self):
