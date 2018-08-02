@@ -32,7 +32,7 @@ class Pipeline(object):
         self.outdir = args['output_dir']
         # We will always want to run FastQC on the data.
         self.required_mods = ['fastqc']
-        self.logger = set_verbosity.verb(args['verbosity'], args['pipeline'])
+        self.logger = set_verbosity.verb(args['verbosity'], __name__)
         self.logger.debug('Args: %s', args)
         return
 
