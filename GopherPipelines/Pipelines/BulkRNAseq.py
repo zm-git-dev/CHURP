@@ -18,7 +18,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'Pipeline: ' + self.pipe_name,
             'FASTQ Dir: ' + str(self.fq_dir),
             'Output Dir: ' + str(self.outdir),
-            'Modules: ' + ','.join(self.required_mods)])
+            'Modules: ' + ','.join(self.required_mods),
+            'Methods and Attributes: ' + ','.join(dir(self))])
         return s
 
     def __init__(self, args):

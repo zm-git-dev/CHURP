@@ -4,7 +4,7 @@ types of high-throughput sequencing data analyses. This script is written to
 work on the University of Minnesota Supercomputing Institute clusters with
 data from the University of Minnesota Genomics Centre. The following analysis
 pipelines are supported:
-    - Bulk RNAseq
+    - bulk_rnaseq
 Questions should be directed to help@msi.umn.edu.
 Version: 0.0
 2017-07-24
