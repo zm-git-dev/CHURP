@@ -4,7 +4,6 @@ a huge function, so we will isolate it into this script for ease of development
 and maintenance."""
 
 import argparse
-from GopherPipelines.FileOps import default_dirs
 from GopherPipelines.ArgHandling import bulk_rnaseq_args
 from GopherPipelines.ArgHandling import sc_rnaseq_args
 

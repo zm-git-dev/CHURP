@@ -2,6 +2,7 @@
 """Define a sub-class of the Pipeline class for bulk RNAseq analysis."""
 
 from GopherPipelines.Pipelines import Pipeline
+from GopherPipelines.ArgHandling import set_verbosity
 
 
 class BulkRNAseqPipeline(Pipeline.Pipeline):
@@ -18,7 +19,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'Pipeline: ' + self.pipe_name,
             'FASTQ Dir: ' + str(self.fq_dir),
             'Output Dir: ' + str(self.outdir),
-            'Modules: ' + ','.join(self.required_mods)])
+            'Modules: ' + ','.join(self.required_mods),
+            'Methods and Attributes: ' + ','.join(dir(self))])
         return s
 
     def __init__(self, args):
@@ -34,7 +36,14 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             )
         if not args['no_trim']:
             self.required_mods.append('trimmomatic')
+        self.pipe_logger = set_verbosity.verb(args['verbosity'], __name__)
+        self.pipe_logger.debug('New BulkRNAseqPipeline instance.')
         return
+
+    def summarize_fastqc(self):
+        """Summarize the FASTQC reports for the run."""
+        self.logger.info('Summarizing FastQC runs.')
+        pass
 
     def summarize_counts(self):
         """Genearate counts from a list of BAM files and write them into a

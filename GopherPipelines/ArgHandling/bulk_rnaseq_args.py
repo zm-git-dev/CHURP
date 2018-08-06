@@ -8,7 +8,6 @@ from GopherPipelines.FileOps import default_dirs
 EXTRA_OPT_HELP = """Must be passed as a quoted string with = after the option.
 
 Example:
-
 --extra-trimmomatic-opts="-phred64 -threads 4".
 
 This is unfortunately due to a known bug in argparse that prevents proper
@@ -17,7 +16,8 @@ handling of options with dashes in them."""
 
 def add_args(ap):
     """Takes an ArgumentParser object, and adds some arguments to it. These will
-    be for the bulk RNAseq pipeline."""
+    be for the bulk RNAseq pipeline. This function returns None; it is called
+    for the side-effect of adding arguments to the parser object."""
     ap_req = ap.add_argument_group(
         'Required Arguments')
     ap_req.add_argument(
@@ -46,9 +46,9 @@ def add_args(ap):
     ap_opt.add_argument(
         '--verbosity',
         '-v',
-        help='Minimum level of logging to show. Default INFO.',
-        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-        default='INFO')
+        help='How much logging output to show',
+        choices=['debug', 'info', 'warn'],
+        default='warn')
     ap_opt.add_argument(
         '--no-trim',
         help='If supplied, do not trim reads with Trimmomatic.',
@@ -62,7 +62,7 @@ def add_args(ap):
     ap_opt.add_argument(
         '--threads',
         '-t',
-        help='Number of threads to supply to each pipeline step. Default 1',
+        help='Number of threads to supply to each pipeline step. Default 1.',
         type=int,
         default=1)
     ap_opt.add_argument(
