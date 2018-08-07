@@ -30,3 +30,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.useropts['trimmomatic'] = args['trimmomatic']
         self.useropts['hisat2'] = args['hisat2']
         return
+
+    def validate_hisat_idx(self):
+        """Raise an error if the provided HISAT2 index is not complete -
+        all of the [1-8].ht2l? files should be present."""
+        pass

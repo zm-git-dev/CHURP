@@ -32,8 +32,6 @@ class Pipeline(object):
             - User options dictionary
             - Default optiond dictionary
             - Final options dictionary"""
-        self.fq_dir = args['fq_folder']
-        self.outdir = args['output_dir']
         # These are empty, and will get populated by the sub-class.
         self.programs = []
         self.useropts = {}
