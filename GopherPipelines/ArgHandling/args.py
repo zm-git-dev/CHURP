@@ -25,7 +25,7 @@ its own set of options that must be specified. To see a full listing of each
 available option for a given pipeline, pass the '--help' option. Alternately,
 online help is maintained at the GitHub repository.
 
-Currently, the following pipelines are supported:
+Currently, the following subcommands are supported:
     - bulk_rnaseq
 
 For issues, contact help@msi.umn.edu.
