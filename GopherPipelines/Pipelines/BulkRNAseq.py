@@ -41,13 +41,3 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.useropts['trimmomatic'] = args['trimmomatic']
         self.useropts['hisat2'] = args['hisat2']
         return
-
-    def summarize_fastqc(self):
-        """Summarize the FASTQC reports for the run."""
-        self.logger.info('Summarizing FastQC runs.')
-        pass
-
-    def summarize_counts(self):
-        """Genearate counts from a list of BAM files and write them into a
-        scratch directory. Return the filename to the counts."""
-        pass
