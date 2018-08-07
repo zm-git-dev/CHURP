@@ -27,11 +27,18 @@ class Pipeline(object):
         """Initialize the pipeline object with user-supplied inputs. The
         general pipeline attributes that get set here are:
             - path to FASTQ folder
-            - Output directory"""
+            - Output directory
+            - Program names for options setting
+            - User options dictionary
+            - Default optiond dictionary
+            - Final options dictionary"""
         self.fq_dir = args['fq_folder']
         self.outdir = args['output_dir']
-        # We will always want to run FastQC on the data.
-        self.required_mods = ['fastqc']
+        # These are empty, and will get populated by the sub-class.
+        self.programs = []
+        self.useropts = {}
+        self.defaultopts = {}
+        self.finalopts = {}
         self.logger = set_verbosity.verb(args['verbosity'], __name__)
         self.logger.debug('Args: %s', args)
         return
@@ -42,6 +49,17 @@ class Pipeline(object):
         output directory cannot be written to."""
         self.logger.info('Checking directories.')
         self.logger.debug('Output dir: ' + str(self.outdir))
+        pass
+
+    def resolve_options(self):
+        """Read the options dictionary that is set by the user and by the
+        sub-class initialization. Basically, any supplied user options will
+        clobber the default options. We WILL NOT check that the supplied user
+        options are valid. We will try to provide ample warning that users are
+        responsible for giving options that will work."""
+        self.logger.info('Resolving user and default options.')
+        self.logger.debug('User opts: %s', self.useropts)
+        self.logger.debug('Default opts: %s', self.defaultopts)
         pass
 
     def prepare_samplesheet(self, ss=None):

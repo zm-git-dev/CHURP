@@ -36,6 +36,7 @@ def brnaseq(args):
     p = BulkRNAseq.BulkRNAseqPipeline(args)
     p.check_dirs()
     p.setup_workdir()
+    p.resolve_options()
     p.prepare_samplesheet()
     p.prepare_qsub()
     return

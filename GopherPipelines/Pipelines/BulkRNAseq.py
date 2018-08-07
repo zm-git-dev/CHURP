@@ -19,8 +19,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'Pipeline: ' + self.pipe_name,
             'FASTQ Dir: ' + str(self.fq_dir),
             'Output Dir: ' + str(self.outdir),
-            'Modules: ' + ','.join(self.required_mods),
-            'Methods and Attributes: ' + ','.join(dir(self))])
+            'User options: ' + str(self.useropts)])
         return s
 
     def __init__(self, args):
@@ -31,13 +30,15 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         super().__init__(args)
         # Add hisat2, samtools, and R to the list of required modules. Also
         # add trimmomatic, conditionally
-        self.required_mods.extend(
-            ('hisat2', 'samtools', 'R')
-            )
-        if not args['no_trim']:
-            self.required_mods.append('trimmomatic')
         self.pipe_logger = set_verbosity.verb(args['verbosity'], __name__)
         self.pipe_logger.debug('New BulkRNAseqPipeline instance.')
+        # This pipeline takes options for trimmomatic and hisat2
+        self.programs.extend(['trimmomatic', 'hisat2'])
+        # Set the default trimmomatic options here. This is from YZ's scripts
+        self.defaultopts['trimmomatic'] = 'ILLUMINACLIP:adapters.fa:4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18'
+        # Set the user options here
+        self.useropts['trimmomatic'] = args['trimmomatic']
+        self.useropts['hisat2'] = args['hisat2']
         return
 
     def summarize_fastqc(self):

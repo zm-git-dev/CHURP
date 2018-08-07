@@ -35,6 +35,13 @@ Version: 0.0
     return
 
 
+def validate(a):
+    """Validate the arguments. This function will run checks to make sure that
+    valid combinations of arguments have been passed. For now, it will check
+    that either a samplesheet, or the group of fq/hisat2/gtf were provided."""
+    return vars(a)
+
+
 def pipeline_args():
     """Parse arguments for the pipeline as a whole. This will dispatch the
     arguments to other functions that parse pipeline-specific arguments. This
@@ -63,4 +70,5 @@ def pipeline_args():
     bulk_rnaseq_args.add_args(bulk_rnaseq_parser)
     sc_rnaseq_args.add_args(sc_rnaseq_parser)
     pargs = parser.parse_args()
-    return vars(pargs)
+    v_args = validate(pargs)
+    return v_args
