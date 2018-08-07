@@ -60,7 +60,21 @@ class Pipeline(object):
         self.logger.info('Resolving user and default options.')
         self.logger.debug('User opts: %s', self.useropts)
         self.logger.debug('Default opts: %s', self.defaultopts)
-        pass
+        self.logger.debug('Programs for options: %s', self.programs)
+        for prog in self.programs:
+            if self.useropts[prog]:
+                self.finalopts[prog] = self.useropts[prog]
+            else:
+                self.finalopts[prog] = self.defaultopts[prog]
+        self.logger.debug('Resolved opts: %s', self.finalopts)
+        if self.finalopts != self.defaultopts:
+            self.logger.warning((
+                'Be cautious when specifying alternate option strings! '
+                'We do not guarantee that they will work. '
+                'Always check the manual for the latest version of the '
+                'programs that you are using. This is not an error message.'
+                ))
+        return
 
     def prepare_samplesheet(self, ss=None):
         """Read the provided UMGC report sheet and build a list of Sample

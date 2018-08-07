@@ -36,6 +36,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.programs.extend(['trimmomatic', 'hisat2'])
         # Set the default trimmomatic options here. This is from YZ's scripts
         self.defaultopts['trimmomatic'] = 'ILLUMINACLIP:adapters.fa:4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18'
+        self.defaultopts['hisat2'] = ''
         # Set the user options here
         self.useropts['trimmomatic'] = args['trimmomatic']
         self.useropts['hisat2'] = args['hisat2']
