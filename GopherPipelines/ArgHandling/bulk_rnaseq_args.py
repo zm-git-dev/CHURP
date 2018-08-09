@@ -18,32 +18,51 @@ def add_args(ap):
     """Takes an ArgumentParser object, and adds some arguments to it. These will
     be for the bulk RNAseq pipeline. This function returns None; it is called
     for the side-effect of adding arguments to the parser object."""
-    # This group is called "required" but it actually isn't set as required by
-    # the parser. We will manually check later for the proper combination of
-    # arguments that are set.
     ap_req = ap.add_argument_group(
         title='Required Arguments')
-    ap_req.add_argument(
+    ap_req_ss = ap_req.add_mutually_exclusive_group()
+    ap_req_ss.add_argument(
+        '--umgc-sheet',
+        '-u',
+        metavar='<UMGC sheet.xlsx>',
+        dest='umgc',
+        help=('UMGC sheet giving R1 and R2 paths. This must come directly from '
+              'the UMGC facility as an Excel file. We do not support parsing '
+              'any files that have modifications from the standard format. '
+              'Incompatible with -f.')
+        )
+    ap_req_ss.add_argument(
         '--fq-folder',
         '-f',
         metavar='<fastq folder>',
         dest='fq_folder',
-        required=False,
-        help='Directory that contains the FASTQ files.')
+        help=('Directory that contains the FASTQ files. If this is provided, '
+              'we will attempt to build the list of R1 and R2 read paths. '
+              'Incompatible with -u.'))
     ap_req.add_argument(
         '--hisat2-index',
         '-x',
         metavar='<HISAT2 index base>',
         dest='hisat2_idx',
         required=False,
-        help='Basename of the HISAT2 index.')
+        help='Basename of the HISAT2 index. Incompatible with -r.')
     ap_req.add_argument(
         '--gtf',
         '-g',
-        metavar='<GTF>',
+        metavar='<GTF.gtf>',
         dest='gtf',
         required=False,
-        help='GTF that accompanies the genome for the HISAT2 index.')
+        help=('GTF that accompanies the genome for the HISAT2 index. '
+              'Incompatible with -r.'))
+    ap_req.add_argument(
+        '--organism',
+        '-r',
+        metavar='<organism>',
+        dest='organism',
+        required=False,
+        help=('Organism shorthand for automatically setting a HISAT2 index and '
+              'GTF annotation file. Pass --list-species to see a full list. '
+              'Incompatible with -x and -g.'))
     # Make an argument group for optional arguments
     ap_opt = ap.add_argument_group(
         'Optional Arguments')
@@ -53,13 +72,28 @@ def add_args(ap):
         help='Show this help message and exit.',
         action='help')
     ap_opt.add_argument(
+        '--list-species',
+        help='List species databases that can be passed to -r.',
+        action='store_true',
+        default=False)
+    ap_opt.add_argument(
         '--verbosity',
         '-v',
         metavar='<loglevel>',
         dest='verbosity',
-        help='How much logging output to show. Choose one of "debug," "info," or "warn."',
+        help=('How much logging output to show. '
+              'Choose one of "debug," "info," or "warn."'),
         choices=['debug', 'info', 'warn'],
         default='warn')
+    ap_opt.add_argument(
+        '--adapters',
+        '-a',
+        metavar='<adapter file.fa>',
+        dest='adapters',
+        help=('Adapters to use for trimming with Trimmomatic. Defaults to '
+              '/home/msistaff/public/all_adapter.fa. --no-trim causes these '
+              'to not be used.'),
+        default='/home/msistaff/public/all_adapter.fa')
     ap_opt.add_argument(
         '--no-trim',
         dest='no_trim',
@@ -70,7 +104,7 @@ def add_args(ap):
         '--output-dir',
         '-o',
         metavar='<output directory>',
-        dest='output_dir',
+        dest='outdir',
         help='Output directory. Defaults to global scratch.',
         default=default_dirs.default_output('bulk_rnaseq'))
     ap_opt.add_argument(

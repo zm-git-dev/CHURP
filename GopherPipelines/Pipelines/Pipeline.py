@@ -26,19 +26,19 @@ class Pipeline(object):
     def __init__(self, args):
         """Initialize the pipeline object with user-supplied inputs. The
         general pipeline attributes that get set here are:
-            - path to FASTQ folder
             - Output directory
             - Program names for options setting
             - User options dictionary
             - Default optiond dictionary
             - Final options dictionary"""
+        self.logger = set_verbosity.verb(args['verbosity'], __name__)
+        self.logger.debug('Passed args: %s', args)
+        self.outdir = args['outdir']
         # These are empty, and will get populated by the sub-class.
         self.programs = []
         self.useropts = {}
         self.defaultopts = {}
         self.finalopts = {}
-        self.logger = set_verbosity.verb(args['verbosity'], __name__)
-        self.logger.debug('Args: %s', args)
         return
 
     def check_dirs(self):
