@@ -3,14 +3,7 @@
 
 from GopherPipelines.Pipelines import Pipeline
 from GopherPipelines.ArgHandling import set_verbosity
-
-
-def validate_args(a):
-    """Validate arguments for the BulkRNAseqPipeline object. We define it in
-    this file because it only really needs to be accessible to this subclass.
-    Argument dependencies are pipeline-specific."""
-    return a
-
+from GopherPipelines.FileOps import species_list
 
 
 class BulkRNAseqPipeline(Pipeline.Pipeline):
@@ -25,7 +18,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         attributes."""
         # First validate the arguments. We do this in the subclass because the
         # dependencies of the arguments are pipeline-specific.
-        valid_args = validate_args(args)
+        valid_args = self.validate_args(args)
         # We call the parent class init() here
         super().__init__(valid_args)
         # Add hisat2, samtools, and R to the list of required modules. Also
@@ -45,6 +38,17 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.useropts['trimmomatic'] = valid_args['trimmomatic']
         self.useropts['hisat2'] = valid_args['hisat2']
         return
+
+    def validate_args(self, a):
+        """Validate arguments for the BulkRNAseqPipeline object. We define it in
+        this file because it only really needs to be accessible to this subclass.
+        Argument dependencies are pipeline-specific. For the bulk RNAseq analysis
+        pipeline:
+            - If organism was specified, then the HISAT2 index and GTF do not
+              need to be checked
+        """
+        
+        return a
 
     def validate_hisat_idx(self):
         """Raise an error if the provided HISAT2 index is not complete -

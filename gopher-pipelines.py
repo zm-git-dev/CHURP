@@ -10,6 +10,15 @@ Version: 0.0
 2017-07-24
 """
 
+# Check the Python version
+try:
+    import sys
+    assert sys.version_info.major == 3
+except AssertionError:
+    sys.stderr.write('Error - this pipeline requires Python 3!\n')
+    exit(2)
+
+
 # Import standard library modules here
 import sys
 import os
@@ -20,13 +29,6 @@ try:
 except ImportError:
     sys.stderr.write('Error - GopherPipelines package cannot be not found!\n')
     exit(1)
-
-# And check the Python version
-try:
-    assert sys.version_info.major == 3
-except AssertionError:
-    sys.stderr.write('Error - this pipeline requires Python 3!\n')
-    exit(2)
 
 
 def brnaseq(args):
