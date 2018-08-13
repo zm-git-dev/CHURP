@@ -47,7 +47,6 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             - If organism was specified, then the HISAT2 index and GTF do not
               need to be checked
         """
-        
         return a
 
     def validate_hisat_idx(self):

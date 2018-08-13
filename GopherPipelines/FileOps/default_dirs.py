@@ -10,8 +10,22 @@ import datetime
 SCRATCH = pathlib.Path('/panfs/roc/scratch')
 
 
+def default_workdir(pipeline):
+    """Return a pathlib.Path object that points to a default working directory.
+    This will be in global scratch at
+    $SCRATCH/username/YYYY-MM-DD.pipeline_id.work"""
+    # Ugly, but a portable and flexible way to get today's ISO date
+    ymd = datetime.date.isoformat(datetime.datetime.today())
+    uname = getpass.getuser()
+    # Make the basename of the directory from YMD, pipeline ID
+    wk_base = ymd + '.' + pipeline + '.work'
+    # '/' operator joins pathlib.Path objects
+    d = SCRATCH / uname / wk_base
+    return d
+
+
 def default_output(pipeline):
-    """Return a string to a default output scratch directory. This will be
+    """Return a pathlib.Path to a default output scratch directory. This will be
     $SCRATCH/username/YYYY-MM-DD.pipeline_id."""
     # This is ugly, but it is the most flexible way to get the current ISO
     # format date.

@@ -108,13 +108,12 @@ def add_args(ap):
         help='Output directory. Defaults to global scratch.',
         default=default_dirs.default_output('bulk_rnaseq'))
     ap_opt.add_argument(
-        '--threads',
-        '-t',
-        metavar='<num. threads>',
-        dest='threads',
-        help='Number of threads to supply to each pipeline step. Default 1.',
-        type=int,
-        default=1)
+        '--working-dir',
+        '-w',
+        metavar='<working directory>',
+        dest='wkdir',
+        help='Working directory. Defaults to global scratch.',
+        default=default_dirs.default_workdir('bulk_rnaseq'))
     ap_opt.add_argument(
         '--trimmomatic-opts',
         metavar='<trimmomatic options>',
@@ -129,4 +128,24 @@ def add_args(ap):
         dest='hisat2',
         type=str,
         default='')
+
+    # Make an argument for scheduler options
+    ap_sched = ap.add_argument_group(
+        'Scheduler Options')
+    ap_sched.add_argument(
+        '--ppn',
+        '-p',
+        metavar='<procs per node>',
+        dest='ppn',
+        help='Processors to allocate for each task. Defaults to 8.',
+        type=int,
+        default=8)
+    ap_sched.add_argument(
+        '--mem',
+        '-m',
+        metavar='<mem per job (Mb)>',
+        dest='mem',
+        help='Memory, in megabytes, to allocate to each task. Defaults to 24000 (24GB)',
+        type=int,
+        default=24000)
     return
