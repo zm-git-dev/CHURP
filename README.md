@@ -11,8 +11,9 @@ The fastq files are simply the `Tutorial_File_R1.fastq` and
 identical and R2 files are identical. This shouldn't matter for testing
 purposes.
 
-The genome is the complete UCSC hg19/GRCh37.p13 build, with a GTF. It has been
-indexed with HISAT2 2.1.0.
+The genome is the complete GRCh37 pre-built index from 
+`ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/data/grch37_snp_tran.tar.gz`. It has
+been built with SNP and splice site databases.
 
 ## TODO
 These are some discrete tasks that need to be accomplished within major
