@@ -13,6 +13,7 @@ from GopherPipelines.FileOps import dir_funcs
 # Define exit codes as constants for diagnostic problems
 BAD_OUTDIR = 10
 BAD_WORKDIR = 11
+BAD_RESOURCES = 12
 
 
 class Pipeline(object):
@@ -39,13 +40,47 @@ class Pipeline(object):
         self.single_sample_script = ''
         # Initialize the samplesheet here
         self.sheet = SampleSheet.Samplesheet(args)
-        # Set the scheduler parameters here
+        # Set the scheduler resources and PBS options here
         self.ppn = args['ppn']
         self.mem = args['mem']
         self.walltime = args['walltime']
+        self.overwrite = args['overwrite']
+        # Check that these make sense
+        self._check_scheduler()
+        # Then run through the rest of the checks
+        self._check_dirs()
+        self._resolve_options()
+        self._prepare_samplesheet()
         return
 
-    def check_dirs(self):
+    def _check_scheduler(self):
+        """Check that the scheduler resource requests make sense. ppn should be
+        between 1 and 24; mem should be between 2000 and 62000; walltime should
+        be between 2h and 96h."""
+        try:
+            assert self.ppn >= 1 and self.ppn <= 24
+        except AssertionError as e:
+            self.logger.error(
+                'PPN value of %i is invalid! Please specify between 1 and 24.',
+                self.ppn)
+            exit(BAD_RESOURCES)
+        try:
+            assert self.mem >= 1 and self.mem <= 62000
+        except AssertionError as e:
+            self.logger.error(
+                'Mem value of %i is invalid! Please specify between 1 and 62000.',
+                self.mem)
+            exit(BAD_RESOURCES)
+        try:
+            assert self.walltime >= 1 and self.walltime <= 96
+        except AssertionError as e:
+            self.logger.error(
+                'Walltime value of %i is invalid! Please specify between 1 and 96.',
+                self.walltime)
+            exit(BAD_RESOURCES)
+        return
+
+    def _check_dirs(self):
         """Check that the directories exist and are readable and writeable. This
         will raise an error if we cannot find the fastq directory, or the
         output directory cannot be written to."""
@@ -95,7 +130,7 @@ class Pipeline(object):
                 exit(BAD_WORKDIR)
         return
 
-    def resolve_options(self):
+    def _resolve_options(self):
         """Read the options dictionary that is set by the user and by the
         sub-class initialization. Basically, any supplied user options will
         clobber the default options. We WILL NOT check that the supplied user
@@ -120,7 +155,7 @@ class Pipeline(object):
                 ))
         return
 
-    def prepare_samplesheet(self):
+    def _prepare_samplesheet(self):
         """Call the samplesheet build method here. The SampleSheet object has
         the fastq directory defined within it, so we do not have to pass any
         other data to it."""

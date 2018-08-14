@@ -67,8 +67,8 @@ def make_dir(d, l):
         l.debug('Successfully made directory %s', p)
         return True
     except PermissionError as e:
-        l.debug('Error making directory %s, permission denied', p)
+        l.error('Error making directory %s, permission denied', p)
         return False
     except OSError as e:
-        l.debug('Error making directory %s, disk full?', p)
+        l.error('Error making directory %s, disk full?', p)
         return False

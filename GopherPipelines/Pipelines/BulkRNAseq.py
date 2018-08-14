@@ -22,7 +22,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         attributes."""
         # First validate the arguments. We do this in the subclass because the
         # dependencies of the arguments are pipeline-specific.
-        valid_args = self.validate_args(args)
+        valid_args = self._validate_args(args)
         # We call the parent class init() here
         super().__init__(valid_args)
         # Set up the verbosity and logging
@@ -58,7 +58,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'run_summary_stats.pbs')
         return
 
-    def validate_args(self, a):
+    def _validate_args(self, a):
         """Validate arguments for the BulkRNAseqPipeline object. We define it in
         this file because it only really needs to be accessible to this subclass.
         Argument dependencies are pipeline-specific. For the bulk RNAseq analysis
@@ -68,7 +68,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         """
         return a
 
-    def validate_hisat_idx(self):
+    def _validate_hisat_idx(self):
         """Raise an error if the provided HISAT2 index is not complete -
         all of the [1-8].ht2l? files should be present."""
         pass
@@ -93,6 +93,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         qsub_resources += ',walltime=' + str(self.walltime * 3600) + '"'
         aln_cmd = [
             'qsub',
+            '-q',
+            'mesabi',
             '-l',
             qsub_resources,
             '-t',
@@ -103,6 +105,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # This is the command for counting and normalizing reads
         summary_cmd = [
             'qsub',
+            '-q',
+            'mesabi',
             '-l',
             qsub_resources,
             '-W',

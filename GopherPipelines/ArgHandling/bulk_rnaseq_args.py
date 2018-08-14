@@ -86,6 +86,12 @@ def add_args(ap):
         choices=['debug', 'info', 'warn'],
         default='warn')
     ap_opt.add_argument(
+        '--overwrite',
+        dest='overwrite',
+        help='Overwrite previous runs?',
+        action='store_true',
+        default=False)
+    ap_opt.add_argument(
         '--adapters',
         '-a',
         metavar='<adapter file.fa>',
