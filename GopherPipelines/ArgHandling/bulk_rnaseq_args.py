@@ -109,7 +109,7 @@ def add_args(ap):
         default=default_dirs.default_output('bulk_rnaseq'))
     ap_opt.add_argument(
         '--working-dir',
-        '-w',
+        '-d',
         metavar='<working directory>',
         dest='workdir',
         help='Working directory. Defaults to global scratch.',
@@ -148,4 +148,12 @@ def add_args(ap):
         help='Memory, in megabytes, to allocate to each task. Defaults to 24000 (24GB)',
         type=int,
         default=24000)
+    ap_sched.add_argument(
+        '--walltime',
+        '-w',
+        metavar='<wall clock time (hours)>',
+        dest='walltime',
+        help='Walltime, in hours, to allocate to each task. Defaults to 12 hours.',
+        type=int,
+        default=12)
     return

@@ -42,6 +42,7 @@ class Pipeline(object):
         # Set the scheduler parameters here
         self.ppn = args['ppn']
         self.mem = args['mem']
+        self.walltime = args['walltime']
         return
 
     def check_dirs(self):
