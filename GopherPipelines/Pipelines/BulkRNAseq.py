@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """Define a sub-class of the Pipeline class for bulk RNAseq analysis."""
 
+import pprint
+
 from GopherPipelines.Pipelines import Pipeline
 from GopherPipelines.ArgHandling import set_verbosity
 from GopherPipelines.FileOps import species_list
@@ -24,7 +26,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Set up the verbosity and logging
         self.pipe_logger = set_verbosity.verb(valid_args['verbosity'], __name__)
         self.pipe_logger.debug('New BulkRNAseqPipeline instance.')
-        self.pipe_logger.debug('Validated args: %s', valid_args)
+        self.pipe_logger.debug('Validated args: %s', pprint.pformat(valid_args))
 
         # Set fastq directory here
         self.adapters = valid_args['adapters']

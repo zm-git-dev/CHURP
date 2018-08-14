@@ -4,6 +4,7 @@ analysis pipelines. This class will have all methods that are common to the
 analysis pipelines that we will build: setting dependencies, checking that
 programs exist and checking sample lists."""
 
+import pprint
 
 from GopherPipelines.ArgHandling import set_verbosity
 from GopherPipelines.SampleSheet import SampleSheet
@@ -28,7 +29,7 @@ class Pipeline(object):
             - Final options dictionary
             - Path to single sample PBS script"""
         self.logger = set_verbosity.verb(args['verbosity'], __name__)
-        self.logger.debug('Passed args: %s', args)
+        self.logger.debug('Passed args: %s', pprint.pformat(args))
         self.outdir = args['outdir']
         self.workdir = args['workdir']
         # These are empty, and will get populated by the sub-class.
