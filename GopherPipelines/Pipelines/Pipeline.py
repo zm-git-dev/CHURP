@@ -68,7 +68,29 @@ class Pipeline(object):
             s = dir_funcs.make_dir(self.outdir, self.logger)
             if not s:
                 exit(BAD_OUTDIR)
-        pass
+
+        # And do the same for the work directory
+        self.logger.debug('Checking working directory %s', self.workdir)
+        # First,check that it exists
+        if dir_funcs.dir_exists(self.workdir, self.logger):
+            # Is it empty?
+            if dir_funcs.dir_empty(self.workdir, self.logger):
+                # And lastly, is it writeable?
+                if dir_funcs.dir_writeable(self.workdir, self.logger):
+                    # All good!
+                    self.logger.debug('Working dir %s is valid', self.workdir)
+                    pass
+                else:
+                    self.logger.error('Working dir %s cannot be written to!', self.workdir)
+                    exit(BAD_WORKDIR)
+            else:
+                self.logger.warning('Working dir %s is not empty!', self.workdir)
+        else:
+            self.logger.warning('Working dir %s does not exist, making it', self.workdir)
+            s = dir_funcs.make_dir(self.workdir, self.logger)
+            if not s:
+                exit(BAD_WORKDIR)
+        return
 
     def resolve_options(self):
         """Read the options dictionary that is set by the user and by the
