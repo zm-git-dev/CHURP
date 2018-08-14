@@ -10,14 +10,14 @@ from GopherPipelines.ArgHandling import set_verbosity
 from GopherPipelines.SampleSheet import SampleSheet
 from GopherPipelines.FileOps import dir_funcs
 
+# Define some constants here for diagnostic problems
+BAD_OUTDIR = 10
+BAD_WORKDIR = 11
+
 
 class Pipeline(object):
     """Define the Pipeline object. The following attributes are set:
     """
-
-    # Define some constants here for diagnostic problems
-    BAD_OUTDIR = 10
-    BAD_WORKDIR = 11
 
     def __init__(self, args):
         """Initialize the pipeline object with user-supplied inputs. The
