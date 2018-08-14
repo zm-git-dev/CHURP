@@ -88,7 +88,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug('Number of samples: %i', nsamp)
         self.pipe_logger.debug('Samplesheet: %s', ss_path)
         # This is the command for aligning and cleaning
-        qsub_resources = 'mem=' + str(self.mem)
+        qsub_resources = 'mem=' + str(self.mem) + 'mb'
         qsub_resources += ',nodes=1:ppn=' + str(self.ppn)
         qsub_resources += ',walltime=' + str(self.walltime * 3600) + '"'
         aln_cmd = [
