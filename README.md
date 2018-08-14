@@ -11,6 +11,9 @@ The fastq files are simply the `Tutorial_File_R1.fastq` and
 identical and R2 files are identical. This shouldn't matter for testing
 purposes.
 
+The genome is the complete UCSC hg19/GRCh37.p13 build, with a GTF. It has been
+indexed with HISAT2 2.1.0.
+
 ## TODO
 These are some discrete tasks that need to be accomplished within major
 divisions of the pipeline:
