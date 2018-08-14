@@ -10,14 +10,13 @@ from GopherPipelines.ArgHandling import set_verbosity
 from GopherPipelines.SampleSheet import SampleSheet
 from GopherPipelines.FileOps import dir_funcs
 
-# Define some constants here for diagnostic problems
+# Define exit codes as constants for diagnostic problems
 BAD_OUTDIR = 10
 BAD_WORKDIR = 11
 
 
 class Pipeline(object):
-    """Define the Pipeline object. The following attributes are set:
-    """
+    """Define the Pipeline object."""
 
     def __init__(self, args):
         """Initialize the pipeline object with user-supplied inputs. The
@@ -40,6 +39,9 @@ class Pipeline(object):
         self.single_sample_script = ''
         # Initialize the samplesheet here
         self.sheet = SampleSheet.Samplesheet(args)
+        # Set the scheduler parameters here
+        self.ppn = args['ppn']
+        self.mem = args['mem']
         return
 
     def check_dirs(self):
@@ -112,8 +114,8 @@ class Pipeline(object):
             self.logger.warning((
                 'Be cautious when specifying alternate option strings! '
                 'We do not guarantee that they will work. '
-                'Always check the manual for the latest version of the '
-                'programs that you are using. This is not an error message.'
+                'Always check the manual for the version of the programs that '
+                'you are using. This is not an error message.'
                 ))
         return
 
@@ -125,9 +127,3 @@ class Pipeline(object):
         print(self.sheet.fq_dir)
         pass
 
-    def prepare_qsub(self):
-        """Take the pipeline attributes and prepare the qsub call. This drop the
-        variables for scratch directory, samplesheet, and index into the qsub
-        call."""
-        self.logger.info('Setting up qsub command.')
-        pass

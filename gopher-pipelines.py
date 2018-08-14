@@ -39,7 +39,7 @@ def brnaseq(args):
     p.check_dirs()
     p.resolve_options()
     p.prepare_samplesheet()
-    p.prepare_qsub()
+    p.qsub()
     return
 
 

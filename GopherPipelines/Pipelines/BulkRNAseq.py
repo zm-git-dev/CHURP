@@ -2,6 +2,8 @@
 """Define a sub-class of the Pipeline class for bulk RNAseq analysis."""
 
 import pprint
+import os
+import subprocess
 
 from GopherPipelines.Pipelines import Pipeline
 from GopherPipelines.ArgHandling import set_verbosity
@@ -40,8 +42,20 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.useropts['hisat2'] = valid_args['hisat2']
 
         # Set the paths to the single sample analysis script. This will be
-        # submitted to the scheduler.
-        
+        # submitted to the scheduler. This is a little ugly, but because the
+        # package contains the shell script data, it should be OK to define a
+        # relative path. __file__ is the currently running script,
+        # os.path.realpath() gives the full path, with symlinks resolved. We
+        # then rsplit() the string returned by realpath() to get the base dir
+        # of the gopher-pipelines scipt. Woof.
+        self.single_sample_script = os.path.join(
+            os.path.realpath(__file__).rsplit(os.path.sep, 3)[0],
+            'PBS',
+            'bulk_rnaseq_single_sample.pbs')
+        self.summary_script = os.path.join(
+            os.path.realpath(__file__).rsplit(os.path.sep, 3)[0],
+            'PBS',
+            'run_summary_stats.pbs')
         return
 
     def validate_args(self, a):
@@ -58,3 +72,37 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         """Raise an error if the provided HISAT2 index is not complete -
         all of the [1-8].ht2l? files should be present."""
         pass
+
+    
+    def qsub(self):
+        """Write the qsub command. We will need the path to the samplesheet,
+        the number of samples in the samplesheet, and the scheduler options that
+        were passed as arguments. This is defined in the subclass rather than
+        in the main Pipeline class because the exact form of the qsub command
+        depends on which pipeline we are running."""
+        self.pipe_logger.info('Setting up qsub command.')
+        # Set some dummy values here just for testing purposes
+        nsamp = 5
+        ss_path = '/panfs/roc/scratch/test/samplesheet.txt'
+        aln_job_id = '12345'
+        self.pipe_logger.debug('Number of samples: %i', nsamp)
+        self.pipe_logger.debug('Samplesheet: %s', ss_path)
+        # This is the command for aligning and cleaning
+        aln_cmd = [
+            'qsub',
+            '-t',
+            '1-' + str(nsamp),
+            '-v',
+            '"SampleSheet='+ss_path+'"',
+            self.single_sample_script]
+        # This is the command for counting and normalizing reads
+        summary_cmd = [
+            'qsub',
+            '-W',
+            'depend=afterok:' + aln_job_id,
+            '-v',
+            '"base_in='+ss_path+'"',
+            self.summary_script]
+        self.pipe_logger.debug('qsub: %s', aln_cmd)
+        self.pipe_logger.debug('qsub: %s', summary_cmd)
+        return
