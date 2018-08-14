@@ -110,6 +110,6 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-v',
             '"base_in='+ss_path+'"',
             self.summary_script]
-        self.pipe_logger.debug('qsub: %s', aln_cmd)
-        self.pipe_logger.debug('qsub: %s', summary_cmd)
+        self.pipe_logger.debug('qsub:\n%s', ' '.join(aln_cmd))
+        self.pipe_logger.debug('qsub:\n%s', ' '.join(summary_cmd))
         return
