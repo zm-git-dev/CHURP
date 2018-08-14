@@ -59,7 +59,7 @@ def dir_empty(d, l):
 def make_dir(d, l):
     """Try to safely make a directory."""
     # Set it to be a pathlib.Path object
-    p = patlib.Path(d)
+    p = pathlib.Path(d)
     l.debug('Making directory %s', p)
     # This should be analogous to mkdir -p
     try:
