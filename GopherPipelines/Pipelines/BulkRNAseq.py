@@ -16,15 +16,13 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
     # Define the pipeline name here
     pipe_name = 'bulk_rnaseq'
 
-    def __init__(self, args):
+    def setup(self, args):
         """Initialize the pipeline object. We will call the general
         Pipeline.__init__() here, as well as set some specific pipeline
         attributes."""
         # First validate the arguments. We do this in the subclass because the
         # dependencies of the arguments are pipeline-specific.
         valid_args = self._validate_args(args)
-        # We call the parent class init() here
-        super().__init__(valid_args)
         # Set up the verbosity and logging
         self.pipe_logger = set_verbosity.verb(valid_args['verbosity'], __name__)
         self.pipe_logger.debug('New BulkRNAseqPipeline instance.')

@@ -45,12 +45,14 @@ class Pipeline(object):
         self.mem = args['mem']
         self.walltime = args['walltime']
         self.overwrite = args['overwrite']
-        # Check that these make sense
+        return
+
+    def _run_checks(self):
+        """Run the checks on the directories and options that were passed.
+        This happens after initialization of sub-classes from the pipeline."""
         self._check_scheduler()
-        # Then run through the rest of the checks
         self._check_dirs()
         self._resolve_options()
-        self._prepare_samplesheet()
         return
 
     def _check_scheduler(self):
@@ -155,11 +157,12 @@ class Pipeline(object):
                 ))
         return
 
-    def _prepare_samplesheet(self):
+    def prepare_samplesheet(self):
         """Call the samplesheet build method here. The SampleSheet object has
         the fastq directory defined within it, so we do not have to pass any
         other data to it."""
         self.logger.info('Preparing samplesheet.')
+        self._run_checks()
         print(self.sheet.fq_dir)
         pass
 
