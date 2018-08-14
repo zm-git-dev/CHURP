@@ -21,13 +21,12 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         valid_args = self.validate_args(args)
         # We call the parent class init() here
         super().__init__(valid_args)
-        # Add hisat2, samtools, and R to the list of required modules. Also
-        # add trimmomatic, conditionally
+        # Set up the verbosity and logging
         self.pipe_logger = set_verbosity.verb(valid_args['verbosity'], __name__)
         self.pipe_logger.debug('New BulkRNAseqPipeline instance.')
         self.pipe_logger.debug('Validated args: %s', valid_args)
+
         # Set fastq directory here
-        self.fq_dir = valid_args['fq_folder']
         self.adapters = valid_args['adapters']
         # This pipeline takes options for trimmomatic and hisat2
         self.programs.extend(['trimmomatic', 'hisat2'])
@@ -37,6 +36,10 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Set the user options here
         self.useropts['trimmomatic'] = valid_args['trimmomatic']
         self.useropts['hisat2'] = valid_args['hisat2']
+
+        # Set the paths to the single sample analysis script. This will be
+        # submitted to the scheduler.
+        
         return
 
     def validate_args(self, a):

@@ -6,23 +6,18 @@ programs exist and checking sample lists."""
 
 
 from GopherPipelines.ArgHandling import set_verbosity
+from GopherPipelines.SampleSheet import SampleSheet
+from GopherPipelines.FileOps import dir_funcs
 
 
 class Pipeline(object):
     """Define the Pipeline object. The following attributes are set:
-
-        self.fq_dir (pathlib.Path): The path to the FASTQ directory
-        self.outdir (pathlib.Path): The output directory
-        self.required_mods (list): List of required software modules
-
-    The following methods are also defined:
-
-        check_dirs(): Check that directories exist and can be written to.
-        prepare_samplesheet(): Initialize a SampleSheet object and populate it
-        setup_workdir(): Prepare the working directory
-        prepare_qsub(): Build the qsub command line
-
     """
+
+    # Define some constants here for diagnostic problems
+    BAD_OUTDIR = 10
+    BAD_WORKDIR = 11
+
     def __init__(self, args):
         """Initialize the pipeline object with user-supplied inputs. The
         general pipeline attributes that get set here are:
@@ -30,15 +25,20 @@ class Pipeline(object):
             - Program names for options setting
             - User options dictionary
             - Default optiond dictionary
-            - Final options dictionary"""
+            - Final options dictionary
+            - Path to single sample PBS script"""
         self.logger = set_verbosity.verb(args['verbosity'], __name__)
         self.logger.debug('Passed args: %s', args)
         self.outdir = args['outdir']
+        self.workdir = args['workdir']
         # These are empty, and will get populated by the sub-class.
         self.programs = []
         self.useropts = {}
         self.defaultopts = {}
         self.finalopts = {}
+        self.single_sample_script = ''
+        # Initialize the samplesheet here
+        self.sheet = SampleSheet.Samplesheet(args)
         return
 
     def check_dirs(self):
@@ -46,7 +46,27 @@ class Pipeline(object):
         will raise an error if we cannot find the fastq directory, or the
         output directory cannot be written to."""
         self.logger.info('Checking directories.')
-        self.logger.debug('Output dir: ' + str(self.outdir))
+        # We need to check the output directory and the working directory
+        self.logger.debug('Checking output directory %s', self.outdir)
+        # First,check that it exists
+        if dir_funcs.dir_exists(self.outdir, self.logger):
+            # Is it empty?
+            if dir_funcs.dir_empty(self.outdir, self.logger):
+                # And lastly, is it writeable?
+                if dir_funcs.dir_writeable(self.outdir, self.logger):
+                    # All good!
+                    self.logger.debug('Output dir %s is valid', self.outdir)
+                    pass
+                else:
+                    self.logger.error('Output dir %s cannot be written to!', self.outdir)
+                    exit(BAD_OUTDIR)
+            else:
+                self.logger.warning('Output dir %s is not empty!', self.outdir)
+        else:
+            self.logger.warning('Output dir %s does not exist, making it', self.outdir)
+            s = dir_funcs.make_dir(self.outdir, self.logger)
+            if not s:
+                exit(BAD_OUTDIR)
         pass
 
     def resolve_options(self):
@@ -74,23 +94,12 @@ class Pipeline(object):
                 ))
         return
 
-    def prepare_samplesheet(self, ss=None):
-        """Read the provided UMGC report sheet and build a list of Sample
-        objects that will go downstream to the actual job submission routine.
-        Optionally, if 'ss' not provided, we will attempt to build one by
-        searching the fastq folder and matching filenames. This is not the
-        preferred way, though."""
+    def prepare_samplesheet(self):
+        """Call the samplesheet build method here. The SampleSheet object has
+        the fastq directory defined within it, so we do not have to pass any
+        other data to it."""
         self.logger.info('Preparing samplesheet.')
-        if not ss:
-            self.logger.debug('Attempting to build one from ' + str(self.fq_dir))
-        else:
-            self.logger.info('Parsing ' + str(ss))
-        pass
-
-    def setup_workdir(self):
-        """Make the output directory and make sure that the needed materials
-        are present."""
-        self.logger.info('Setting up working direcotry.')
+        print(self.sheet.fq_dir)
         pass
 
     def prepare_qsub(self):

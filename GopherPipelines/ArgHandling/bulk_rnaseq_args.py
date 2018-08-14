@@ -111,7 +111,7 @@ def add_args(ap):
         '--working-dir',
         '-w',
         metavar='<working directory>',
-        dest='wkdir',
+        dest='workdir',
         help='Working directory. Defaults to global scratch.',
         default=default_dirs.default_workdir('bulk_rnaseq'))
     ap_opt.add_argument(
