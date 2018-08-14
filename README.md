@@ -1,6 +1,16 @@
 # `gopher-pipelines` Recfator
 This repository contains the Python refactoring of `gohper-pipelines`.
 
+## Testing
+A test dataset is located at `/panfs/roc/scratch/konox006/gopher-pipelines_test`.
+It contains tutorial RNAseq reads in `fastq/` and the hg19/GRCh37.p13 release
+of the human genome in `genome/`.
+
+The fastq files are simply the `Tutorial_File_R1.fastq` and
+`Tutorial_File_R2.fastq` file copied over with new names. All R1 files are
+identical and R2 files are identical. This shouldn't matter for testing
+purposes.
+
 ## TODO
 These are some discrete tasks that need to be accomplished within major
 divisions of the pipeline:
