@@ -29,7 +29,7 @@ class Pipeline(object):
             - Final options dictionary
             - Path to single sample PBS script"""
         self.logger = set_verbosity.verb(args['verbosity'], __name__)
-        self.logger.debug('Passed args: %s', pprint.pformat(args))
+        self.logger.debug('Passed args:\n%s', pprint.pformat(args))
         self.outdir = args['outdir']
         self.workdir = args['workdir']
         # These are empty, and will get populated by the sub-class.
@@ -77,15 +77,15 @@ class Pipeline(object):
         options are valid. We will try to provide ample warning that users are
         responsible for giving options that will work."""
         self.logger.info('Resolving user and default options.')
-        self.logger.debug('User opts: %s', self.useropts)
-        self.logger.debug('Default opts: %s', self.defaultopts)
+        self.logger.debug('User opts:\n%s', pprint.pformat(self.useropts))
+        self.logger.debug('Default opts:\n%s', pprint.pformat(self.defaultopts))
         self.logger.debug('Programs for options: %s', self.programs)
         for prog in self.programs:
             if self.useropts[prog]:
                 self.finalopts[prog] = self.useropts[prog]
             else:
                 self.finalopts[prog] = self.defaultopts[prog]
-        self.logger.debug('Resolved opts: %s', self.finalopts)
+        self.logger.debug('Resolved opts:\n%s', pprint.pformat(self.finalopts))
         if self.finalopts != self.defaultopts:
             self.logger.warning((
                 'Be cautious when specifying alternate option strings! '

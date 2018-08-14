@@ -26,7 +26,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Set up the verbosity and logging
         self.pipe_logger = set_verbosity.verb(valid_args['verbosity'], __name__)
         self.pipe_logger.debug('New BulkRNAseqPipeline instance.')
-        self.pipe_logger.debug('Validated args: %s', pprint.pformat(valid_args))
+        self.pipe_logger.debug('Validated args:\n%s', pprint.pformat(valid_args))
 
         # Set fastq directory here
         self.adapters = valid_args['adapters']
