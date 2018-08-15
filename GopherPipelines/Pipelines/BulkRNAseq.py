@@ -40,6 +40,11 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Set the user options here
         self.useropts['trimmomatic'] = valid_args['trimmomatic']
         self.useropts['hisat2'] = valid_args['hisat2']
+        # Set the overwrite flag
+        if valid_args['overwrite']:
+            self.ow = '1'
+        else:
+            self.ow = '0'
 
         # Set the paths to the single sample analysis script. This will be
         # submitted to the scheduler. This is a little ugly, but because the
@@ -134,7 +139,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-t',
             '1-' + str(nsamp),
             '-v',
-            '"SampleSheet='+ss_path+'"',
+            '"SampleSheet='+ss_path+',overwrite=' + self.ow + '"',
             self.single_sample_script]
         # This is the command for counting and normalizing reads
         summary_cmd = [
