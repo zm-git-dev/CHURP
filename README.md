@@ -21,6 +21,7 @@ divisions of the pipeline:
 
 - **General Usability**
     - ~~Finish bulk RNAseq argument parsing~~ (Done)
+    - ~~User-friendly error messages~~ (Done)
 - **Pipeline Object**
     - ~~Check directories exist and can be written into~~ (Done)
     - ~~Merge user-specified options with default options~~ (Done)
@@ -28,7 +29,7 @@ divisions of the pipeline:
     - ~~Build `qsub` command (see `pipeline.sh`)~~ (Done)
     - ~~Add `--overwrite` option~~ (Done)
     - Write program versions and date/time info into samplesheet data
-    - `BulkRNASeqPipeline`: check HISAT2 index exists and is complete
+    - ~~`BulkRNASeqPipeline`: check HISAT2 index exists and is complete~~ (Done)
     - `BulkRNASeqPipeline`: list available organisms in risdb
 - **Samplesheet Object**
     - ~~Finalize data in samplesheet~~ (Done)
