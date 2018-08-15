@@ -9,11 +9,7 @@ import pprint
 from GopherPipelines.ArgHandling import set_verbosity
 from GopherPipelines.SampleSheet import SampleSheet
 from GopherPipelines.FileOps import dir_funcs
-
-# Define exit codes as constants for diagnostic problems
-BAD_OUTDIR = 10
-BAD_WORKDIR = 11
-BAD_RESOURCES = 12
+from GopherPipelines import DieGracefully
 
 
 class Pipeline(object):
@@ -65,21 +61,21 @@ class Pipeline(object):
             self.logger.error(
                 'PPN value of %i is invalid! Please specify between 1 and 24.',
                 self.ppn)
-            exit(BAD_RESOURCES)
+            DieGracefully.die_gracefully(DieGracefully.BAD_RESOURCES)
         try:
             assert self.mem >= 1 and self.mem <= 62000
         except AssertionError as e:
             self.logger.error(
                 'Mem value of %i is invalid! Please specify between 1 and 62000.',
                 self.mem)
-            exit(BAD_RESOURCES)
+            DieGracefully.die_gracefully(DieGracefully.BAD_RESOURCES)
         try:
             assert self.walltime >= 1 and self.walltime <= 96
         except AssertionError as e:
             self.logger.error(
                 'Walltime value of %i is invalid! Please specify between 1 and 96.',
                 self.walltime)
-            exit(BAD_RESOURCES)
+            DieGracefully.die_gracefully(DieGracefully.BAD_RESOURCES)
         return
 
     def _check_dirs(self):
@@ -100,14 +96,14 @@ class Pipeline(object):
                     pass
                 else:
                     self.logger.error('Output dir %s cannot be written to!', self.outdir)
-                    exit(BAD_OUTDIR)
+                    DieGracefully.die_gracefully(DieGracefully.BAD_OUTDIR)
             else:
                 self.logger.warning('Output dir %s is not empty!', self.outdir)
         else:
             self.logger.warning('Output dir %s does not exist, making it', self.outdir)
             s = dir_funcs.make_dir(self.outdir, self.logger)
             if not s:
-                exit(BAD_OUTDIR)
+                DieGracefully.die_gracefully(DieGracefully.BAD_OUTDIR)
 
         # And do the same for the work directory
         self.logger.debug('Checking working directory %s', self.workdir)
@@ -122,14 +118,14 @@ class Pipeline(object):
                     pass
                 else:
                     self.logger.error('Working dir %s cannot be written to!', self.workdir)
-                    exit(BAD_WORKDIR)
+                    DieGracefully.die_gracefully(DieGracefully.BAD_WORKDIR)
             else:
                 self.logger.warning('Working dir %s is not empty!', self.workdir)
         else:
             self.logger.warning('Working dir %s does not exist, making it', self.workdir)
             s = dir_funcs.make_dir(self.workdir, self.logger)
             if not s:
-                exit(BAD_WORKDIR)
+                DieGracefully.die_gracefully(DieGracefully.BAD_WORKDIR)
         return
 
     def _resolve_options(self):

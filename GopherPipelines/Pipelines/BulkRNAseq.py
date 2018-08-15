@@ -3,8 +3,10 @@
 
 import pprint
 import os
+import glob
 import subprocess
 
+from GopherPipelines import DieGracefully
 from GopherPipelines.Pipelines import Pipeline
 from GopherPipelines.ArgHandling import set_verbosity
 from GopherPipelines.FileOps import species_list
@@ -20,11 +22,11 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         """Initialize the pipeline object. We will call the general
         Pipeline.__init__() here, as well as set some specific pipeline
         attributes."""
+        # Set up the verbosity and logging
+        self.pipe_logger = set_verbosity.verb(args['verbosity'], __name__)
         # First validate the arguments. We do this in the subclass because the
         # dependencies of the arguments are pipeline-specific.
         valid_args = self._validate_args(args)
-        # Set up the verbosity and logging
-        self.pipe_logger = set_verbosity.verb(valid_args['verbosity'], __name__)
         self.pipe_logger.debug('New BulkRNAseqPipeline instance.')
         self.pipe_logger.debug('Validated args:\n%s', pprint.pformat(valid_args))
 
@@ -63,13 +65,47 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         pipeline:
             - If organism was specified, then the HISAT2 index and GTF do not
               need to be checked
+              - Check that the HISAT2 index is complete
         """
+        # Check the completeness of the argument dictionary. Either -f or
+        # -u must be specified. (-x and -g) or -r must be specified.
+        if not a['fq_folder'] and not a['umgc']:
+            DieGracefully.die_gracefully(DieGracefully.BRNASEQ_INC_ARGS)
+        elif not ((a['hisat2_idx'] and a['gtf']) or a['organism']):
+            DieGracefully.die_gracefully(DieGracefully.BRNASEQ_INC_ARGS)
+        elif (a['hisat2_idx'] and a['gtf']) and a['organism']:
+            DieGracefully.die_gracefully(DieGracefully.BRNASEQ_CONFLICT)
+        # Convert all of the paths into absolute paths
+        a['outdir'] = os.path.realpath(os.path.expanduser(str(a['outdir'])))
+        a['workdir'] = os.path.realpath(os.path.expanduser(str(a['workdir'])))
+        a['hisat2_idx'] = os.path.realpath(os.path.expanduser(str(a['hisat2_idx'])))
+        # Validate the hisat2 index
+        self._validate_hisat_idx(a['hisat2_idx'])
         return a
 
-    def _validate_hisat_idx(self):
+    def _validate_hisat_idx(self, i):
         """Raise an error if the provided HISAT2 index is not complete -
         all of the [1-8].ht2l? files should be present."""
-        pass
+        # Build glob patterns for the normal and long indices
+        norm_idx = i + '.[1-8].ht2'
+        long_idx = i + '.[1-8].ht2l'
+        # Do the search
+        self.pipe_logger.debug('Searching for %s', norm_idx)
+        norm_idx_files = glob.glob(norm_idx)
+        self.pipe_logger.debug('Found %i index files', len(norm_idx_files))
+        # There should be 8 total
+        if len(norm_idx_files) == 8:
+            return
+        else:
+            self.pipe_logger.debug('Normal index not found. Searching for long index.')
+            long_idx_files = glob.glob(long_idx)
+            self.pipe_logger.debug('Found %i long index files', len(long_idx_files))
+            if len(long_idx_files) == 8:
+                return
+            else:
+                self.pipe_logger.error('Cound not find HISAT2 index files!')
+                DieGracefully.die_gracefully(DieGracefully.BAD_HISAT)
+        return
 
     
     def qsub(self):
