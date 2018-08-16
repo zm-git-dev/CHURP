@@ -68,9 +68,11 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         this file because it only really needs to be accessible to this subclass.
         Argument dependencies are pipeline-specific. For the bulk RNAseq analysis
         pipeline:
-            - If organism was specified, then the HISAT2 index and GTF do not
-              need to be checked
-              - Check that the HISAT2 index is complete
+            - FASTQ dir and UMGC sheet are mutually exclusive
+            - Organism and HISAT2 index + GTF are mutually exclusive
+            - Check that the HISAT2 index is complete
+        Further, sanitize the paths of the output dir, working dir, and hisat2
+        index.
         """
         # Check the completeness of the argument dictionary. Either -f or
         # -u must be specified. (-x and -g) or -r must be specified.
@@ -120,7 +122,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         in the main Pipeline class because the exact form of the qsub command
         depends on which pipeline we are running."""
         self.pipe_logger.info('Setting up qsub command.')
-        # Set some dummy values here just for testing purposes
+        # Set some dummy values here just for testing purposes Eventually, these
+        # will come from a samplesheet
         nsamp = 5
         ss_path = '/panfs/roc/scratch/test/samplesheet.txt'
         aln_job_id = '12345'

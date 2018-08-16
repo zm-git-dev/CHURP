@@ -143,17 +143,17 @@ def add_args(ap):
         '-p',
         metavar='<procs per node>',
         dest='ppn',
-        help='Processors to allocate for each task. Defaults to 8.',
+        help='Processors to allocate for each task. Defaults to 6.',
         type=int,
-        default=8)
+        default=6)
     ap_sched.add_argument(
         '--mem',
         '-m',
         metavar='<mem per job (Mb)>',
         dest='mem',
-        help='Memory, in megabytes, to allocate to each task. Defaults to 24000 (24GB)',
+        help='Memory, in megabytes, to allocate to each task. Defaults to 12000 (12GB)',
         type=int,
-        default=24000)
+        default=12000)
     ap_sched.add_argument(
         '--walltime',
         '-w',
