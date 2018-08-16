@@ -30,17 +30,16 @@ class Pipeline(object):
         self.workdir = args['workdir']
         # These are empty, and will get populated by the sub-class.
         self.programs = []
-        self.useropts = {}
-        self.defaultopts = {}
-        self.finalopts = {}
         self.single_sample_script = ''
-        # Initialize the samplesheet here
-        self.sheet = SampleSheet.Samplesheet(args)
         # Set the scheduler resources and PBS options here
         self.ppn = args['ppn']
         self.mem = args['mem']
         self.walltime = args['walltime']
-        self.overwrite = args['overwrite']
+        # Set the overwrite flag
+        if args['overwrite']:
+            self.ow = '1'
+        else:
+            self.ow = '0'
         return
 
     def _run_checks(self):
@@ -48,7 +47,6 @@ class Pipeline(object):
         This happens after initialization of sub-classes from the pipeline."""
         self._check_scheduler()
         self._check_dirs()
-        self._resolve_options()
         return
 
     def _check_scheduler(self):
@@ -127,38 +125,3 @@ class Pipeline(object):
             if not s:
                 DieGracefully.die_gracefully(DieGracefully.BAD_WORKDIR)
         return
-
-    def _resolve_options(self):
-        """Read the options dictionary that is set by the user and by the
-        sub-class initialization. Basically, any supplied user options will
-        clobber the default options. We WILL NOT check that the supplied user
-        options are valid. We will try to provide ample warning that users are
-        responsible for giving options that will work."""
-        self.logger.info('Resolving user and default options.')
-        self.logger.debug('User opts:\n%s', pprint.pformat(self.useropts))
-        self.logger.debug('Default opts:\n%s', pprint.pformat(self.defaultopts))
-        self.logger.debug('Programs for options: %s', self.programs)
-        for prog in self.programs:
-            if self.useropts[prog]:
-                self.finalopts[prog] = self.useropts[prog]
-            else:
-                self.finalopts[prog] = self.defaultopts[prog]
-        self.logger.debug('Resolved opts:\n%s', pprint.pformat(self.finalopts))
-        if self.finalopts != self.defaultopts:
-            self.logger.warning((
-                'Be cautious when specifying alternate option strings! '
-                'We do not guarantee that they will work. '
-                'Always check the manual for the version of the programs that '
-                'you are using. This is not an error message.'
-                ))
-        return
-
-    def prepare_samplesheet(self):
-        """Call the samplesheet build method here. The SampleSheet object has
-        the fastq directory defined within it, so we do not have to pass any
-        other data to it."""
-        self.logger.info('Preparing samplesheet.')
-        self._run_checks()
-        print(self.sheet.fq_dir)
-        pass
-

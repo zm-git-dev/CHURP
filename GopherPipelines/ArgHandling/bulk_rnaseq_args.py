@@ -20,25 +20,13 @@ def add_args(ap):
     for the side-effect of adding arguments to the parser object."""
     ap_req = ap.add_argument_group(
         title='Required Arguments')
-    ap_req_ss = ap_req.add_mutually_exclusive_group()
-    ap_req_ss.add_argument(
-        '--umgc-sheet',
-        '-u',
-        metavar='<UMGC sheet.xlsx>',
-        dest='umgc',
-        help=('UMGC sheet giving R1 and R2 paths. This must come directly from '
-              'the UMGC facility as an Excel file. We do not support parsing '
-              'any files that have modifications from the standard format. '
-              'Incompatible with -f.')
-        )
-    ap_req_ss.add_argument(
+    ap_req.add_argument(
         '--fq-folder',
         '-f',
         metavar='<fastq folder>',
         dest='fq_folder',
         help=('Directory that contains the FASTQ files. If this is provided, '
-              'we will attempt to build the list of R1 and R2 read paths. '
-              'Incompatible with -u.'))
+              'we will attempt to build the list of R1 and R2 read paths.'))
     ap_req.add_argument(
         '--hisat2-index',
         '-x',
@@ -89,6 +77,12 @@ def add_args(ap):
         '--overwrite',
         dest='overwrite',
         help='Overwrite previous runs?',
+        action='store_true',
+        default=False)
+    ap_opt.add_argument(
+        '--stranded',
+        dest='stranded',
+        help='Stranded library?',
         action='store_true',
         default=False)
     ap_opt.add_argument(

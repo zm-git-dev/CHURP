@@ -5,9 +5,11 @@ import pprint
 import os
 import glob
 import subprocess
+import re
 
 from GopherPipelines import DieGracefully
 from GopherPipelines.Pipelines import Pipeline
+from GopherPipelines.SampleSheet import BulkRNASeqSampleSheet
 from GopherPipelines.ArgHandling import set_verbosity
 from GopherPipelines.FileOps import species_list
 
@@ -30,21 +32,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug('New BulkRNAseqPipeline instance.')
         self.pipe_logger.debug('Validated args:\n%s', pprint.pformat(valid_args))
 
-        # Set fastq directory here
-        self.adapters = valid_args['adapters']
-        # This pipeline takes options for trimmomatic and hisat2
-        self.programs.extend(['trimmomatic', 'hisat2'])
-        # Set the default trimmomatic options here. This is from YZ's scripts
-        self.defaultopts['trimmomatic'] = 'ILLUMINACLIP:' + self.adapters + ':4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18'
-        self.defaultopts['hisat2'] = ''
-        # Set the user options here
-        self.useropts['trimmomatic'] = valid_args['trimmomatic']
-        self.useropts['hisat2'] = valid_args['hisat2']
-        # Set the overwrite flag
-        if valid_args['overwrite']:
-            self.ow = '1'
-        else:
-            self.ow = '0'
+        # And make a sample sheet from the args
+        self.sheet = SampleSheet.BulkRNASeqSampleSheet(valid_args)
 
         # Set the paths to the single sample analysis script. This will be
         # submitted to the scheduler. This is a little ugly, but because the
@@ -76,19 +65,44 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         """
         # Check the completeness of the argument dictionary. Either -f or
         # -u must be specified. (-x and -g) or -r must be specified.
-        if not a['fq_folder'] and not a['umgc']:
+        if not a['fq_folder']:
             DieGracefully.die_gracefully(DieGracefully.BRNASEQ_INC_ARGS)
         elif not ((a['hisat2_idx'] and a['gtf']) or a['organism']):
             DieGracefully.die_gracefully(DieGracefully.BRNASEQ_INC_ARGS)
         elif (a['hisat2_idx'] and a['gtf']) and a['organism']:
             DieGracefully.die_gracefully(DieGracefully.BRNASEQ_CONFLICT)
         # Convert all of the paths into absolute paths
+        a['gtf'] = os.path.realpath(os.path.expanduser(str(a['gtf'])))
+        a['adapters'] = os.path.realpath(os.path.expanduser(str(a['adapters'])))
+        a['fq_folder'] = os.path.realpath(os.path.exanduser(str(a['fq_folder'])))
         a['outdir'] = os.path.realpath(os.path.expanduser(str(a['outdir'])))
         a['workdir'] = os.path.realpath(os.path.expanduser(str(a['workdir'])))
         a['hisat2_idx'] = os.path.realpath(os.path.expanduser(str(a['hisat2_idx'])))
+        # Validate the FASTQ folder
+        self._validate_fastq_folder(a['fq_folder'])
         # Validate the hisat2 index
         self._validate_hisat_idx(a['hisat2_idx'])
         return a
+
+    def _validate_fastq_folder(self, d):
+        """Raise an error if the FASTQ directory does not exist or does not
+        have any FASTQ files."""
+        try:
+            contents = os.listdir(d)
+        except OSError:
+            DieGracefully.die_gracefully(DieGracefully.BAD_FASTQ)
+        # Check if there is at least one file ending in a standard fastq suffix
+        fq_pat = re.compile(r'^.+((.fq(.gz)?$)|(.fastq(.gz)?$))')
+        has_fastq = False
+        for f in contents:
+            if re.match(fq_pat, f):
+                has_fastq = True
+                break
+        if has_fastq:
+            return
+        else:
+            DieGracefully.die_gracefully(DieGracefully.EMPTY_FASTQ)
+        return
 
     def _validate_hisat_idx(self, i):
         """Raise an error if the provided HISAT2 index is not complete -
@@ -99,22 +113,30 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Do the search
         self.pipe_logger.debug('Searching for %s', norm_idx)
         norm_idx_files = glob.glob(norm_idx)
-        self.pipe_logger.debug('Found %i index files', len(norm_idx_files))
+        self.pipe_logger.debug('Found %i idx files', len(norm_idx_files))
         # There should be 8 total
         if len(norm_idx_files) == 8:
             return
         else:
-            self.pipe_logger.debug('Normal index not found. Searching for long index.')
+            self.pipe_logger.debug('Normal idx not found. Searching for long idx.')
             long_idx_files = glob.glob(long_idx)
-            self.pipe_logger.debug('Found %i long index files', len(long_idx_files))
+            self.pipe_logger.debug('Found %i long idx files', len(long_idx_files))
             if len(long_idx_files) == 8:
                 return
             else:
-                self.pipe_logger.error('Cound not find HISAT2 index files!')
+                self.pipe_logger.error('Cound not find HISAT2 idx files!')
                 DieGracefully.die_gracefully(DieGracefully.BAD_HISAT)
         return
 
-    
+    def _prepare_samplesheet(self):
+        """Call the samplesheet build method here. The SampleSheet object has
+        the fastq directory defined within it, so we do not have to pass any
+        other data to it."""
+        self.pipe_logger.info('Preparing samplesheet.')
+        self._run_checks()
+        print(self.sheet.fq_dir)
+        pass
+
     def qsub(self):
         """Write the qsub command. We will need the path to the samplesheet,
         the number of samples in the samplesheet, and the scheduler options that
@@ -122,10 +144,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         in the main Pipeline class because the exact form of the qsub command
         depends on which pipeline we are running."""
         self.pipe_logger.info('Setting up qsub command.')
-        # Set some dummy values here just for testing purposes Eventually, these
-        # will come from a samplesheet
-        nsamp = 5
-        ss_path = '/panfs/roc/scratch/test/samplesheet.txt'
+        self._prepare_samplesheet()
         aln_job_id = '12345'
         self.pipe_logger.debug('Number of samples: %i', nsamp)
         self.pipe_logger.debug('Samplesheet: %s', ss_path)

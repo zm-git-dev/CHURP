@@ -10,6 +10,8 @@ import os
 BAD_OUTDIR = 10
 BAD_WORKDIR = 11
 BAD_RESOURCES = 12
+BAD_FASTQ = 13
+EMPTY_FASTQ = 14
 BRNASEQ_INC_ARGS = 20
 BRNASEQ_CONFLICT = 21
 BAD_HISAT = 22
@@ -102,12 +104,36 @@ information on building an index from a FASTA file.\n"""
     return
 
 
+def bad_fastq():
+    """Call this fucntion when the user supplies a bad FASTQ folder."""
+    msg = """
+The FASTQ directory that you have supplied either does not exist or cannot be
+read. If you have verified that you can read the directory contents, please
+contact the help desk (help@msi.umn.edu) with tihs error message and the
+debugging output.\n"""
+    sys.stderr.write(msg)
+    return
+
+
+def empty_fastq():
+    """Call this fucntion when the user supplies an empty FASTQ folder."""
+    msg = """
+The FASTQ directory that you have supplied doesn not appear to contain any
+FASTQ or gzipped FASTQ files. Please ensure that the files in the directory
+have names that end in one of the following: .fastq, .fastq.gz, .fq., .fq.gz
+(case sensitive).\n"""
+    sys.stderr.write(msg)
+    return
+
+
 def die_gracefully(e):
     """Print user-friendly error messages and exit."""
     err_dict = {
         BAD_OUTDIR: bad_outdir,
         BAD_WORKDIR: bad_workdir,
         BAD_RESOURCES: bad_resources,
+        BAD_FASTQ: bad_fastq,
+        EMPTY_FASTQ: empty_fastq,
         BAD_HISAT: bad_hisat2,
         BRNASEQ_INC_ARGS: brnaseq_inc,
         BRNASEQ_CONFLICT: brnaseq_conflict
