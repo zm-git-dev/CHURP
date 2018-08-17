@@ -10,7 +10,7 @@ from GopherPipelines.SampleSheet import SampleSheet
 from GopherPipelines.ArgHandling import set_verbosity
 
 
-class BulkRNASeqSampleSheet(SampleSheet.SampleSheet):
+class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
     """A sub-class of SampleSheet that holds information for the bulk RNAseq
     pipelines."""
 
@@ -26,14 +26,34 @@ class BulkRNASeqSampleSheet(SampleSheet.SampleSheet):
         # Set the user options here
         self.useropts['trimmomatic'] = args['trimmomatic']
         self.useropts['hisat2'] = args['hisat2']
-        # Stranded library?
-        if args['stranded']:
-            self.stranded = '1'
+        if args['no_trim']:
+            self.useropts['trim'] = '0'
         else:
-            self.stranded = '0'
-    return
+            self.useropts['trim'] = '1'
+        if args['stranded']:
+            self.useropts['stranded'] = '1'
+        else:
+            self.useropts['stranded'] = '0'
+        self.useropts['gtf'] = args['gtf']
+        self.useropts['hisat2_idx'] = args['hisat2_idx']
+        # Set the column order to be the columns of the sample sheet. This will
+        # eventually become the header of the sheet.
+        self.column_order.extend([
+            'FastqR1files',
+            'FastqR2file',
+            'OutputDir',
+            'WorkingDir',
+            'TRIM',
+            'trimmomaticOpts',
+            'Hisat2index',
+            'Hisat2Options',
+            'Stranded',
+            'AnnotationGTF'])
+        self._get_fq_paths(args['fq_folder'])
+        self._resolve_options()
+        return
 
-    def _build(self, d):
+    def _get_fq_paths(self, d):
         """Read through the contents of a FASTQ directory and try to build a
         list of samples from it."""
         # Get all files that look like fastq files
@@ -81,4 +101,25 @@ class BulkRNASeqSampleSheet(SampleSheet.SampleSheet):
                 self.samples[s]['R2'] = ''
         # Print what we found
         self.sheet_logger.debug('Found samples: %s', pprint.pformat(self.samples))
+        return
+
+    def compile(self, od, wd):
+        """Iterate through the dictionary of samples, and fill-in the values
+        that were supplied by the user."""
+        # For each sample...
+        for s in self.samples:
+            # Key in the values based on the column names
+            self.final_sheet[s] = {
+                'FastqR1files': self.samples[s]['R1'],
+                'FastqR2file': self.samples[s]['R2'],
+                'OutputDir': od,
+                'WorkingDir': wd,
+                'TRIM': self.useropts['trim'],
+                'trimmomaticOpts': self.finalopts['trimmomatic'],
+                'Hisat2index': self.useropts['hisat2_idx'],
+                'Hisat2Options': self.finalopts['hisat2'],
+                'Stranded': self.useropts['stranded'],
+                'AnnotationGTF': self.useropts['gtf']
+                }
+        self.sheet_logger.debug('Samplesheet:\n%s', pprint.pformat(self.final_sheet))
         return

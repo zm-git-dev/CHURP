@@ -37,7 +37,6 @@ def brnaseq(args):
     from GopherPipelines.Pipelines import BulkRNAseq
     p = BulkRNAseq.BulkRNAseqPipeline(args)
     p.setup(args)
-    p.prepare_samplesheet()
     p.qsub()
     return
 

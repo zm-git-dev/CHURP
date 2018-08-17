@@ -33,7 +33,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug('Validated args:\n%s', pprint.pformat(valid_args))
 
         # And make a sample sheet from the args
-        self.sheet = SampleSheet.BulkRNASeqSampleSheet(valid_args)
+        self.sheet = BulkRNASeqSampleSheet.BulkRNASeqSampleSheet(valid_args)
 
         # Set the paths to the single sample analysis script. This will be
         # submitted to the scheduler. This is a little ugly, but because the
@@ -74,10 +74,16 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Convert all of the paths into absolute paths
         a['gtf'] = os.path.realpath(os.path.expanduser(str(a['gtf'])))
         a['adapters'] = os.path.realpath(os.path.expanduser(str(a['adapters'])))
-        a['fq_folder'] = os.path.realpath(os.path.exanduser(str(a['fq_folder'])))
+        a['fq_folder'] = os.path.realpath(os.path.expanduser(str(a['fq_folder'])))
         a['outdir'] = os.path.realpath(os.path.expanduser(str(a['outdir'])))
         a['workdir'] = os.path.realpath(os.path.expanduser(str(a['workdir'])))
         a['hisat2_idx'] = os.path.realpath(os.path.expanduser(str(a['hisat2_idx'])))
+        self.pipe_logger.debug('GTF: %s', a['gtf'])
+        self.pipe_logger.debug('Adapters: %s', a['adapters'])
+        self.pipe_logger.debug('FASTQ Folder: %s', a['fq_folder'])
+        self.pipe_logger.debug('Output Dir: %s', a['outdir'])
+        self.pipe_logger.debug('Working Dir: %s', a['workdir'])
+        self.pipe_logger.debug('HISAT2 Idx: %s', a['hisat2_idx'])
         # Validate the FASTQ folder
         self._validate_fastq_folder(a['fq_folder'])
         # Validate the hisat2 index
@@ -129,13 +135,13 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         return
 
     def _prepare_samplesheet(self):
-        """Call the samplesheet build method here. The SampleSheet object has
-        the fastq directory defined within it, so we do not have to pass any
-        other data to it."""
-        self.pipe_logger.info('Preparing samplesheet.')
+        """Call the samplesheet build method here. This will build the
+        dictionary that will hold all samplesheet data, and then write it into
+        the output directory."""
         self._run_checks()
-        print(self.sheet.fq_dir)
-        pass
+        self.sheet.compile(self.outdir, self.workdir)
+        ss_path = self.sheet.write_sheet(self.outdir, self.pipe_name, '|')
+        return ss_path
 
     def qsub(self):
         """Write the qsub command. We will need the path to the samplesheet,
@@ -143,11 +149,10 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         were passed as arguments. This is defined in the subclass rather than
         in the main Pipeline class because the exact form of the qsub command
         depends on which pipeline we are running."""
-        self.pipe_logger.info('Setting up qsub command.')
-        self._prepare_samplesheet()
+        ss = self._prepare_samplesheet()
         aln_job_id = '12345'
-        self.pipe_logger.debug('Number of samples: %i', nsamp)
-        self.pipe_logger.debug('Samplesheet: %s', ss_path)
+        self.pipe_logger.debug('Number of samples: %i', len(self.sheet.final_sheet))
+        self.pipe_logger.debug('Samplesheet: %s', ss)
         # This is the command for aligning and cleaning
         qsub_resources = '"mem=' + str(self.mem) + 'mb'
         qsub_resources += ',nodes=1:ppn=' + str(self.ppn)
@@ -159,9 +164,9 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-l',
             qsub_resources,
             '-t',
-            '1-' + str(nsamp),
+            '1-' + str(len(self.sheet.final_sheet)),
             '-v',
-            '"SampleSheet='+ss_path+',overwrite=' + self.ow + '"',
+            '"SampleSheet='+ss+',overwrite=' + self.ow + '"',
             self.single_sample_script]
         # This is the command for counting and normalizing reads
         summary_cmd = [
@@ -173,7 +178,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-W',
             'depend=afterok:' + aln_job_id,
             '-v',
-            '"base_in='+ss_path+'"',
+            '"base_in='+ss+'"',
             self.summary_script]
         self.pipe_logger.debug('qsub:\n%s', ' '.join(aln_cmd))
         self.pipe_logger.debug('qsub:\n%s', ' '.join(summary_cmd))
