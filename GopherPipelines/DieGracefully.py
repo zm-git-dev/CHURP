@@ -15,6 +15,8 @@ EMPTY_FASTQ = 14
 BRNASEQ_INC_ARGS = 20
 BRNASEQ_CONFLICT = 21
 BAD_HISAT = 22
+BAD_GTF = 23
+BAD_ADAPT = 24
 
 # Define a series of functions that just write messages to the terminal. We
 # will call these with a main error handling function at the end.
@@ -118,10 +120,32 @@ debugging output.\n"""
 def empty_fastq():
     """Call this fucntion when the user supplies an empty FASTQ folder."""
     msg = """
-The FASTQ directory that you have supplied doesn not appear to contain any
-FASTQ or gzipped FASTQ files. Please ensure that the files in the directory
-have names that end in one of the following: .fastq, .fastq.gz, .fq., .fq.gz
+The FASTQ directory that you have supplied does not appear to contain any FASTQ
+or gzipped FASTQ files. Please ensure that the files in the directory have names
+that end in one of the following: .fastq, .fastq.gz, .fq., .fq.gz
 (case sensitive).\n"""
+    sys.stderr.write(msg)
+    return
+
+
+def bad_gtf():
+    """Call this function when the user supplies a GTF that does not exist or
+    cannot be read."""
+    msg = """
+The GTF you have supplied does not exist, or cannot be read. Please check your
+path for any typos and that any special characters are properly quoted or
+escaped and try again.\n"""
+    sys.stderr.write(msg)
+    return
+
+
+def bad_adapter():
+    """Call thsi function when the user supplies an adapters file that does not
+    exist or cannot be read."""
+    msg = """
+The adapters file that you have supplied either does not exist or cannot be
+read. Please check your path for any typos and that any special characters are
+properly quoted or escaped, and try again.\n"""
     sys.stderr.write(msg)
     return
 
@@ -136,7 +160,9 @@ def die_gracefully(e):
         EMPTY_FASTQ: empty_fastq,
         BAD_HISAT: bad_hisat2,
         BRNASEQ_INC_ARGS: brnaseq_inc,
-        BRNASEQ_CONFLICT: brnaseq_conflict
+        BRNASEQ_CONFLICT: brnaseq_conflict,
+        BAD_GTF: bad_gtf,
+        BAD_ADAPT: bad_adapter
         }
     try:
         err_dict[e]()

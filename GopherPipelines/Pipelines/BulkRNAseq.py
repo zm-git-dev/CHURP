@@ -84,6 +84,17 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug('Output Dir: %s', a['outdir'])
         self.pipe_logger.debug('Working Dir: %s', a['workdir'])
         self.pipe_logger.debug('HISAT2 Idx: %s', a['hisat2_idx'])
+        # Check that the adapters and GTF file exist
+        try:
+            handle = open(a['gtf'], 'r')
+            handle.close()
+        except OSError:
+            DieGracefully.die_gracefully(DieGracefully.BAD_GTF)
+        try:
+            handle = open(a['adapters'], 'r')
+            handle.close()
+        except OSError:
+            DieGracefully.die_gracefully(DieGracefully.BAD_ADAPT)
         # Validate the FASTQ folder
         self._validate_fastq_folder(a['fq_folder'])
         # Validate the hisat2 index
