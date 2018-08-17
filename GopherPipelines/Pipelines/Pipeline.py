@@ -29,7 +29,6 @@ class Pipeline(object):
         self.outdir = args['outdir']
         self.workdir = args['workdir']
         # These are empty, and will get populated by the sub-class.
-        self.programs = []
         self.single_sample_script = ''
         # Set the scheduler resources and PBS options here
         self.ppn = args['ppn']
