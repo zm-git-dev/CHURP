@@ -7,7 +7,6 @@ programs exist and checking sample lists."""
 import pprint
 
 from GopherPipelines.ArgHandling import set_verbosity
-from GopherPipelines.SampleSheet import SampleSheet
 from GopherPipelines.FileOps import dir_funcs
 from GopherPipelines import DieGracefully
 
