@@ -33,10 +33,10 @@ divisions of the pipeline:
     - `BulkRNASeqPipeline`: list available organisms in risdb
 - **Samplesheet Object**
     - ~~Finalize data in samplesheet~~ (Done)
-    - Parse UMGC samplesheet (And verify the consistency of the format)
-    - Build samplesheet from directory
-    - Build `gopher-pipelines` samplesheet input for `qsub`
-    - Write samplesheet to disk
+    - ~~Parse UMGC samplesheet (And verify the consistency of the format)~~ (Not doing)
+    - ~~Build samplesheet from directory~~ (Done)
+    - ~~Build `gopher-pipelines` samplesheet input for `qsub`~~ (Done)
+    - ~~Write samplesheet to disk~~ (Done)
 - **PBS Scripts**
     - ~~Add checkpointing for `resume`-like behavior~~ (Done)
     - Choose software versions to use for `hisat2`, `samtools`, `R`, `trimmomatic`, and `fastqc`
@@ -44,3 +44,4 @@ divisions of the pipeline:
     - `EdgeR` scripts for raw counts, TPM, FPKM, etc.
 - **Documentation**
     - Write manual draft
+    - Update diagrams
