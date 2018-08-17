@@ -1,4 +1,4 @@
-SampleNM|FastqR1files|FastqR2file|OutputDir|WorkingDir|TRIM|trimmomaticOpts|Hisat2index|Hisat2Options|AnnotationGTF
+SampleNM|FastqR1files|FastqR2file|Overwrite|OutputDir|WorkingDir|TRIM|trimmomaticOpts|Hisat2index|Hisat2Options|Stranded|AnnotationGTF
 S1|R1_test.fastq|R2_test.fastq|yes|ILLUMINACLIP:adapters.fa:4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18|/panfs/roc/risdb/genomes/Homo_sapiens/hg38/hisat2/genome||/panfs/roc/risdb/genomes/Homo_sapiens/hg38/annotation/Homo_sapiens.GRCh38.76.gtf
 S2|/Dummy/2_R1.fastq|/Dummy/2_R2.fastq|no||/Dummy/WorkDir2|/Dummy/genome||GTF
 S3|/Dummy/3_R1.fastq||yes||/Dummy/genome|||
