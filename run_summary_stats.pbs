@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=4,mem=16gb,walltime=8:00:00
+#PBS -l nodes=1:ppn=1,mem=16gb,walltime=8:00:00
 
 # load necessary modules
 module load subread R cufflinks
@@ -15,26 +15,23 @@ mkdir bams
 
 cd bams
 
-ln -s ${WORKDIR}/singlesamples/*/*.bam .
+ln -s ${WORKDIR}/singlesamples/*/*.sorted.rmdup.bam .
 
+fnms=`ls *.bam | cut -f1 -d"."`
 # do FPKM counting using cufflinks
-for file in `ls *.bam`; do
-    cuffquant ${GTFFILE} $f
-    mv abundances.cxb $f.cxb
+for fnm in $fnms; do
+    cuffquant ${GTFFILE} ${fnm}.sorted.rmdup.bam
+    mv abundances.cxb ${fnm}.cxb
 done
 
 cuffnorm ${GTFFILE} *.cxb -o ../cuffnorm_out
 
-# do Subread count in R
-R --vanilla CMD Batch < subread.r
-
-# do TPM count in R
-R --vanilla CMD Batch < tpm.r
-
-# prepare for EdgeR, DESeq2 etc analysis
-R --vanilla CMD BATCH < prep.r
+# do Subread count in R, report subread.counts.txt, tpm.txt, EdgeR.RData
+# Rsubread can run in multithreaded fashion
+R --vanilla CMD Batch prep.r ${GFFFILE}
 
 cd ..
 
 ln -s cuffnorm_out/genes.fpkm_table.renamed samples.fpkms.txt
-
+mv bams/subread.counts.txt samples.subread.counts.txt
+mv bams/EdgeR.RData .
