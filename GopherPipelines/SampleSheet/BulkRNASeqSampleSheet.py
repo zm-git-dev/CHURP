@@ -6,6 +6,8 @@ import os
 import glob
 import re
 import pprint
+
+import GopherPipelines
 from GopherPipelines.SampleSheet import SampleSheet
 from GopherPipelines.ArgHandling import set_verbosity
 
@@ -13,6 +15,17 @@ from GopherPipelines.ArgHandling import set_verbosity
 class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
     """A sub-class of SampleSheet that holds information for the bulk RNAseq
     pipelines."""
+
+    # These are the names of the programs that will get version numbers reported
+    # in the samplesheet on disk. They match the way they are defined in the
+    # __init__.py in the top level module.
+    PROGS = [
+        'HISAT2',
+        'FASTQC',
+        'TRIMMOMATIC',
+        'JAVA',
+        'SAMTOOLS',
+        'R']
 
     def __init__(self, args):
         """Initialize the bulk RNAseq samplesheet."""
@@ -36,6 +49,7 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             self.useropts['stranded'] = '0'
         self.useropts['gtf'] = args['gtf']
         self.useropts['hisat2_idx'] = args['hisat2_idx']
+        self.useropts['hisat2_threads'] = '-p ' + str(args['ppn']) + ' '
         # Set the column order to be the columns of the sample sheet. This will
         # eventually become the header of the sheet.
         self.column_order.extend([
@@ -56,51 +70,51 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
     def _get_fq_paths(self, d):
         """Read through the contents of a FASTQ directory and try to build a
         list of samples from it."""
-        # Get all files that look like fastq files
-        fq_pat = re.compile(r'^.+((.fq(.gz)?$)|(.fastq(.gz)?$))')
+        # Write a regular expression that will match the parts of the filename
+        # that come after the sample name
+        samp_re = re.compile(r'(_S[0-9]+)?(_L00[1-8])?(_R(1|2))?_001\.((fq(\.gz)?$)|(fastq(\.gz)?$))')
+        # Get all files that look like not-R2 fastq files, make the matching
+        # case-insensitive.
+        fq_re = re.compile(r'^.+[^_R2]_001\.((fq(\.gz)?$)|(fastq(\.gz)?$))', flags=re.I)
         cont = os.listdir(d)
-        fqs = []
+        # From the Illumina BaseSpace online documentation, this is what the
+        # standard filenames will look like:
+        #   SampleName_SX_L00Y_R1_001.fastq.gz
+        # X: Sample nummber in samplesheet
+        # Y: Lane number
+        # R1/2: Fwd/reverse
+        # 001: Always 001.
+        # This is similar to the UMGC filenames, which are split across lanes
+        # and then concatenated.
+        # We will iterate through all files in the directory. If they look like
+        # R1 fastq files, we will extract the samplename from them. We will
+        # then build the R2 filename and ask if that exists in the directory
         for f in cont:
-            if re.match(fq_pat, f):
-                fqs.append(f)
-        self.sheet_logger.debug('Found %i fastq files', len(cont))
-        # Then, build the sample names from the fastq names
-        snames = set()
-        for f in fqs:
-            # Strip off the _R1_001.fastq.gz and _R2_001.fastq.gz
-            snames.add('_'.join(f.split('_')[:-2]))
-        # Cast from set to list
-        snames = list(snames)
-        self.sheet_logger.debug('Samples found: %s', snames)
-        # Now iterate through the list of sample names and populate the sample
-        # dictionary
-        for s in snames:
-            # Use globbing to try to get the full R1 and R2 paths
-            r1 = glob.glob(os.path.join(d, s + '_R1_*.f*'))
-            r2 = glob.glob(os.path.join(d, s + '_R2_*.f*'))
-            # Print warnings if there are multiple files found
-            if len(r1) > 1:
-                self.sheet_logger.warning(
-                    'Sample %s appears to have multiple R1 files associated with it: %s',
-                    s, r1)
-            if len(r2) > 1:
-                self.sheet_logger.warning(
-                    'Sample %s appears to have multiple R2 files associated with it: %s',
-                    s, r2)
-            # If R2, then the sample is paired
-            if r2:
-                pe = True
-            else:
-                pe = False
-            # Put them into the dictionary
-            self.samples[s] = {}
-            self.samples[s]['R1'] = r1.pop()
-            if pe:
-                self.samples[s]['R2'] = r2.pop()
-            else:
-                self.samples[s]['R2'] = ''
-        # Print what we found
-        self.sheet_logger.debug('Found samples: %s', pprint.pformat(self.samples))
+            if re.match(fq_re, f):
+                # Extract the samplename from the fastq name
+                sn = re.sub(samp_re, '', f)
+                # Tack it onto the samples dictionary
+                self.samples[sn] = {}
+                self.samples[sn]['R1'] = os.path.join(d, f)
+                # Look for the R2. This is really dumb-looking but:
+                #   Reverse the R1 filename ([::-1])
+                #   Replace 1R with 2R, with at most 1 replacement
+                #   Reverse it again
+                r2 = f[::-1].replace('1R', '2R', 1)[::-1]
+                # Extract the samplename from the hypothetical R2 path. If it is
+                # different from the R1 samplename, then we have messed up the
+                # part of the filename that we shouldn't have - the R2 does not
+                # exist for this sammple, and it is single-end
+                r2_sn = re.sub(samp_re, '', r2)
+                if r2_sn != sn:
+                    self.samples[sn]['R2'] = ''
+                elif r2 not in cont or r2 == f:
+                    self.samples[sn]['R2'] = ''
+                elif r2 in cont and r2 != f:
+                    self.samples[sn]['R2'] = os.path.join(d, r2)
+                else:
+                    self.samples[sn]['R2'] = ''
+        self.sheet_logger.debug('Found samples:\n%s', pprint.pformat(self.samples))
         return
 
     def compile(self, od, wd):
@@ -117,9 +131,10 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
                 'TRIM': self.useropts['trim'],
                 'trimmomaticOpts': self.finalopts['trimmomatic'],
                 'Hisat2index': self.useropts['hisat2_idx'],
-                'Hisat2Options': self.finalopts['hisat2'],
+                'Hisat2Options': self.useropts['hisat2_threads'] + self.finalopts['hisat2'],
                 'Stranded': self.useropts['stranded'],
                 'AnnotationGTF': self.useropts['gtf']
                 }
         self.sheet_logger.debug('Samplesheet:\n%s', pprint.pformat(self.final_sheet))
         return
+
