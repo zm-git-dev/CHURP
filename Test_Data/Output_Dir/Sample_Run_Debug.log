@@ -1,4 +1,4 @@
-2018-08-20 17:01:41,629 - GopherPipelines.Pipelines.Pipeline - DEBUG: Passed args:
+2018-08-21 12:36:07,878 - GopherPipelines.Pipelines.Pipeline - DEBUG: Passed args:
 {'adapters': 'Test_Data/test_adapters.fasta',
  'fq_folder': 'Test_Data/Test_Project_010/',
  'gtf': 'Test_Data/Genome/annotations.gtf',
@@ -17,16 +17,16 @@
  'verbosity': 'debug',
  'walltime': 12,
  'workdir': '/Users/tomkono/tmp/gp/work/'}
-2018-08-20 17:01:41,630 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: GTF: /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Genome/annotations.gtf
-2018-08-20 17:01:41,630 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Adapters: /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/test_adapters.fasta
-2018-08-20 17:01:41,630 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: FASTQ Folder: /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Test_Project_010
-2018-08-20 17:01:41,630 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Output Dir: /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Output_Dir
-2018-08-20 17:01:41,630 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Working Dir: /Users/tomkono/tmp/gp/work
-2018-08-20 17:01:41,630 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: HISAT2 Idx: /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Genome/genome_snp_tran
-2018-08-20 17:01:41,630 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Searching for /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Genome/genome_snp_tran.[1-8].ht2
-2018-08-20 17:01:41,631 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Found 8 idx files
-2018-08-20 17:01:41,631 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: New BulkRNAseqPipeline instance.
-2018-08-20 17:01:41,631 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Validated args:
+2018-08-21 12:36:07,879 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: GTF: /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Genome/annotations.gtf
+2018-08-21 12:36:07,879 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Adapters: /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/test_adapters.fasta
+2018-08-21 12:36:07,880 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: FASTQ Folder: /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Test_Project_010
+2018-08-21 12:36:07,880 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Output Dir: /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Output_Dir
+2018-08-21 12:36:07,880 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Working Dir: /Users/tomkono/tmp/gp/work
+2018-08-21 12:36:07,880 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: HISAT2 Idx: /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Genome/genome_snp_tran
+2018-08-21 12:36:07,880 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Searching for /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Genome/genome_snp_tran.[1-8].ht2
+2018-08-21 12:36:07,881 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Found 8 idx files
+2018-08-21 12:36:07,881 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: New BulkRNAseqPipeline instance.
+2018-08-21 12:36:07,881 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Validated args:
 {'adapters': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/test_adapters.fasta',
  'fq_folder': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Test_Project_010',
  'gtf': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Genome/annotations.gtf',
@@ -45,7 +45,7 @@
  'verbosity': 'debug',
  'walltime': 12,
  'workdir': '/Users/tomkono/tmp/gp/work'}
-2018-08-20 17:01:41,633 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: Found samples:
+2018-08-21 12:36:07,882 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: Found samples:
 {'Sample01': {'R1': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Test_Project_010/Sample01_R1_001.fastq.gz',
               'R2': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Test_Project_010/Sample01_R2_001.fastq.gz'},
  'Sample02': {'R1': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Test_Project_010/Sample02_R1_001.fastq.gz',
@@ -58,8 +58,8 @@
               'R2': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Test_Project_010/Sample05_R2_001.fastq.gz'},
  'Sample06_SingleEnd': {'R1': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Test_Project_010/Sample06_SingleEnd_001.fastq.gz',
                         'R2': ''}}
-2018-08-20 17:01:41,633 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - INFO: Resolving user and default options.
-2018-08-20 17:01:41,633 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: User opts:
+2018-08-21 12:36:07,882 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - INFO: Resolving user and default options.
+2018-08-21 12:36:07,882 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: User opts:
 {'gtf': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Genome/annotations.gtf',
  'hisat2': '--phred64 --no-unal',
  'hisat2_idx': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Genome/genome_snp_tran',
@@ -67,32 +67,32 @@
  'stranded': '1',
  'trim': '1',
  'trimmomatic': ''}
-2018-08-20 17:01:41,633 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: Default opts:
+2018-08-21 12:36:07,882 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: Default opts:
 {'hisat2': '',
  'trimmomatic': 'ILLUMINACLIP:/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/test_adapters.fasta:4:15:7:2:true '
                 'LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18'}
-2018-08-20 17:01:41,633 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: Programs for options: ['trimmomatic', 'hisat2']
-2018-08-20 17:01:41,633 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: Resolved opts:
+2018-08-21 12:36:07,883 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: Programs for options: ['trimmomatic', 'hisat2']
+2018-08-21 12:36:07,883 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: Resolved opts:
 {'hisat2': '--phred64 --no-unal',
  'trimmomatic': 'ILLUMINACLIP:/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/test_adapters.fasta:4:15:7:2:true '
                 'LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18'}
-2018-08-20 17:01:41,634 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - WARNING: Be cautious when specifying alternate option strings! We do not guarantee that they will work. Always check the manual for the version of the programs that you are using. This is not an error message.
-2018-08-20 17:01:41,634 - GopherPipelines.Pipelines.Pipeline - INFO: Checking directories.
-2018-08-20 17:01:41,634 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking output directory Test_Data/Output_Dir
-2018-08-20 17:01:41,634 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking if Test_Data/Output_Dir exists
-2018-08-20 17:01:41,634 - GopherPipelines.Pipelines.Pipeline - DEBUG: Test_Data/Output_Dir exists
-2018-08-20 17:01:41,634 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking if Test_Data/Output_Dir is empty
-2018-08-20 17:01:41,634 - GopherPipelines.Pipelines.Pipeline - DEBUG: Found file Test_Data/Output_Dir/2018-08-20.tomkono.bulk_rnaseq.samplesheet.txt in Test_Data/Output_Dir. Not empty
-2018-08-20 17:01:41,634 - GopherPipelines.Pipelines.Pipeline - WARNING: Output dir Test_Data/Output_Dir is not empty!
-2018-08-20 17:01:41,634 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking working directory /Users/tomkono/tmp/gp/work/
-2018-08-20 17:01:41,634 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking if /Users/tomkono/tmp/gp/work exists
-2018-08-20 17:01:41,635 - GopherPipelines.Pipelines.Pipeline - DEBUG: /Users/tomkono/tmp/gp/work exists
-2018-08-20 17:01:41,635 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking if /Users/tomkono/tmp/gp/work is empty
-2018-08-20 17:01:41,635 - GopherPipelines.Pipelines.Pipeline - DEBUG: /Users/tomkono/tmp/gp/work appears empty
-2018-08-20 17:01:41,635 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking if /Users/tomkono/tmp/gp/work/ is writeable
-2018-08-20 17:01:41,635 - GopherPipelines.Pipelines.Pipeline - DEBUG: /Users/tomkono/tmp/gp/work/ is writeable
-2018-08-20 17:01:41,635 - GopherPipelines.Pipelines.Pipeline - DEBUG: Working dir /Users/tomkono/tmp/gp/work/ is valid
-2018-08-20 17:01:41,636 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: Samplesheet:
+2018-08-21 12:36:07,883 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - WARNING: Be cautious when specifying alternate option strings! We do not guarantee that they will work. Always check the manual for the version of the programs that you are using. This is not an error message.
+2018-08-21 12:36:07,883 - GopherPipelines.Pipelines.Pipeline - INFO: Checking directories.
+2018-08-21 12:36:07,883 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking output directory Test_Data/Output_Dir
+2018-08-21 12:36:07,883 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking if Test_Data/Output_Dir exists
+2018-08-21 12:36:07,883 - GopherPipelines.Pipelines.Pipeline - DEBUG: Test_Data/Output_Dir exists
+2018-08-21 12:36:07,883 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking if Test_Data/Output_Dir is empty
+2018-08-21 12:36:07,883 - GopherPipelines.Pipelines.Pipeline - DEBUG: Found file Test_Data/Output_Dir/Sample_Run_Debug.log in Test_Data/Output_Dir. Not empty
+2018-08-21 12:36:07,883 - GopherPipelines.Pipelines.Pipeline - WARNING: Output dir Test_Data/Output_Dir is not empty!
+2018-08-21 12:36:07,883 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking working directory /Users/tomkono/tmp/gp/work/
+2018-08-21 12:36:07,884 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking if /Users/tomkono/tmp/gp/work exists
+2018-08-21 12:36:07,884 - GopherPipelines.Pipelines.Pipeline - DEBUG: /Users/tomkono/tmp/gp/work exists
+2018-08-21 12:36:07,884 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking if /Users/tomkono/tmp/gp/work is empty
+2018-08-21 12:36:07,884 - GopherPipelines.Pipelines.Pipeline - DEBUG: /Users/tomkono/tmp/gp/work appears empty
+2018-08-21 12:36:07,884 - GopherPipelines.Pipelines.Pipeline - DEBUG: Checking if /Users/tomkono/tmp/gp/work/ is writeable
+2018-08-21 12:36:07,884 - GopherPipelines.Pipelines.Pipeline - DEBUG: /Users/tomkono/tmp/gp/work/ is writeable
+2018-08-21 12:36:07,885 - GopherPipelines.Pipelines.Pipeline - DEBUG: Working dir /Users/tomkono/tmp/gp/work/ is valid
+2018-08-21 12:36:07,886 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - DEBUG: Samplesheet:
 {'Sample01': {'AnnotationGTF': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Genome/annotations.gtf',
               'FastqR1files': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Test_Project_010/Sample01_R1_001.fastq.gz',
               'FastqR2file': '/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/Test_Project_010/Sample01_R2_001.fastq.gz',
@@ -165,11 +165,9 @@
                         'trimmomaticOpts': 'ILLUMINACLIP:/Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/Test_Data/test_adapters.fasta:4:15:7:2:true '
                                            'LEADING:3 TRAILING:3 '
                                            'SLIDINGWINDOW:4:15 MINLEN:18'}}
-2018-08-20 17:01:41,637 - GopherPipelines.SampleSheet.BulkRNASeqSampleSheet - WARNING: Samplesheet Test_Data/Output_Dir/2018-08-20.tomkono.bulk_rnaseq.samplesheet.txt exists. Overwriting
-2018-08-20 17:01:41,637 - GopherPipelines.Pipelines.BulkRNAseq - WARNING: Submission script Test_Data/Output_Dir/2018-08-20.tomkono.bulk_rnaseq.pipeline.sh already exists. Overwriting!
-2018-08-20 17:01:41,637 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Number of samples: 6
-2018-08-20 17:01:41,637 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Samplesheet: Test_Data/Output_Dir/2018-08-20.tomkono.bulk_rnaseq.samplesheet.txt
-2018-08-20 17:01:41,637 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: qsub:
-qsub -q mesabi -l "mem=12000mb,nodes=1:ppn=6,walltime=43200" -t 1-6 -v "SampleSheet=Test_Data/Output_Dir/2018-08-20.tomkono.bulk_rnaseq.samplesheet.txt,overwrite=0" /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/PBS/bulk_rnaseq_single_sample.pbs
-2018-08-20 17:01:41,637 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: qsub:
-qsub -q mesabi -W depend=afterok:${single_id} -v "base_in=Test_Data/Output_Dir/2018-08-20.tomkono.bulk_rnaseq.samplesheet.txt" /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/PBS/run_summary_stats.pbs
+2018-08-21 12:36:07,886 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Number of samples: 6
+2018-08-21 12:36:07,886 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: Samplesheet: Test_Data/Output_Dir/2018-08-21.tomkono.bulk_rnaseq.samplesheet.txt
+2018-08-21 12:36:07,886 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: qsub:
+qsub -q mesabi -l "mem=12000mb,nodes=1:ppn=6,walltime=43200" -t 1-6 -v "SampleSheet=Test_Data/Output_Dir/2018-08-21.tomkono.bulk_rnaseq.samplesheet.txt,overwrite=0" /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/PBS/bulk_rnaseq_single_sample.pbs
+2018-08-21 12:36:07,886 - GopherPipelines.Pipelines.BulkRNAseq - DEBUG: qsub:
+qsub -q mesabi -W depend=afterok:${single_id} -v "base_in=Test_Data/Output_Dir/2018-08-21.tomkono.bulk_rnaseq.samplesheet.txt" /Users/tomkono/Dropbox/GitHub/RIS/gopher-pipeline-refactor/PBS/run_summary_stats.pbs

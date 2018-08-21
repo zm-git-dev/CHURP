@@ -25,7 +25,8 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         'TRIMMOMATIC',
         'JAVA',
         'SAMTOOLS',
-        'R']
+        'R',
+        'CUFFLINKS']
 
     def __init__(self, args):
         """Initialize the bulk RNAseq samplesheet."""

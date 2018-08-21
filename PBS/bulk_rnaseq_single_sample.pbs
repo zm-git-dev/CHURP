@@ -22,7 +22,11 @@ while IFS="|" read -ra OPTS; do
 done <<< "$IN"
 
 # load necessary modules
-module load hisat2 picard fastqc trimmomatic java samtools
+module load hisat2/2.1.0
+module load fastqc/0.11.7
+module load trimmomatic/0.33
+module load java/jdk1.8.0_144
+module load samtools/1.7
 
 # set working directory
 cd $WORKDIR/singlesamples

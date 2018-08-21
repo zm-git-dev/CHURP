@@ -21,5 +21,6 @@ SW_VERS = {
     'TRIMMOMATIC': '0.33',
     'JAVA': 'jdk1.8.0_144',
     'SAMTOOLS': '1.7',
-    'R': '3.5.0'
+    'R': '3.5.0',
+    'CUFFLINKS': '2.2.1'
 }

@@ -30,7 +30,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         'TRIMMOMATIC',
         'JAVA',
         'SAMTOOLS',
-        'R']
+        'R',
+        'CUFFLINKS']
 
     def setup(self, args):
         """Initialize the pipeline object. We will call the general

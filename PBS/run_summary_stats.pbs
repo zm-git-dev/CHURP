@@ -2,7 +2,8 @@
 #PBS -l nodes=1:ppn=1,mem=16gb,walltime=8:00:00
 
 # load necessary modules
-module load subread R cufflinks
+module load R/3.5.0
+module load cufflinks/2.2.1
 
 cd ${WORKDIR}
 
