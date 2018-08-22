@@ -39,9 +39,12 @@ divisions of the pipeline:
     - ~~Write samplesheet to disk~~ (Done)
 - **PBS Scripts**
     - ~~Add checkpointing for `resume`-like behavior~~ (Done)
-    - Choose software versions to use for `hisat2`, `samtools`, `R`, `trimmomatic`, and `fastqc`
+    - ~~Choose software versions to use for `hisat2`, `samtools`, `R`, `trimmomatic`, and `fastqc`~~ (Done)
     - Add option for `overwrite`, with a default of false
     - `EdgeR` scripts for raw counts, TPM, FPKM, etc.
 - **Documentation**
     - Write manual draft
     - Update diagrams
+    - Change versioning to a three-part number (major.minor.patch; semantic versioning)
+    - Make workflow diagram for each pipeline
+    - Start a CHANGELOG
