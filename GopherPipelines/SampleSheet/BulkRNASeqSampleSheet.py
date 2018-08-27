@@ -121,8 +121,8 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             self.final_sheet[s] = {
                 'FastqR1files': self.samples[s]['R1'],
                 'FastqR2file': self.samples[s]['R2'],
-                'OutputDir': od,
-                'WorkingDir': wd,
+                'OutputDir': str(od),
+                'WorkingDir': str(wd),
                 'TRIM': self.useropts['trim'],
                 'trimmomaticOpts': self.finalopts['trimmomatic'],
                 'Hisat2index': self.useropts['hisat2_idx'],
