@@ -206,7 +206,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-t',
             '1-' + str(len(self.sheet.final_sheet)),
             '-v',
-            '"SampleSheet='+ss+',purge=' + self.purge + '"',
+            '"SampleSheet='+ss+',PURGE=' + self.purge + '"',
             self.single_sample_script]
         # Write the first qsub command
         handle.write('single_id=$(' + ' '.join(aln_cmd) + ')\n')

@@ -10,7 +10,7 @@ IN=`head -n $((${PBS_ARRAYID}+1)) ${SampleSheet} | tail -1`
 [ "$IN" = "\#.*" ] && echo "hit a comment line in sample sheet" && exit $?
 while IFS="|" read -ra OPTS; do 
     SAMPLENM=${OPTS[0]}
-    R1FILE=${OPTS[1]}    
+    R1FILE=${OPTS[1]}
     R2FILE=${OPTS[2]}
     OUTDIR=${OPTS[3]}
     WORKDIR=${OPTS[4]}
@@ -29,20 +29,19 @@ module load java/jdk1.8.0_144
 module load samtools/1.7
 
 # set working directory
-cd $WORKDIR/singlesamples
-mkdir ${SAMPLENM}
-cd ${SAMPLENM}
+mkdir -p ${WORKDIR}/singlesamples/${SAMPLENM}
+cd ${WORKDIR}/singlesamples/${SAMPLENM}
 
 # check whether to purge files or not. $PURGE will be parsed by command line
 if [ $PURGE = "true" ]; then
-    find . -name '*.done' -delete    
+    find . -name '*.done' -delete
 fi
 
 # start workflow with check point
 [ -f ${SAMPLENM}.done ] && echo "found done analysis, exit" && exit $?
 
 # Set Up a log file instead (?)
-if [ ! -f fastqc.done]; then
+if [ ! -f fastqc.done ]; then
     fastqc -t 2 ${R1FILE} ${R2FILE}
     touch fastqc.done
 fi

@@ -35,9 +35,9 @@ class Pipeline(object):
         self.walltime = args['walltime']
         # Set the purge flag
         if args['purge']:
-            self.purge = '1'
+            self.purge = 'true'
         else:
-            self.purge = '0'
+            self.purge = 'false'
         return
 
     def _run_checks(self):
