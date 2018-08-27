@@ -65,7 +65,7 @@ class Samplesheet(object):
         # Define a samplesheet output name
         ssname = '.'.join([
             GopherPipelines.TODAY, GopherPipelines.UNAME, pn,
-            '.samplesheet.txt'])
+            'samplesheet.txt'])
         ssname = os.path.join(od, ssname)
         if os.path.isfile(ssname):
             self.sheet_logger.warning(
