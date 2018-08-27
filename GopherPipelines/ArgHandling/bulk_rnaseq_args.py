@@ -25,8 +25,7 @@ def add_args(ap):
         '-f',
         metavar='<fastq folder>',
         dest='fq_folder',
-        help=('Directory that contains the FASTQ files. If this is provided, '
-              'we will attempt to build the list of R1 and R2 read paths.'))
+        help='Directory that contains the FASTQ files.')
     ap_req.add_argument(
         '--hisat2-index',
         '-x',
