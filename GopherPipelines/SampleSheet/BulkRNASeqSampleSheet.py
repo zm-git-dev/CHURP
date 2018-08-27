@@ -31,13 +31,13 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         self.useropts['trimmomatic'] = args['trimmomatic']
         self.useropts['hisat2'] = args['hisat2']
         if args['no_trim']:
-            self.useropts['trim'] = '0'
+            self.useropts['trim'] = 'no'
         else:
-            self.useropts['trim'] = '1'
+            self.useropts['trim'] = 'yes'
         if args['stranded']:
-            self.useropts['stranded'] = '1'
+            self.useropts['stranded'] = 'yes'
         else:
-            self.useropts['stranded'] = '0'
+            self.useropts['stranded'] = 'no'
         self.useropts['gtf'] = args['gtf']
         self.useropts['hisat2_idx'] = args['hisat2_idx']
         self.useropts['hisat2_threads'] = '-p ' + str(args['ppn']) + ' '
