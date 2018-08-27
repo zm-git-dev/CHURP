@@ -64,7 +64,7 @@ class Samplesheet(object):
         """Write the sheet into the given directory."""
         # Define a samplesheet output name
         ssname = '.'.join([
-            GopherPipelines.TODAY, '.', GopherPipelines.UNAME, pn,
+            GopherPipelines.TODAY, GopherPipelines.UNAME, pn,
             '.samplesheet.txt'])
         ssname = os.path.join(od, ssname)
         if os.path.isfile(ssname):
