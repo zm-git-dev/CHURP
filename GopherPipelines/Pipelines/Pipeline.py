@@ -62,21 +62,21 @@ class Pipeline(object):
             assert self.mem >= 1 and self.mem <= 62000
         except AssertionError as e:
             self.logger.error(
-                'Mem value of %i is invalid! Please specify between 1 and 62000.',
+                'Mem value of %i is invalid! Specify between 1 and 62000.',
                 self.mem)
             DieGracefully.die_gracefully(DieGracefully.BAD_RESOURCES)
         try:
             assert self.walltime >= 1 and self.walltime <= 96
         except AssertionError as e:
             self.logger.error(
-                'Walltime value of %i is invalid! Please specify between 1 and 96.',
+                'Walltime value of %i is invalid! Specify between 1 and 96.',
                 self.walltime)
             DieGracefully.die_gracefully(DieGracefully.BAD_RESOURCES)
         return
 
     def _check_dirs(self):
-        """Check that the directories exist and are readable and writeable. This
-        will raise an error if we cannot find the fastq directory, or the
+        """Check that the directories exist and are readable and writeable.
+        This will raise an error if we cannot find the fastq directory, or the
         output directory cannot be written to."""
         self.logger.info('Checking directories.')
         # We need to check the output directory and the working directory
@@ -91,12 +91,14 @@ class Pipeline(object):
                     self.logger.debug('Output dir %s is valid', self.outdir)
                     pass
                 else:
-                    self.logger.error('Output dir %s cannot be written to!', self.outdir)
+                    self.logger.error(
+                        'Output dir %s cannot be written to!', self.outdir)
                     DieGracefully.die_gracefully(DieGracefully.BAD_OUTDIR)
             else:
                 self.logger.warning('Output dir %s is not empty!', self.outdir)
         else:
-            self.logger.warning('Output dir %s does not exist, making it', self.outdir)
+            self.logger.warning(
+                'Output dir %s does not exist, making it', self.outdir)
             s = dir_funcs.make_dir(self.outdir, self.logger)
             if not s:
                 DieGracefully.die_gracefully(DieGracefully.BAD_OUTDIR)
@@ -113,12 +115,15 @@ class Pipeline(object):
                     self.logger.debug('Working dir %s is valid', self.workdir)
                     pass
                 else:
-                    self.logger.error('Working dir %s cannot be written to!', self.workdir)
+                    self.logger.error(
+                        'Working dir %s cannot be written to!', self.workdir)
                     DieGracefully.die_gracefully(DieGracefully.BAD_WORKDIR)
             else:
-                self.logger.warning('Working dir %s is not empty!', self.workdir)
+                self.logger.warning(
+                    'Working dir %s is not empty!', self.workdir)
         else:
-            self.logger.warning('Working dir %s does not exist, making it', self.workdir)
+            self.logger.warning(
+                'Working dir %s does not exist, making it', self.workdir)
             s = dir_funcs.make_dir(self.workdir, self.logger)
             if not s:
                 DieGracefully.die_gracefully(DieGracefully.BAD_WORKDIR)

@@ -15,9 +15,9 @@ handling of options with dashes in them."""
 
 
 def add_args(ap):
-    """Takes an ArgumentParser object, and adds some arguments to it. These will
-    be for the bulk RNAseq pipeline. This function returns None; it is called
-    for the side-effect of adding arguments to the parser object."""
+    """Takes an ArgumentParser object, and adds some arguments to it. These
+    will be for the bulk RNAseq pipeline. This function returns None; it is
+    called for the side-effect of adding arguments to the parser object."""
     ap_req = ap.add_argument_group(
         title='Required Arguments')
     ap_req.add_argument(
@@ -48,8 +48,8 @@ def add_args(ap):
         metavar='<organism>',
         dest='organism',
         required=False,
-        help=('Organism shorthand for automatically setting a HISAT2 index and '
-              'GTF annotation file. Pass --list-species to see a full list. '
+        help=('Organism shorthand for automatically setting a HISAT2 index and'
+              ' GTF annotation file. Pass --list-species to see a full list. '
               'Incompatible with -x and -g.'))
     # Make an argument group for optional arguments
     ap_opt = ap.add_argument_group(
@@ -145,7 +145,8 @@ def add_args(ap):
         '-m',
         metavar='<mem per job (Mb)>',
         dest='mem',
-        help='Memory, in megabytes, to allocate to each task. Defaults to 12000 (12GB)',
+        help=('Memory, in megabytes, to allocate to each task. '
+              'Defaults to 12000 (12GB)'),
         type=int,
         default=12000)
     ap_sched.add_argument(
@@ -153,7 +154,8 @@ def add_args(ap):
         '-w',
         metavar='<wall clock time (hours)>',
         dest='walltime',
-        help='Walltime, in hours, to allocate to each task. Defaults to 12 hours.',
+        help=('Walltime, in hours, to allocate to each task. '
+              'Defaults to 12 hours.'),
         type=int,
         default=12)
     return

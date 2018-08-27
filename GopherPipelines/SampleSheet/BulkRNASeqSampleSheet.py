@@ -94,10 +94,10 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
                 #   Replace 1R with 2R, with at most 1 replacement
                 #   Reverse it again
                 r2 = f[::-1].replace('1R', '2R', 1)[::-1]
-                # Extract the samplename from the hypothetical R2 path. If it is
-                # different from the R1 samplename, then we have messed up the
-                # part of the filename that we shouldn't have - the R2 does not
-                # exist for this sammple, and it is single-end
+                # Extract the samplename from the hypothetical R2 path. If it
+                # is different from the R1 samplename, then we have messed up
+                # the part of the filename that we shouldn't have - the R2 does
+                # not exist for this sammple, and it is single-end
                 r2_sn = re.sub(samp_re, '', r2)
                 if r2_sn != sn:
                     self.samples[sn]['R2'] = ''
@@ -107,7 +107,9 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
                     self.samples[sn]['R2'] = os.path.join(d, r2)
                 else:
                     self.samples[sn]['R2'] = ''
-        self.sheet_logger.debug('Found samples:\n%s', pprint.pformat(self.samples))
+        self.sheet_logger.debug(
+            'Found samples:\n%s',
+            pprint.pformat(self.samples))
         return
 
     def compile(self, od, wd):
@@ -124,10 +126,12 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
                 'TRIM': self.useropts['trim'],
                 'trimmomaticOpts': self.finalopts['trimmomatic'],
                 'Hisat2index': self.useropts['hisat2_idx'],
-                'Hisat2Options': self.useropts['hisat2_threads'] + self.finalopts['hisat2'],
+                'Hisat2Options': self.useropts['hisat2_threads'] +
+                                 self.finalopts['hisat2'],
                 'Stranded': self.useropts['stranded'],
                 'AnnotationGTF': self.useropts['gtf']
                 }
-        self.sheet_logger.debug('Samplesheet:\n%s', pprint.pformat(self.final_sheet))
+        self.sheet_logger.debug(
+            'Samplesheet:\n%s',
+            pprint.pformat(self.final_sheet))
         return
-
