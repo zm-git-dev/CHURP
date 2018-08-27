@@ -3,11 +3,9 @@
 samples."""
 
 import os
-import glob
 import re
 import pprint
 
-import GopherPipelines
 from GopherPipelines.SampleSheet import SampleSheet
 from GopherPipelines.ArgHandling import set_verbosity
 
@@ -16,18 +14,6 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
     """A sub-class of SampleSheet that holds information for the bulk RNAseq
     pipelines."""
 
-    # These are the names of the programs that will get version numbers reported
-    # in the samplesheet on disk. They match the way they are defined in the
-    # __init__.py in the top level module.
-    PROGS = [
-        'HISAT2',
-        'FASTQC',
-        'TRIMMOMATIC',
-        'JAVA',
-        'SAMTOOLS',
-        'R',
-        'CUFFLINKS']
-
     def __init__(self, args):
         """Initialize the bulk RNAseq samplesheet."""
         # Set up a logger
@@ -35,7 +21,11 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         # This pipeline takes options for trimmomatic and hisat2
         self.programs.extend(['trimmomatic', 'hisat2'])
         # Set the default trimmomatic options here. This is from YZ's scripts
-        self.defaultopts['trimmomatic'] = 'ILLUMINACLIP:' + args['adapters'] + ':4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18'
+        self.defaultopts['trimmomatic'] = ' '.join([
+            'ILLUMINACLIP:',
+            args['adapters'],
+            ':4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18']
+            )
         self.defaultopts['hisat2'] = ''
         # Set the user options here
         self.useropts['trimmomatic'] = args['trimmomatic']
@@ -76,7 +66,9 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         samp_re = re.compile(r'(_S[0-9]+)?(_L00[1-8])?(_R(1|2))?_001\.((fq(\.gz)?$)|(fastq(\.gz)?$))')
         # Get all files that look like not-R2 fastq files, make the matching
         # case-insensitive.
-        fq_re = re.compile(r'^.+[^_R2]_001\.((fq(\.gz)?$)|(fastq(\.gz)?$))', flags=re.I)
+        fq_re = re.compile(
+            r'^.+[^_R2]_001\.((fq(\.gz)?$)|(fastq(\.gz)?$))',
+            flags=re.I)
         cont = os.listdir(d)
         # From the Illumina BaseSpace online documentation, this is what the
         # standard filenames will look like:

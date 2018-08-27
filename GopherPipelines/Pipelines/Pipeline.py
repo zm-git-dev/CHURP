@@ -33,11 +33,11 @@ class Pipeline(object):
         self.ppn = args['ppn']
         self.mem = args['mem']
         self.walltime = args['walltime']
-        # Set the overwrite flag
-        if args['overwrite']:
-            self.ow = '1'
+        # Set the purge flag
+        if args['purge']:
+            self.purge = '1'
         else:
-            self.ow = '0'
+            self.purge = '0'
         return
 
     def _run_checks(self):
