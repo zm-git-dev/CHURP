@@ -4,7 +4,7 @@
 # Parse SampleSheet using $PBS_ARRAYID
 # Assume there is a header line, so for ID n, the sample is n+1
 # Sample Sheet: SampleNM, R1, R2, Trim (yes or no), TrimmomaticOption, Hisat2Index, Hisat2Option, GTF/GFF
-IN=`head -n $((${PBS_ARRAYID}+1)) ${SampleSheet} | tail -1`
+IN=`head -n $((${PBS_ARRAYID})) ${SampleSheet} | tail -1`
 # handle empty line and comment line
 [ -z "${IN// }" ] && echo "hit an empty line in sample sheet" && exit $?
 [ "$IN" = "\#.*" ] && echo "hit a comment line in sample sheet" && exit $?
