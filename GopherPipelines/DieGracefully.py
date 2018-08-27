@@ -73,10 +73,9 @@ def brnaseq_inc():
     msg = """Error!
 
 You did not specify sufficient options to run the bulk_rnaseq subcommand of
-gopher-pipelines. You must specify either a FASTQ directory (-f) or a UMGC
-report sheet (-u). Additionally, you must either specify a path to a HISAT2
-index (-x) and GTF (-g), or an organism name (-r). Please fix your command line
-and re-run.\n"""
+gopher-pipelines. You must specify a FASTQ directory (-f). Additionally, you
+must either specify a path to a HISAT2 index (-x) and GTF (-g), or an organism
+name (-r). Please fix your command line and re-run.\n"""
     sys.stderr.write(msg)
     return
 
@@ -86,8 +85,7 @@ def brnaseq_conflict():
     bulk_rnaseq pipeline."""
     msg = """Error!
 
-You have specified conflicting options to the bulk_rnaseq subcommand. Only one
-of FASTQ directory (-f) and UMGC report sheet (-u) may be specified. HISAT2
+You have specified conflicting options to the bulk_rnaseq subcommand. HISAT2
 index (-x) and GTF (-g) are both incompatible with organism (-r). Pass the help
 option (-h) to see all available options. Please fix your command line and
 re-run.\n"""
