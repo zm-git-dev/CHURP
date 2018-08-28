@@ -230,7 +230,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-M',
             '"${user_email}"',
             '-W',
-            'depend=afterok:"${single_id}"',
+            '"depend=afterokarray:${single_id}"',
             '-v',
             '"base_in='+ss+'"',
             self.summary_script]
