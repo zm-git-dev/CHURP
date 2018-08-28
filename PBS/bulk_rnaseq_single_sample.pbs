@@ -3,8 +3,8 @@
 
 # Check the major version of the pipeline. If they mismatch, then quit with an error
 PIPELINE_VERSION="0"
-SAMPLESHEET_VERSION=$(tail -n 1 ${SampleSheet} | sed -E 's/#//g')
-if [  ${SAMPLESHEET_VERSION} -ne ${PIPELINE_VERSION} ]
+SAMPLESHEET_VERSION=$(tail -n 1 "${SampleSheet}" | sed -E 's/#//g')
+if [ "${SAMPLESHEET_VERSION}" -ne "${PIPELINE_VERSION}" ]
 then
     echo "${SampleSheet} is incompatible with this version of gopher-pipelines."
     echo "${SampleSheet} was generated with version ${SAMPLESHEET_VERSION}, and this script requires ${PIPELINE_VERSION}."
@@ -14,10 +14,10 @@ fi
 # Parse SampleSheet using $PBS_ARRAYID
 # Assume there is a header line, so for ID n, the sample is n+1
 # Sample Sheet: SampleNM, R1, R2, Trim (yes or no), TrimmomaticOption, Hisat2Index, Hisat2Option, GTF/GFF
-IN=$(head -n $((${PBS_ARRAYID})) ${SampleSheet} | tail -1)
+IN=$(head -n ${PBS_ARRAYID} "${SampleSheet}" | tail -1)
 # handle empty line and comment line
 [ -z "${IN// }" ] && echo "hit an empty line in sample sheet" && exit $?
-[ "$IN" = "\#.*" ] && echo "hit a comment line in sample sheet" && exit $?
+[ "$IN" = "#.*" ] && echo "hit a comment line in sample sheet" && exit $?
 while IFS="|" read -ra OPTS; do 
     SAMPLENM=${OPTS[0]}
     R1FILE=${OPTS[1]}
@@ -43,16 +43,16 @@ module list -t
 
 # Print the loaded module information to a file
 LOG_FNAME="${OUTDIR}/${SAMPLENM}_Log.txt"
-echo "$(date '+%F %T'): Analysis for ${SAMPLENM} started" > ${LOG_FNAME}
-module list -t 2>> ${LOG_FNAME}
+echo "$(date '+%F %T'): Analysis for ${SAMPLENM} started" > "${LOG_FNAME}"
+module list -t 2>> "${LOG_FNAME}"
 
 # set working directory
-mkdir -p ${WORKDIR}/singlesamples/${SAMPLENM}
-cd ${WORKDIR}/singlesamples/${SAMPLENM}
+mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}"
+cd "${WORKDIR}/singlesamples/${SAMPLENM}"
 
 # check whether to purge files or not. $PURGE will be parsed by command line
-if [ $PURGE = "true" ]; then
-    echo "$(date '+%F %T'): PURGE=true; re-running all analyses." >> ${LOG_FNAME}
+if [ "${PURGE}" = "true" ]; then
+    echo "$(date '+%F %T'): PURGE=true; re-running all analyses." >> "${LOG_FNAME}"
     find . -name '*.done' -delete
 fi
 
@@ -61,52 +61,52 @@ fi
 
 # Set Up a log file instead (?)
 if [ ! -f fastqc.done ]; then
-    echo "$(date '+%F %T'): Running fastqc on ${R1FILE} and ${R2FILE}." >> ${LOG_FNAME}
-    echo "fastqc -t 2 ${R1FILE} ${R2FILE}" >> ${LOG_FNAME}
-    fastqc -t 2 ${R1FILE} ${R2FILE}
+    echo "$(date '+%F %T'): Running fastqc on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
+    echo "fastqc -t 2 \"${R1FILE}\" \"${R2FILE}\"" >> "${LOG_FNAME}"
+    fastqc -t 2 "${R1FILE}" "${R2FILE}"
     touch fastqc.done
 fi
 
 # To use -basein option, fastq file must be in format *_R1_*.fastq and *_R2_*.fastq
-if [ $TRIM = "yes" ]; then
+if [ "${TRIM}" = "yes" ]; then
     if [ ! -f trimmomatic.done ]; then
-        echo "$(date '+%F %T'): Running trimmomatic on ${R1FILE} and ${R2FILE}." >> ${LOG_FNAME}
-        echo "java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads 8 -basein $R1FILE -baseout ${SAMPLENM} $TRIMOPTS 2>trim.log" >> ${LOG_FNAME}
-        java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads 8 -basein $R1FILE -baseout ${SAMPLENM} $TRIMOPTS 2>trim.log
+        echo "$(date '+%F %T'): Running trimmomatic on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
+        echo "java -jar \"${TRIMMOMATIC}\"/trimmomatic.jar PE -threads 8 -basein \"${R1FILE}\" -baseout \"${SAMPLENM}\" ${TRIMOPTS} 2>trim.log" >> "${LOG_FNAME}"
+        java -jar "${TRIMMOMATIC}"/trimmomatic.jar PE -threads 8 -basein "${R1FILE}" -baseout "${SAMPLENM}" ${TRIMOPTS} 2>trim.log
         touch trimmomatic.done
     fi
     if [ ! -f fastqc.trim.done ]; then
-        echo "$(date '+%F %T'): Running fastqc on trimmed fastq files." >> ${LOG_FNAME}
-        echo "fastqc -t 2 ${SAMPLENM}_1P ${SAMPLENM}_2P" >> ${LOG_FNAME}
-        fastqc -t 2 ${SAMPLENM}_1P ${SAMPLENM}_2P
+        echo "$(date '+%F %T'): Running fastqc on trimmed fastq files." >> "${LOG_FNAME}"
+        echo "fastqc -t 2 \"${SAMPLENM}\"_1P \"${SAMPLENM}\"_2P" >> "${LOG_FNAME}"
+        fastqc -t 2 "${SAMPLENM}"_1P "${SAMPLENM}"_2P
         touch fastqc.trim.done
     fi
 fi
 
 if [ ! -f hisat2.done ]; then
-    if [ $TRIM = "yes" ]; then
-        echo "$(date '+%F %T'): Aligning trimmed reads with HISAT2." >> ${LOG_FNAME}
-        echo "hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 ${SAMPLENM}_1P -2 ${SAMPLENM}_2P -S ${SAMPLENM}.sam 2>alignment.summary" >> ${LOG_FNAME}
-        hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 ${SAMPLENM}_1P -2 ${SAMPLENM}_2P -S ${SAMPLENM}.sam 2>alignment.summary
+    if [ "${TRIM}" = "yes" ]; then
+        echo "$(date '+%F %T'): Aligning trimmed reads with HISAT2." >> "${LOG_FNAME}"
+        echo "hisat2 ${HISAT2OPTS} -x \"${HISAT2INDEX}\" -1 \"${SAMPLENM}\"_1P -2 \"${SAMPLENM}\"_2P -S \"${SAMPLENM}\".sam 2>alignment.summary" >> "${LOG_FNAME}"
+        hisat2 ${HISAT2OPTS} -x "${HISAT2INDEX}" -1 "${SAMPLENM}"_1P -2 "${SAMPLENM}"_2P -S "${SAMPLENM}".sam 2>alignment.summary
     else
-        echo "$(date '+%F %T'): Aligning reads with HISAT2." >> ${LOG_FNAME}
-        echo "hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 $R1FILE -2 $R2FILE -S ${SAMPLENM}.sam 2>alignment.summary" >> ${LOG_FNAME}
-        hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 $R1FILE -2 $R2FILE -S ${SAMPLENM}.sam 2>alignment.summary
+        echo "$(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
+        echo "hisat2 \"${HISAT2OPTS} -x \"${HISAT2INDEX}\" -1 \"${R1FILE}\" -2 \"${R2FILE}\" -S \"${SAMPLENM}\".sam 2>alignment.summary" >> "${LOG_FNAME}"
+        hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -1 "${R1FILE}" -2 "${R2FILE}" -S "${SAMPLENM}".sam 2>alignment.summary
     fi
     touch hisat2.done
 fi
 
 # use samtools to remove unmapped reads, could be done in picard too.
 if [ ! -f samtools.done ]; then
-    echo "$(date '+%F %T'): Sorting, indexing, and removing duplicates from HISAT2 alignment." >> ${LOG_FNAME}
-    echo "samtools view -bh -F 4 -@ 8 ${SAMPLENM}.sam | samtools sort -o ${SAMPLENM}.sorted.bam -@ 8 -O bam -T temp " >> ${LOG_FNAME}
-    echo "samtools index ${SAMPLENM}.sorted.bam" >> ${LOG_FNAME}
-    echo "samtools rmdup ${SAMPLENM}.sorted.bam ${SAMPLENM}.sorted.rmdup.bam" >> ${LOG_FNAME}
-    samtools view -bh -F 4 -@ 8 ${SAMPLENM}.sam | samtools sort -o ${SAMPLENM}.sorted.bam -@ 8 -O bam -T temp 
-    samtools index ${SAMPLENM}.sorted.bam
-    samtools rmdup ${SAMPLENM}.sorted.bam ${SAMPLENM}.sorted.rmdup.bam
+    echo "$(date '+%F %T'): Sorting, indexing, and removing duplicates from HISAT2 alignment." >> "${LOG_FNAME}"
+    echo "samtools view -bh -F 4 -@ 8 \"${SAMPLENM}\".sam | samtools sort -o \"${SAMPLENM}\".sorted.bam -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
+    echo "samtools index \"${SAMPLENM}\".sorted.bam" >> "${LOG_FNAME}"
+    echo "samtools rmdup \"${SAMPLENM}\".sorted.bam \"${SAMPLENM}\".sorted.rmdup.bam" >> "${LOG_FNAME}"
+    samtools view -bh -F 4 -@ 8 "${SAMPLENM}".sam | samtools sort -o "${SAMPLENM}".sorted.bam -@ 8 -O bam -T temp 
+    samtools index "${SAMPLENM}".sorted.bam
+    samtools rmdup "${SAMPLENM}".sorted.bam "${SAMPLENM}".sorted.rmdup.bam
     touch samtools.done
 fi
 
-echo "$(date '+%F %T'): Finished processing ${SAMPLENM}." >> ${LOG_FNAME}
-touch ${SAMPLENM}.done
+echo "$(date '+%F %T'): Finished processing ${SAMPLENM}." >> "${LOG_FNAME}"
+touch "${SAMPLENM}".done
