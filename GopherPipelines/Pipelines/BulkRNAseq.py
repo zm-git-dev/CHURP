@@ -234,6 +234,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Write the second command
         handle.write('summary_id=$(' + ' '.join(summary_cmd) + ')\n')
         # Write some echo statements for users' information
+        handle.write('echo "Emails will be sent to ${user_email}"\n')
         handle.write('echo "Single samples job array ID: ${single_id}"\n')
         handle.write('echo "Summary job ID: ${summary_id}"\n')
         self.pipe_logger.debug('qsub:\n%s', ' '.join(aln_cmd))
