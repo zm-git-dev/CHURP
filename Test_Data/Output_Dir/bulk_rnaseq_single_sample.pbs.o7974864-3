@@ -1,0 +1,6 @@
+Analysis complete for Sample03_R1_001.fastq.gz
+Analysis complete for Sample03_R2_001.fastq.gz
+Using templated Input files: /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample03_R1_001.fastq.gz /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample03_R2_001.fastq.gz
+Using templated Output files: Sample03_1P Sample03_1U Sample03_2P Sample03_2U
+Analysis complete for Sample03_1P
+Analysis complete for Sample03_2P
