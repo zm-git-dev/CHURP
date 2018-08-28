@@ -1,10 +1,20 @@
 #!/bin/bash -l
 #PBS -l nodes=1:ppn=8,mem=16gb,walltime=24:00:00
 
+# Check the major version of the pipeline. If they mismatch, then quit with an error
+PIPELINE_VERSION="0"
+SAMPLESHEET_VERSION=$(tail -n 1 ${SampleSheet} | sed -E 's/#//g')
+if [  ${SAMPLESHEET_VERSION} -ne ${PIPELINE_VERSION} ]
+then
+    echo "${SampleSheet} is incompatible with this version of gopher-pipelines."
+    echo "${SampleSheet} was generated with version ${SAMPLESHEET_VERSION}, and this script requires ${PIPELINE_VERSION}."
+    exit 100
+fi
+
 # Parse SampleSheet using $PBS_ARRAYID
 # Assume there is a header line, so for ID n, the sample is n+1
 # Sample Sheet: SampleNM, R1, R2, Trim (yes or no), TrimmomaticOption, Hisat2Index, Hisat2Option, GTF/GFF
-IN=`head -n $((${PBS_ARRAYID})) ${SampleSheet} | tail -1`
+IN=$(head -n $((${PBS_ARRAYID})) ${SampleSheet} | tail -1)
 # handle empty line and comment line
 [ -z "${IN// }" ] && echo "hit an empty line in sample sheet" && exit $?
 [ "$IN" = "\#.*" ] && echo "hit a comment line in sample sheet" && exit $?
