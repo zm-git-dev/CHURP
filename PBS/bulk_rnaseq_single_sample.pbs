@@ -39,10 +39,13 @@ module load trimmomatic/0.33
 module load java/jdk1.8.0_144
 module load samtools/1.7
 
+module list -t
+
 # Print the loaded module information to a file
 LOG_FNAME="${OUTDIR}/${SAMPLENM}_Log.txt"
-echo "Loaded modules:" > ${LOG_FNAME}
-module list -t >> ${LOG_FNAME}
+DATETIME=$(date "+%F %T")
+echo "Analysis for ${SAMPLENM} started at ${DATETIME}" > ${LOG_FNAME}
+module list -t 2>> ${LOG_FNAME}
 
 # set working directory
 mkdir -p ${WORKDIR}/singlesamples/${SAMPLENM}
@@ -106,5 +109,6 @@ if [ ! -f samtools.done ]; then
     touch samtools.done
 fi
 
-echo "Finished processing ${SAMPLENM}." >> ${LOG_FNAME}
+DATETIME=$(date "+%F %T")
+echo "Finished processing ${SAMPLENM} at ${DATETIME}." >> ${LOG_FNAME}
 touch ${SAMPLENM}.done
