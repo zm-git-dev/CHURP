@@ -12,88 +12,88 @@ mpc/1.0.3_gcc7.2.0
 isl/0.18_gcc7.2.0
 gcc/7.2.0
 samtools/1.7
-Started analysis of Sample04_R1_001.fastq.gz
-Started analysis of Sample04_R2_001.fastq.gz
-Approx 5% complete for Sample04_R1_001.fastq.gz
-Approx 10% complete for Sample04_R1_001.fastq.gz
-Approx 5% complete for Sample04_R2_001.fastq.gz
-Approx 15% complete for Sample04_R1_001.fastq.gz
-Approx 10% complete for Sample04_R2_001.fastq.gz
-Approx 20% complete for Sample04_R1_001.fastq.gz
-Approx 15% complete for Sample04_R2_001.fastq.gz
-Approx 25% complete for Sample04_R1_001.fastq.gz
-Approx 20% complete for Sample04_R2_001.fastq.gz
-Approx 30% complete for Sample04_R1_001.fastq.gz
-Approx 25% complete for Sample04_R2_001.fastq.gz
-Approx 35% complete for Sample04_R1_001.fastq.gz
-Approx 30% complete for Sample04_R2_001.fastq.gz
-Approx 40% complete for Sample04_R1_001.fastq.gz
-Approx 35% complete for Sample04_R2_001.fastq.gz
-Approx 45% complete for Sample04_R1_001.fastq.gz
-Approx 40% complete for Sample04_R2_001.fastq.gz
-Approx 50% complete for Sample04_R1_001.fastq.gz
-Approx 45% complete for Sample04_R2_001.fastq.gz
-Approx 55% complete for Sample04_R1_001.fastq.gz
-Approx 50% complete for Sample04_R2_001.fastq.gz
-Approx 60% complete for Sample04_R1_001.fastq.gz
-Approx 55% complete for Sample04_R2_001.fastq.gz
-Approx 65% complete for Sample04_R1_001.fastq.gz
-Approx 60% complete for Sample04_R2_001.fastq.gz
-Approx 70% complete for Sample04_R1_001.fastq.gz
-Approx 65% complete for Sample04_R2_001.fastq.gz
-Approx 75% complete for Sample04_R1_001.fastq.gz
-Approx 70% complete for Sample04_R2_001.fastq.gz
-Approx 80% complete for Sample04_R1_001.fastq.gz
-Approx 75% complete for Sample04_R2_001.fastq.gz
-Approx 85% complete for Sample04_R1_001.fastq.gz
-Approx 80% complete for Sample04_R2_001.fastq.gz
-Approx 90% complete for Sample04_R1_001.fastq.gz
-Approx 85% complete for Sample04_R2_001.fastq.gz
-Approx 95% complete for Sample04_R1_001.fastq.gz
-Approx 90% complete for Sample04_R2_001.fastq.gz
-Approx 100% complete for Sample04_R1_001.fastq.gz
-Approx 95% complete for Sample04_R2_001.fastq.gz
-Approx 100% complete for Sample04_R2_001.fastq.gz
-Started analysis of Sample04_1P
-Approx 5% complete for Sample04_1P
-Started analysis of Sample04_2P
-Approx 10% complete for Sample04_1P
-Approx 5% complete for Sample04_2P
-Approx 15% complete for Sample04_1P
-Approx 10% complete for Sample04_2P
-Approx 20% complete for Sample04_1P
-Approx 15% complete for Sample04_2P
-Approx 25% complete for Sample04_1P
-Approx 20% complete for Sample04_2P
-Approx 30% complete for Sample04_1P
-Approx 25% complete for Sample04_2P
-Approx 35% complete for Sample04_1P
-Approx 30% complete for Sample04_2P
-Approx 40% complete for Sample04_1P
-Approx 35% complete for Sample04_2P
-Approx 45% complete for Sample04_1P
-Approx 40% complete for Sample04_2P
-Approx 50% complete for Sample04_1P
-Approx 45% complete for Sample04_2P
-Approx 55% complete for Sample04_1P
-Approx 50% complete for Sample04_2P
-Approx 60% complete for Sample04_1P
-Approx 55% complete for Sample04_2P
-Approx 65% complete for Sample04_1P
-Approx 60% complete for Sample04_2P
-Approx 70% complete for Sample04_1P
-Approx 65% complete for Sample04_2P
-Approx 75% complete for Sample04_1P
-Approx 70% complete for Sample04_2P
-Approx 80% complete for Sample04_1P
-Approx 75% complete for Sample04_2P
-Approx 85% complete for Sample04_1P
-Approx 80% complete for Sample04_2P
-Approx 90% complete for Sample04_1P
-Approx 85% complete for Sample04_2P
-Approx 95% complete for Sample04_1P
-Approx 90% complete for Sample04_2P
-Approx 95% complete for Sample04_2P
+Started analysis of Sample05_R1_001.fastq.gz
+Approx 5% complete for Sample05_R1_001.fastq.gz
+Started analysis of Sample05_R2_001.fastq.gz
+Approx 10% complete for Sample05_R1_001.fastq.gz
+Approx 5% complete for Sample05_R2_001.fastq.gz
+Approx 15% complete for Sample05_R1_001.fastq.gz
+Approx 10% complete for Sample05_R2_001.fastq.gz
+Approx 20% complete for Sample05_R1_001.fastq.gz
+Approx 15% complete for Sample05_R2_001.fastq.gz
+Approx 25% complete for Sample05_R1_001.fastq.gz
+Approx 20% complete for Sample05_R2_001.fastq.gz
+Approx 30% complete for Sample05_R1_001.fastq.gz
+Approx 25% complete for Sample05_R2_001.fastq.gz
+Approx 35% complete for Sample05_R1_001.fastq.gz
+Approx 30% complete for Sample05_R2_001.fastq.gz
+Approx 40% complete for Sample05_R1_001.fastq.gz
+Approx 35% complete for Sample05_R2_001.fastq.gz
+Approx 45% complete for Sample05_R1_001.fastq.gz
+Approx 40% complete for Sample05_R2_001.fastq.gz
+Approx 50% complete for Sample05_R1_001.fastq.gz
+Approx 45% complete for Sample05_R2_001.fastq.gz
+Approx 55% complete for Sample05_R1_001.fastq.gz
+Approx 50% complete for Sample05_R2_001.fastq.gz
+Approx 60% complete for Sample05_R1_001.fastq.gz
+Approx 55% complete for Sample05_R2_001.fastq.gz
+Approx 65% complete for Sample05_R1_001.fastq.gz
+Approx 60% complete for Sample05_R2_001.fastq.gz
+Approx 70% complete for Sample05_R1_001.fastq.gz
+Approx 65% complete for Sample05_R2_001.fastq.gz
+Approx 75% complete for Sample05_R1_001.fastq.gz
+Approx 70% complete for Sample05_R2_001.fastq.gz
+Approx 80% complete for Sample05_R1_001.fastq.gz
+Approx 75% complete for Sample05_R2_001.fastq.gz
+Approx 85% complete for Sample05_R1_001.fastq.gz
+Approx 80% complete for Sample05_R2_001.fastq.gz
+Approx 90% complete for Sample05_R1_001.fastq.gz
+Approx 85% complete for Sample05_R2_001.fastq.gz
+Approx 95% complete for Sample05_R1_001.fastq.gz
+Approx 90% complete for Sample05_R2_001.fastq.gz
+Approx 100% complete for Sample05_R1_001.fastq.gz
+Approx 95% complete for Sample05_R2_001.fastq.gz
+Approx 100% complete for Sample05_R2_001.fastq.gz
+Started analysis of Sample05_1P
+Approx 5% complete for Sample05_1P
+Started analysis of Sample05_2P
+Approx 10% complete for Sample05_1P
+Approx 5% complete for Sample05_2P
+Approx 15% complete for Sample05_1P
+Approx 10% complete for Sample05_2P
+Approx 20% complete for Sample05_1P
+Approx 15% complete for Sample05_2P
+Approx 25% complete for Sample05_1P
+Approx 20% complete for Sample05_2P
+Approx 30% complete for Sample05_1P
+Approx 25% complete for Sample05_2P
+Approx 35% complete for Sample05_1P
+Approx 30% complete for Sample05_2P
+Approx 40% complete for Sample05_1P
+Approx 35% complete for Sample05_2P
+Approx 45% complete for Sample05_1P
+Approx 40% complete for Sample05_2P
+Approx 50% complete for Sample05_1P
+Approx 45% complete for Sample05_2P
+Approx 55% complete for Sample05_1P
+Approx 50% complete for Sample05_2P
+Approx 60% complete for Sample05_1P
+Approx 55% complete for Sample05_2P
+Approx 65% complete for Sample05_1P
+Approx 60% complete for Sample05_2P
+Approx 70% complete for Sample05_1P
+Approx 65% complete for Sample05_2P
+Approx 75% complete for Sample05_1P
+Approx 70% complete for Sample05_2P
+Approx 80% complete for Sample05_1P
+Approx 75% complete for Sample05_2P
+Approx 85% complete for Sample05_1P
+Approx 80% complete for Sample05_2P
+Approx 90% complete for Sample05_1P
+Approx 85% complete for Sample05_2P
+Approx 95% complete for Sample05_1P
+Approx 90% complete for Sample05_2P
+Approx 95% complete for Sample05_2P
 [bam_sort_core] merging from 0 files and 8 in-memory blocks...
 [bam_rmdup_core] processing reference 1...
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:1960'. Continue anyway.
@@ -104,18 +104,17 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00040:4404'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0940'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0944'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:5708'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0956'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:5704'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0952'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0960'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0284'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0280'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0284'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0288'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0292'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0440'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:5692'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:5696'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0212'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0228'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:1968'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:1956'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:1960'. Continue anyway.
@@ -125,23 +124,23 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00043:4988'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0988'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0988'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0992'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0992'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0992'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0992'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0992'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0996'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0996'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0996'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0996'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0996'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0992'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0992'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0992'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0992'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0992'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0976'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0976'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00043:5052'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00043:5048'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00043:5048'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0972'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0432'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0428'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0920'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:2008'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:2012'. Continue anyway.
@@ -150,54 +149,51 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:2296'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:5740'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:5844'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:5848'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:5840'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0808'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0816'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0812'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0820'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0816'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:2104'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0704'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:2100'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0708'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00039:6332'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0668'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0664'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:2128'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0552'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:0388'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:4180'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00000:4184'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00077:8944'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6120'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6124'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6116'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6128'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5276'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5280'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5284'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5360'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5368'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5280'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5356'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5372'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6048'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6040'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6044'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6048'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5388'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5748'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5312'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5428'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5432'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5740'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5964'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5968'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5736'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5492'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5492'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5268'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5268'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5724'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6116'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6116'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6120'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6120'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6120'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6120'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6124'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6124'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6124'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6124'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6116'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6116'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6116'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6116'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6128'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6128'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6128'. Continue anyway.
@@ -205,41 +201,36 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5272'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5276'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5276'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5280'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5280'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5284'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5284'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5280'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5280'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5716'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5716'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6096'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6104'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6108'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6104'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6100'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5748'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5420'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5312'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5520'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5424'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5428'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5428'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5432'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5432'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5740'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5736'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5740'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5740'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5448'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6080'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5736'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6076'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6084'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:6088'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5540'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00002:5564'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:3924'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:2888'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:2892'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:2892'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:2892'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:4316'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:4656'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:4660'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:4416'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:3848'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:3900'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:3920'. Continue anyway.
@@ -252,109 +243,73 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:4336'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:3924'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:3924'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:2888'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:2888'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:2892'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:2892'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:2892'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:2892'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:2680'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:4316'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:4316'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:2684'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:4296'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:3212'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:3224'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00005:2408'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00005:2404'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00005:2388'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00005:2204'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00005:2256'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00005:2332'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00005:2252'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00005:2328'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00005:2336'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1696'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1700'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1164'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1168'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1172'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1652'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1212'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1200'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1208'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1204'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1212'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00008:1216'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00054:7572'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00009:5672'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00009:5676'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8524'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8516'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8520'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8524'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8524'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8516'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8516'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8520'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8524'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8524'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8516'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8516'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8520'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8524'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8524'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8516'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8516'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8520'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8524'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8524'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8516'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00073:8516'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:5836'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:5832'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:5840'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:9844'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:9848'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:9840'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:9844'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:9852'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:9856'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1740'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1748'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1744'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1748'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1752'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1756'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1780'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:2060'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1776'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:2056'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:2064'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:2072'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1856'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1860'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1888'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1892'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1920'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1888'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1924'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1928'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1980'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1984'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:2092'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:2096'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:2100'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:2096'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1712'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1952'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:2108'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1908'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1916'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:1880'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:2012'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:6068'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9964'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9968'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0248'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0244'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0240'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0244'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0244'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0244'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0240'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0240'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9972'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0236'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0368'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9984'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9980'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9984'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9984'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9984'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9980'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9980'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9988'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:9992'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0196'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0200'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0200'. Continue anyway.
@@ -365,84 +320,86 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0308'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0312'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0316'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0288'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0032'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0284'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0036'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00021:0032'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:3044'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8448'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8444'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8452'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:6940'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:6948'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8400'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:6944'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8404'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8400'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:6992'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:6996'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8020'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8016'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7956'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7952'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7960'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7760'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7768'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9324'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9320'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7760'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9328'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9332'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9320'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9336'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7808'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7812'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7816'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7844'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7876'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7880'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7884'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9392'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8928'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:7880'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9388'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8932'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8936'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8940'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8008'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:3388'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:3392'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8564'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8560'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8568'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8676'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8680'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8692'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8696'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8684'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8724'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8728'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8804'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8800'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8808'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9608'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9612'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8824'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8816'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8828'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8824'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8832'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8836'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8832'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8964'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8960'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8972'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8968'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6288'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:8912'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:8908'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:8916'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:9072'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:9076'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6348'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6352'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6356'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6372'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:9080'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6368'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6396'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6532'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6528'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6536'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0104'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0100'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0104'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0104'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6508'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6508'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6508'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6512'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6512'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6512'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6512'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0100'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0104'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0104'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6508'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6512'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6512'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6512'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6512'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6512'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0148'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:2984'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00003:2988'. Continue anyway.
@@ -452,9 +409,9 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6396'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0812'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:2436'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6532'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6528'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6532'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6532'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6528'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6536'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:6536'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0304'. Continue anyway.
@@ -485,10 +442,10 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:9464'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:0716'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:0720'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:0728'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:0724'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:0728'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0688'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0692'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0684'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:3936'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:1952'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:1956'. Continue anyway.
@@ -531,225 +488,154 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:3784'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:4696'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:4568'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:4652'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:4648'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00026:9532'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00027:1116'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00027:1112'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00027:1120'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00027:4088'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00029:2588'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00030:3292'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00037:5544'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00043:9532'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00043:9532'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00029:2592'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00044:5316'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00044:5940'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00044:5776'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00044:5644'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00044:5640'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00044:5648'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00044:5652'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00044:5660'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00044:5716'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00044:5712'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00044:5716'. Continue anyway.
 [bam_rmdup_core] processing reference 10...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00117:8872'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00117:8876'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00117:8880'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00117:8888'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:0580'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:0576'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:0572'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:0584'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:0592'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00153:7680'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00082:4200'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00141:4464'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00141:4460'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00141:4468'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00106:8900'. Continue anyway.
 [bam_rmdup_core] processing reference 11...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00032:7320'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00058:6172'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00058:6176'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:7312'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:7316'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00020:7320'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:5732'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:5720'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:5724'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:5728'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00138:7092'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00138:7084'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00138:7080'. Continue anyway.
 [bam_rmdup_core] processing reference 12...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00085:9056'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00049:4832'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00156:8700'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00114:4220'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00114:4224'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00114:4228'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00114:4232'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00114:4236'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00070:1632'. Continue anyway.
 [bam_rmdup_core] processing reference 13...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00084:6660'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00084:6664'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00135:5784'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00123:4276'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00059:1744'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00059:1748'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00059:1736'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00084:6660'. Continue anyway.
 [bam_rmdup_core] processing reference 14...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00081:2524'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00060:5816'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00182:0044'. Continue anyway.
 [bam_rmdup_core] processing reference 15...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00015:9224'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00134:8992'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00150:9792'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00171:0368'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00085:5036'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00154:6840'. Continue anyway.
 [bam_rmdup_core] processing reference 16...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00180:6648'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00081:8532'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00081:8536'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00142:6644'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00049:5504'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00049:5508'. Continue anyway.
 [bam_rmdup_core] processing reference 17...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00189:0644'. Continue anyway.
 [bam_rmdup_core] processing reference 18...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00085:0368'. Continue anyway.
 [bam_rmdup_core] processing reference 19...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:7024'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:7020'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:7012'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00035:7772'. Continue anyway.
 [bam_rmdup_core] processing reference 2...
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00054:9664'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00106:9112'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00050:7152'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00050:7148'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00182:0044'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00054:9664'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00056:8872'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00082:4200'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00053:1568'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00053:1560'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00053:1560'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00053:1560'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00053:1564'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00053:1564'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00053:1564'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:2304'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:3204'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:3208'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:3204'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:3168'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7452'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7460'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7472'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7456'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:8368'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7560'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7564'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7568'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7572'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7576'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7588'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7628'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7636'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:7632'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:9072'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00061:9076'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:0164'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:0168'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:0936'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:0940'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:3364'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:3368'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:3360'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:2728'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:9104'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:9096'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:9100'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:9092'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:2748'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:2752'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:2756'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:2760'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:2780'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:2784'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:3284'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:5352'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:5628'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:5624'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:8804'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:5356'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:5632'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:5620'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:8800'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:8808'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:8812'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:8804'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6772'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6776'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6780'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6016'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6760'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6776'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6020'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6756'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6764'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6040'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9740'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9744'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6696'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6700'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6684'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9396'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9392'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9396'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9400'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9380'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9376'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9380'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9384'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:8948'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:8952'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:8956'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6524'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9156'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9164'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9168'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9172'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6256'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9224'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9168'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9164'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:6252'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9220'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9216'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9228'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9224'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9548'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9556'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9552'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9540'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9556'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9536'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9508'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9288'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9292'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:9288'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:8872'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00062:8836'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5996'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5612'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5592'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:6000'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5608'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5616'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5660'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5964'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5960'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5968'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5972'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5976'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5944'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5912'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5888'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5872'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5820'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5292'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5892'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5876'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5824'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5288'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5296'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5300'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5308'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5700'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5704'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5708'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5100'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5112'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5116'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5108'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:6016'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5584'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5588'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5592'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5592'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5600'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5136'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5996'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:6000'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5996'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5996'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:6000'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5612'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5608'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5612'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5612'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5608'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5616'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5616'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5148'. Continue anyway.
@@ -758,7 +644,6 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5632'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5984'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5644'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5648'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5652'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5656'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5660'. Continue anyway.
@@ -767,28 +652,22 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5948'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5944'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00065:5944'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:7552'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00082:6020'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0656'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0660'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0664'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00025:0668'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6504'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6508'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6488'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6492'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:5912'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:5920'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6384'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:5912'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6380'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6352'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6344'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6384'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6348'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6304'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6340'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6352'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6300'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6308'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6312'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6316'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6320'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6324'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6320'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6272'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6280'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6276'. Continue anyway.
@@ -798,77 +677,44 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6052'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6060'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6064'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6196'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6192'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6104'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6140'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6124'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:6120'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00069:8680'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00158:5468'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00158:5476'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00077:0024'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00077:0020'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00077:0028'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00077:5956'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00077:5960'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00077:5968'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00088:6536'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00088:6540'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00088:6544'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00088:6548'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00193:7456'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00193:7448'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00080:0784'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00080:0780'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00083:5684'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00089:2888'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00089:2892'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00089:2896'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00077:5964'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:2552'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:2520'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:2512'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:2516'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:2520'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:5740'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:5844'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:5848'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00090:5840'. Continue anyway.
 [bam_rmdup_core] processing reference 20...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00109:7088'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00197:2320'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00197:2324'. Continue anyway.
 [bam_rmdup_core] processing reference 21...
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00024:0224'. Continue anyway.
 [bam_rmdup_core] processing reference 22...
 [bam_rmdup_core] processing reference 3...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00188:8676'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00094:5148'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00094:5152'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00094:5156'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00094:5160'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00094:5728'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00095:8764'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00094:5732'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00096:1292'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00157:9824'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00157:9828'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00157:9828'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00157:9828'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00096:8956'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00159:8768'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00147:1488'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00159:8764'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00147:1484'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00147:1488'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00147:1488'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00138:2816'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00138:2820'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00147:1484'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00147:1484'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00180:3356'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00111:7940'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00111:7944'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00111:7936'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00001:1452'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00001:1448'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00116:7096'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00119:0804'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00119:0808'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00122:0532'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00122:0528'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00122:0536'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:9712'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:9704'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:1652'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:1104'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:1108'. Continue anyway.
@@ -878,71 +724,67 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:1112'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:1112'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:1832'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:1144'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:1744'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:1140'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:1740'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00127:1744'. Continue anyway.
 [bam_rmdup_core] processing reference 4...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00131:8476'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00066:7460'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:3484'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:3488'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:3480'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8072'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:8076'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:1764'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:1776'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9664'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9672'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9668'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9676'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9672'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:1948'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2024'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2056'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2092'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2096'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2100'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2124'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:3000'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2996'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2180'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2184'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2184'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2184'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2192'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2192'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2192'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2188'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2184'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2184'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2184'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2192'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2192'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2192'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2180'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2180'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2180'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2188'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2188'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2552'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2668'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2236'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2236'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2648'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2640'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2644'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2648'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2676'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2268'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2664'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2668'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2668'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2660'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2236'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2524'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2392'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2344'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2348'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2352'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2904'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2600'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2600'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2600'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2352'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2352'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2368'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2596'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2596'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2596'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2548'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2552'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2552'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2552'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2552'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2408'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2412'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2408'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2384'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2536'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2900'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2904'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2904'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2260'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2548'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2548'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2552'. Continue anyway.
@@ -950,61 +792,37 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2552'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2552'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2404'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2408'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2408'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2412'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2412'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2408'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2408'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2540'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2432'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2532'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2536'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2536'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2900'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2904'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2904'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9176'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9176'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00023:9176'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:3136'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:2876'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:3132'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00137:3140'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00138:1156'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00032:7320'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00138:8064'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00138:8068'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00138:8072'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00140:4528'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00140:4484'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00058:6172'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00058:6176'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00171:4664'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00171:4672'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00171:4668'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00171:4676'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00171:4680'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00146:2540'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00146:2532'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00146:2540'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00146:2544'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00097:9916'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00097:9916'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00108:9084'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00147:4116'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:9712'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:9704'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00147:4120'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00150:8028'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00150:8032'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00150:8036'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00155:6548'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00087:7312'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00087:7320'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00087:7320'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00087:7320'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00087:7316'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00087:7316'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00087:7316'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00087:7308'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00087:7308'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00087:7308'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00156:9312'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00084:7548'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00084:7556'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00084:7552'. Continue anyway.
 [bam_rmdup_core] processing reference 5...
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9352'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9112'. Continue anyway.
@@ -1012,6 +830,10 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9268'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9400'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9400'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9340'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9340'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9340'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9340'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9332'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9232'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9232'. Continue anyway.
@@ -1022,6 +844,7 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9416'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9416'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9416'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9184'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9184'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9352'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9352'. Continue anyway.
@@ -1034,6 +857,9 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9400'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9132'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9480'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9336'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9340'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9340'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9340'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9340'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9340'. Continue anyway.
@@ -1057,6 +883,8 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9240'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9184'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9184'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9184'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9184'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9268'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9268'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9268'. Continue anyway.
@@ -1071,6 +899,8 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9416'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9416'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9416'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9184'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9184'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9184'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9268'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9268'. Continue anyway.
@@ -1090,19 +920,16 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9516'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:9516'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00144:4912'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00074:3404'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00074:3412'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0008'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00168:7636'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9656'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9652'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9664'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0992'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0980'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0984'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9224'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9228'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9232'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00168:7452'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00168:7448'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9720'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00168:7540'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0256'. Continue anyway.
@@ -1111,13 +938,13 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00168:7564'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1968'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9256'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9656'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9652'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9656'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9656'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9652'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9664'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9664'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9196'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9644'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0988'. Continue anyway.
@@ -1130,43 +957,38 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0984'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0972'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0968'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9632'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9220'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9268'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9272'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0940'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9268'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0944'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0948'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9612'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9312'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2036'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9308'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2032'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2040'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0916'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0716'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0720'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9376'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9380'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9372'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9384'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0324'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9408'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0420'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2088'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0320'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0316'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0320'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0900'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2060'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2056'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2064'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2068'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2072'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9580'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9584'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9588'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9340'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9344'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2052'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0696'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2048'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0692'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0956'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9204'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9200'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9204'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9204'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9204'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9200'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9200'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9208'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9208'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9208'. Continue anyway.
@@ -1182,10 +1004,10 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00166:5944'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00166:5944'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9260'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1896'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1892'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1896'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1896'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1896'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1892'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1892'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1900'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1900'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1900'. Continue anyway.
@@ -1197,13 +1019,12 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9188'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9252'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1956'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1960'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1960'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1960'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1016'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9696'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9692'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9692'. Continue anyway.
@@ -1217,26 +1038,27 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1884'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00168:7508'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1024'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1032'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1032'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1032'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0600'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0592'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9240'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9236'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1048'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0636'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0640'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0640'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0640'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0648'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0648'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0648'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0652'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0652'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0652'. Continue anyway.
@@ -1248,63 +1070,56 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00166:6036'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00166:6036'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00166:6036'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1060'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1056'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0180'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0184'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0188'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0160'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0164'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00166:6764'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0136'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0140'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1816'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1820'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1824'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1828'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1832'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0016'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0012'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0020'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0028'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0032'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0036'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0024'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0040'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0044'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0048'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0940'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0052'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0944'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0948'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2036'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2032'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2040'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0916'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0716'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0720'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0296'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0432'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0308'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0736'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9372'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9376'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9376'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9376'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9380'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9380'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9380'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9372'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9372'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9372'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9384'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9384'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9384'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0884'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9564'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9560'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9560'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9560'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9568'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9568'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9568'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0328'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0324'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0324'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0324'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9552'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9408'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2160'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0832'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0836'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9452'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9456'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9452'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2168'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0144'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0144'. Continue anyway.
@@ -1314,20 +1129,19 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0772'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2148'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0420'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2088'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0320'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0316'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0320'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0900'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0560'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9656'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0556'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9652'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9664'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9720'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00168:7540'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0256'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0560'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0556'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0560'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0560'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0556'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00166:5964'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00168:7564'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1968'. Continue anyway.
@@ -1338,7 +1152,6 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0984'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0968'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1980'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9632'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1924'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9728'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0584'. Continue anyway.
@@ -1358,39 +1171,37 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1948'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00168:7540'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0256'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0560'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0556'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0560'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0560'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0556'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00166:5964'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00168:7564'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1968'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9256'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9656'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9652'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9656'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9656'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9652'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9664'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9664'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9660'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9648'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9196'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9644'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0968'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1980'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9632'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9616'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9612'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9612'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9612'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9608'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9296'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0940'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0944'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0940'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0940'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0944'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0948'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0948'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0260'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0700'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9616'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9616'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9612'. Continue anyway.
@@ -1398,23 +1209,21 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9612'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9612'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0272'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9312'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9308'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2036'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2032'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2036'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2036'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2032'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2040'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2040'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0712'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9332'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9356'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0716'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0720'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0716'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0716'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0720'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9376'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9380'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9372'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9384'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9560'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9568'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0324'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00166:5688'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:2108'. Continue anyway.
@@ -1429,10 +1238,10 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0756'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9416'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0396'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9204'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9200'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9204'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9204'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9204'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9200'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9200'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9208'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9208'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9208'. Continue anyway.
@@ -1450,14 +1259,14 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00180:3776'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9260'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9668'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9684'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9680'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9684'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9684'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9684'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9680'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9680'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1896'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1892'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1896'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1896'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1896'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1892'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1892'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1900'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1900'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1900'. Continue anyway.
@@ -1469,12 +1278,12 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9188'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9252'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1956'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1960'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1960'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1960'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1964'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9696'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9692'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9692'. Continue anyway.
@@ -1487,27 +1296,28 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9704'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1884'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1024'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1032'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1032'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1032'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1028'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0600'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0592'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9240'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:9236'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0656'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1048'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0636'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0640'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0640'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0640'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0648'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0648'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0648'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0644'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0652'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0652'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0652'. Continue anyway.
@@ -1522,95 +1332,68 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0180'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0184'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0188'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0160'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0164'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0136'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:0140'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1816'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1820'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1824'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1828'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00175:1832'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00177:0180'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00177:0184'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00011:8556'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00178:2416'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00178:2412'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00180:3900'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00180:3904'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:1176'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:1172'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00014:1176'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00182:9720'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00157:7640'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00109:6160'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00187:2540'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00157:7636'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00187:2544'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:2788'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00058:6172'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00058:6176'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:4928'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:4932'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:4928'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:4824'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:4828'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:1536'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:1440'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:4928'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:4932'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:4928'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:5264'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:8712'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00195:8772'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:1660'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:1664'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:1656'. Continue anyway.
 [bam_rmdup_core] processing reference 6...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00169:8708'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00196:5164'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00059:1288'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00059:1284'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00059:1272'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00059:1276'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00157:9792'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00142:0436'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00045:0968'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00082:4784'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00082:4780'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00082:4784'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00113:6792'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00113:6784'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00174:2956'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00059:1288'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00059:1284'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00059:1272'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00059:1276'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00113:6788'. Continue anyway.
 [bam_rmdup_core] processing reference 7...
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00105:8428'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00076:4636'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00076:4636'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00076:4632'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00076:4632'. Continue anyway.
 [bam_rmdup_core] processing reference 8...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:1064'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00177:1248'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:5992'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:1068'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:5996'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00165:6000'. Continue anyway.
 [bam_rmdup_core] processing reference 9...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00139:3356'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00171:4664'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00139:3352'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00171:4672'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00171:4668'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00171:4676'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00171:4680'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00067:9428'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00067:9428'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00067:9424'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00067:9424'. Continue anyway.
 [bam_rmdup_core] processing reference MT...
 [bam_rmdup_core] processing reference X...
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00107:2720'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00058:6172'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00058:6176'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00121:9776'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00121:9784'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00107:2716'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00121:9788'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00146:0708'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00121:9784'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00121:9780'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00146:0704'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:6220'. Continue anyway.
 [bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:6216'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:6220'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:6220'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:6220'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:6220'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:2212'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:2216'. Continue anyway.
-[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:2220'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:6216'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:6216'. Continue anyway.
+[bam_rmdup_core] inconsistent BAM file for pair 'M00784:48:000000000-A4PCU:1:1101:00176:6216'. Continue anyway.
 [bam_rmdup_core] processing reference Y...
 [bam_rmdup_core] processing reference GL000192.1...
 [bam_rmdup_core] processing reference GL000225.1...
@@ -1624,6 +1407,7 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] processing reference GL000205.1...
 [bam_rmdup_core] processing reference GL000217.1...
 [bam_rmdup_core] processing reference GL000211.1...
+[bam_rmdup_core] processing reference GL000220.1...
 [bam_rmdup_core] processing reference GL000218.1...
 [bam_rmdup_core] processing reference GL000221.1...
 [bam_rmdup_core] processing reference GL000214.1...
@@ -1639,4 +1423,4 @@ Approx 95% complete for Sample04_2P
 [bam_rmdup_core] processing reference GL000245.1...
 [bam_rmdup_core] processing reference GL000247.1...
 [bam_rmdup_core] processing reference GL000235.1...
-[bam_rmdup_core] 4281 / 6971 = 0.6141 in library '	'
+[bam_rmdup_core] 3468 / 5682 = 0.6103 in library '	'

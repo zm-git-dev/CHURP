@@ -1,0 +1,8 @@
+Warning: Could not connect to update server to verify current version. Please check at the Cufflinks website (http://cufflinks.cbcb.umd.edu).
+Error: cuffquant requires exactly 1 SAM/BAM file
+mv: cannot stat ‘abundances.cxb’: No such file or directory
+Warning: Could not connect to update server to verify current version. Please check at the Cufflinks website (http://cufflinks.cbcb.umd.edu).
+Error: cuffdiff requires at least 2 SAM files
+/panfs/roc/msisoft/R/3.5.0/lib64/R/bin/Rcmd: line 62: exec: Batch: not found
+mv: cannot stat ‘bams/subread.counts.txt’: No such file or directory
+mv: cannot stat ‘bams/EdgeR.RData’: No such file or directory

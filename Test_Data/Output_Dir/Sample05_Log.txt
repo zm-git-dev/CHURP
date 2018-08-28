@@ -1,4 +1,4 @@
-2018-08-28 10:05:20: Analysis for Sample05 started
+2018-08-28 17:08:49: Analysis for Sample05 started
 Currently Loaded Modulefiles:
 hisat2/2.1.0
 java/jdk1.7.0_45
@@ -13,16 +13,17 @@ mpc/1.0.3_gcc7.2.0
 isl/0.18_gcc7.2.0
 gcc/7.2.0
 samtools/1.7
-2018-08-28 10:05:20: Running fastqc on /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R1_001.fastq.gz and /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R2_001.fastq.gz.
-fastqc -t 2 /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R1_001.fastq.gz /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R2_001.fastq.gz
-2018-08-28 10:05:33: Running trimmomatic on /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R1_001.fastq.gz and /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R2_001.fastq.gz.
-java -jar /panfs/roc/msisoft/trimmomatic/0.33//trimmomatic.jar PE -threads 8 -basein /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R1_001.fastq.gz -baseout Sample05 ILLUMINACLIP:/panfs/roc/groups/14/msistaff/public/all_adapter.fa:4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18 2>trim.log
-2018-08-28 10:05:42: Running fastqc on trimmed fastq files.
-fastqc -t 2 Sample05_1P Sample05_2P
-2018-08-28 10:05:51: Aligning trimmed reads with HISAT2.
-hisat2 -p 6  -x /panfs/roc/scratch/konox006/gopher-pipelines_test/genome/grch37_snp_tran/genome_snp_tran -1 Sample05_1P -2 Sample05_2P -S Sample05.sam 2>alignment.summary
-2018-08-28 10:07:02: Sorting, indexing, and removing duplicates from HISAT2 alignment.
-samtools view -bh -F 4 -@ 8 Sample05.sam | samtools sort -o Sample05.sorted.bam -@ 8 -O bam -T temp 
-samtools index Sample05.sorted.bam
-samtools rmdup Sample05.sorted.bam Sample05.sorted.rmdup.bam
-2018-08-28 10:07:18: Finished processing Sample05.
+2018-08-28 17:08:49: PURGE=true; re-running all analyses.
+2018-08-28 17:08:49: Running fastqc on /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R1_001.fastq.gz and /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R2_001.fastq.gz.
+fastqc -t 2 "/panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R1_001.fastq.gz" "/panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R2_001.fastq.gz"
+2018-08-28 17:08:59: Running trimmomatic on /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R1_001.fastq.gz and /panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R2_001.fastq.gz.
+java -jar /panfs/roc/msisoft/trimmomatic/0.33//trimmomatic.jar PE -threads 8 -basein "/panfs/roc/scratch/konox006/gopher-pipelines_test/Test_Project_010/Sample05_R1_001.fastq.gz" -baseout "Sample05" ILLUMINACLIP:/panfs/roc/groups/14/msistaff/public/all_adapter.fa:4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18 2>trim.log
+2018-08-28 17:09:12: Running fastqc on trimmed fastq files.
+fastqc -t 2 "Sample05_1P" "Sample05_2P"
+2018-08-28 17:09:19: Aligning trimmed reads with HISAT2.
+hisat2 -p 4 --no-unal --new-summary --no-softclip -x "'/panfs/roc/scratch/konox006/gopher-pipelines_test/genome/grch37_snp_tran/genome_snp_tran'" -1 "'Sample05_1P'" -2 "'Sample05_2P'" -S "Sample05.sam" 2>alignment.summary
+2018-08-28 17:10:57: Sorting, indexing, and removing duplicates from HISAT2 alignment.
+samtools view -bh -F 4 -@ 8 "Sample05".sam | samtools sort -o "Sample05.sorted.bam" -@ 8 -O bam -T temp 
+samtools index "Sample05.sorted.bam"
+samtools rmdup "Sample05.sorted.bam" "Sample05.sorted.rmdup.bam"
+2018-08-28 17:11:15: Finished processing Sample05.
