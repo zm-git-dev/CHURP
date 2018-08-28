@@ -87,11 +87,11 @@ if [ ! -f hisat2.done ]; then
     if [ "${TRIM}" = "yes" ]; then
         echo "$(date '+%F %T'): Aligning trimmed reads with HISAT2." >> "${LOG_FNAME}"
         echo "hisat2 ${HISAT2OPTS} -x \"${HISAT2INDEX}\" -1 \"${SAMPLENM}\"_1P -2 \"${SAMPLENM}\"_2P -S \"${SAMPLENM}\".sam 2>alignment.summary" >> "${LOG_FNAME}"
-        hisat2 ${HISAT2OPTS} -x "${HISAT2INDEX}" -1 "${SAMPLENM}_1P" -2 "${SAMPLENM}_2P" -S "${SAMPLENM}.sam" 2>alignment.summary
+        hisat2 ${HISAT2OPTS} -x "${HISAT2INDEX}" -1 "'${SAMPLENM}_1P'" -2 "'${SAMPLENM}_2P'" -S "'${SAMPLENM}.sam'" 2>alignment.summary
     else
         echo "$(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
         echo "hisat2 ${HISAT2OPTS} -x \"${HISAT2INDEX}\" -1 \"${R1FILE}\" -2 \"${R2FILE}\" -S \"${SAMPLENM}\".sam 2>alignment.summary" >> "${LOG_FNAME}"
-        hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -1 "${R1FILE}" -2 "${R2FILE}" -S "${SAMPLENM}.sam" 2>alignment.summary
+        hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -1 "'${R1FILE}'" -2 "'${R2FILE}'" -S "${SAMPLENM}.sam" 2>alignment.summary
     fi
     touch hisat2.done
 fi
