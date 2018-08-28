@@ -193,6 +193,9 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug(
             'Number of samples: %i', len(self.sheet.final_sheet))
         self.pipe_logger.debug('Samplesheet: %s', ss)
+        # Write command to figure out email address of submitting user
+        handle.write('user_name="$(id -u -n)"\n')
+        handle.write('user_email="${user_name}@umn.edu"\n')
         # This is the command for aligning and cleaning
         qsub_resources = '"mem=' + str(self.mem) + 'mb'
         qsub_resources += ',nodes=1:ppn=' + str(self.ppn)
@@ -201,6 +204,10 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'qsub',
             '-q',
             'mesabi',
+            '-m',
+            'abe',
+            '-M',
+            '${user_email}',
             '-l',
             qsub_resources,
             '-t',
@@ -215,6 +222,10 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'qsub',
             '-q',
             'mesabi',
+            '-m',
+            'abe',
+            '-M',
+            '${user_email}',
             '-W',
             'depend=afterok:${single_id}',
             '-v',
