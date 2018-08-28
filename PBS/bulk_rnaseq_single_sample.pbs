@@ -43,8 +43,7 @@ module list -t
 
 # Print the loaded module information to a file
 LOG_FNAME="${OUTDIR}/${SAMPLENM}_Log.txt"
-DATETIME=$(date "+%F %T")
-echo "Analysis for ${SAMPLENM} started at ${DATETIME}" > ${LOG_FNAME}
+echo "$(date '+%F %T'): Analysis for ${SAMPLENM} started" > ${LOG_FNAME}
 module list -t 2>> ${LOG_FNAME}
 
 # set working directory
@@ -53,7 +52,7 @@ cd ${WORKDIR}/singlesamples/${SAMPLENM}
 
 # check whether to purge files or not. $PURGE will be parsed by command line
 if [ $PURGE = "true" ]; then
-    echo "PURGE=true; re-running all analyses." >> ${LOG_FNAME}
+    echo "$(date '+%F %T'): PURGE=true; re-running all analyses." >> ${LOG_FNAME}
     find . -name '*.done' -delete
 fi
 
@@ -62,7 +61,7 @@ fi
 
 # Set Up a log file instead (?)
 if [ ! -f fastqc.done ]; then
-    echo "Running fastqc on ${R1FILE} and ${R2FILE}." >> ${LOG_FNAME}
+    echo "$(date '+%F %T'): Running fastqc on ${R1FILE} and ${R2FILE}." >> ${LOG_FNAME}
     echo "fastqc -t 2 ${R1FILE} ${R2FILE}" >> ${LOG_FNAME}
     fastqc -t 2 ${R1FILE} ${R2FILE}
     touch fastqc.done
@@ -71,13 +70,13 @@ fi
 # To use -basein option, fastq file must be in format *_R1_*.fastq and *_R2_*.fastq
 if [ $TRIM = "yes" ]; then
     if [ ! -f trimmomatic.done ]; then
-        echo "Running trimmomatic on ${R1FILE} and ${R2FILE}." >> ${LOG_FNAME}
+        echo "$(date '+%F %T'): Running trimmomatic on ${R1FILE} and ${R2FILE}." >> ${LOG_FNAME}
         echo "java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads 8 -basein $R1FILE -baseout ${SAMPLENM} $TRIMOPTS 2>trim.log" >> ${LOG_FNAME}
         java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads 8 -basein $R1FILE -baseout ${SAMPLENM} $TRIMOPTS 2>trim.log
         touch trimmomatic.done
     fi
     if [ ! -f fastqc.trim.done ]; then
-        echo "Running fastqc on trimmed fastq files." >> ${LOG_FNAME}
+        echo "$(date '+%F %T'): Running fastqc on trimmed fastq files." >> ${LOG_FNAME}
         echo "fastqc -t 2 ${SAMPLENM}_1P ${SAMPLENM}_2P" >> ${LOG_FNAME}
         fastqc -t 2 ${SAMPLENM}_1P ${SAMPLENM}_2P
         touch fastqc.trim.done
@@ -86,11 +85,11 @@ fi
 
 if [ ! -f hisat2.done ]; then
     if [ $TRIM = "yes" ]; then
-        echo "Aligning trimmed reads with HISAT2." >> ${LOG_FNAME}
+        echo "$(date '+%F %T'): Aligning trimmed reads with HISAT2." >> ${LOG_FNAME}
         echo "hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 ${SAMPLENM}_1P -2 ${SAMPLENM}_2P -S ${SAMPLENM}.sam 2>alignment.summary" >> ${LOG_FNAME}
         hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 ${SAMPLENM}_1P -2 ${SAMPLENM}_2P -S ${SAMPLENM}.sam 2>alignment.summary
     else
-        echo "Aligning reads with HISAT2." >> ${LOG_FNAME}
+        echo "$(date '+%F %T'): Aligning reads with HISAT2." >> ${LOG_FNAME}
         echo "hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 $R1FILE -2 $R2FILE -S ${SAMPLENM}.sam 2>alignment.summary" >> ${LOG_FNAME}
         hisat2 $HISAT2OPTS -x $HISAT2INDEX -1 $R1FILE -2 $R2FILE -S ${SAMPLENM}.sam 2>alignment.summary
     fi
@@ -99,7 +98,7 @@ fi
 
 # use samtools to remove unmapped reads, could be done in picard too.
 if [ ! -f samtools.done ]; then
-    echo "Sorting, indexing, and removing duplicates from HISAT2 alignment." >> ${LOG_FNAME}
+    echo "$(date '+%F %T'): Sorting, indexing, and removing duplicates from HISAT2 alignment." >> ${LOG_FNAME}
     echo "samtools view -bh -F 4 -@ 8 ${SAMPLENM}.sam | samtools sort -o ${SAMPLENM}.sorted.bam -@ 8 -O bam -T temp " >> ${LOG_FNAME}
     echo "samtools index ${SAMPLENM}.sorted.bam" >> ${LOG_FNAME}
     echo "samtools rmdup ${SAMPLENM}.sorted.bam ${SAMPLENM}.sorted.rmdup.bam" >> ${LOG_FNAME}
@@ -109,6 +108,5 @@ if [ ! -f samtools.done ]; then
     touch samtools.done
 fi
 
-DATETIME=$(date "+%F %T")
-echo "Finished processing ${SAMPLENM} at ${DATETIME}." >> ${LOG_FNAME}
+echo "$(date '+%F %T'): Finished processing ${SAMPLENM}." >> ${LOG_FNAME}
 touch ${SAMPLENM}.done
