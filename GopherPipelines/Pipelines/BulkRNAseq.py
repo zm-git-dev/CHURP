@@ -200,6 +200,9 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         qsub_resources = '"mem=' + str(self.mem) + 'mb'
         qsub_resources += ',nodes=1:ppn=' + str(self.ppn)
         qsub_resources += ',walltime=' + str(self.walltime * 3600) + '"'
+        qsub_array = '1'
+        if len(self.sheet.final_sheet) > 1:
+            qsub_array += '-' + str(len(self.sheet.final_sheet))
         aln_cmd = [
             'qsub',
             '-q',
@@ -211,7 +214,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-l',
             qsub_resources,
             '-t',
-            '1-' + str(len(self.sheet.final_sheet)),
+            qsub_array,
             '-v',
             '"SampleSheet='+ss+',PURGE=' + self.purge + '"',
             self.single_sample_script]
