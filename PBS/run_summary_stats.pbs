@@ -48,8 +48,8 @@ echo "$(date '+%F %T'): Making allsamples/bams directory." >> "${LOG_FNAME}"
 echo "mkdir -p "'"'"${WORKDIR}/allsamples/bams"'"'" && cd "'"'"${WORKDIR}/allsamples/bams"'"' >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/allsamples/bams" && cd "${WORKDIR}/allsamples/bams"
 
-# Link them into the current directory
-for BAM in "${WORKDIR}/singlesamples/*/*.sorted.rmdup.bam"
+# Link single sample BAMs into the current directory
+for BAM in "$(find ${WORKDIR}/singlesamples -type f -name '*sorted.rmdup.bam')"
 do
     if [ -e "${BAM}" ]
         then
