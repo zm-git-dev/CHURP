@@ -51,12 +51,13 @@ echo "$(date '+%F %T'): Analysis for ${SAMPLENM} started" > "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 
 # set working directory
-mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}"
-cd "${WORKDIR}/singlesamples/${SAMPLENM}"
+echo "mkdir -p "'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" && cd "'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"' >> "${LOG_FNAME}"
+mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}" && cd "${WORKDIR}/singlesamples/${SAMPLENM}"
 
 # check whether to purge files or not. $PURGE will be parsed by command line
 if [ "${PURGE}" = "true" ]; then
     echo "$(date '+%F %T'): PURGE=true; re-running all analyses." >> "${LOG_FNAME}"
+    echo "find . -name '*.done' -delete" >> "${LOG_FNAME}"
     find . -name '*.done' -delete
 fi
 

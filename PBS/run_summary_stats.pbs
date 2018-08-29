@@ -1,38 +1,94 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=1,mem=16gb,walltime=8:00:00
+set -e
+set -u
+set -o pipefail
+
+# Check for PBS/Samplesheet version agreement
+PIPELINE_VERSION="0"
+SAMPLESHEET_VERSION=$(tail -n 1 "${SampleSheet}" | sed -E 's/#//g')
+if [ "${SAMPLESHEET_VERSION}" -ne "${PIPELINE_VERSION}" ]
+then
+    echo "${SampleSheet} is incompatible with this version of gopher-pipelines."
+    echo "${SampleSheet} was generated with version ${SAMPLESHEET_VERSION}, and this script requires ${PIPELINE_VERSION}."
+    exit 100
+fi
+
+# Read the first line of the samplesheet to get the working directory and the
+# GTF. This is not super elegant, but it works with the samplesheet format
+IN=$(head -n 1 "${SampleSheet}")
+# handle empty line and comment line
+[ -z "${IN// }" ] && echo "hit an empty line in sample sheet" && exit $?
+[ "$IN" = "#.*" ] && echo "hit a comment line in sample sheet" && exit $?
+while IFS="|" read -ra OPTS; do 
+    SAMPLENM=${OPTS[0]}
+    R1FILE=${OPTS[1]}
+    R2FILE=${OPTS[2]}
+    OUTDIR=${OPTS[3]}
+    WORKDIR=${OPTS[4]}
+    TRIM=${OPTS[5]}
+    TRIMOPTS=${OPTS[6]}
+    HISAT2INDEX=${OPTS[7]}
+    HISAT2OPTS=${OPTS[8]}
+    STRANDEDLIB=${OPTS[9]}
+    GTFFILE=${OPTS[10]}
+done <<< "$IN"
 
 # load necessary modules
 module load R/3.5.0
 module load cufflinks/2.2.1
 
-cd ${WORKDIR}
+# Print the loaded modules to stderr and a log file
+module list -t
+LOG_FNAME="${OUTDIR}/BulkRNASeq_Summary_Log.txt"
+echo "$(date '+%F %T'): Summary started" > "${LOG_FNAME}"
+module list -t 2>> "${LOG_FNAME}"
 
-mkdir allsamples
+echo "$(date '+%F %T'): Making allsamples/bams directory." >> "${LOG_FNAME}"
+echo "mkdir -p "'"'"${WORKDIR}/allsamples/bams"'"'" && cd "'"'"${WORKDIR}/allsamples/bams"'"' >> "${LOG_FNAME}"
+mkdir -p "${WORKDIR}/allsamples/bams" && cd "${WORKDIR}/allsamples/bams"
 
-cd allsamples
-
-# make all bam files accessible from the allsample directory
-mkdir bams
-
-cd bams
-
-ln -s ${WORKDIR}/singlesamples/*/*.sorted.rmdup.bam .
-
-fnms=`ls *.bam | cut -f1 -d"."`
-# do FPKM counting using cufflinks
-for fnm in $fnms; do
-    cuffquant ${GTFFILE} ${fnm}.sorted.rmdup.bam
-    mv abundances.cxb ${fnm}.cxb
+# Link them into the current directory
+for BAM in "${WORKDIR}/singlesamples/*/*.sorted.rmdup.bam"
+do
+    if [ -e "${BAM}" ]
+        then
+            echo "$(date '+%F %T'): Linking ${BAM} into ${WORKDIR}/allsamples/bams" >> "${LOG_FNAME}"
+            echo "ln -s "'"'"${BAM}"'"'" ." >> "${LOG_FNAME}"
+            ln -s "${BAM}" .
+    fi
 done
 
-cuffnorm ${GTFFILE} *.cxb -o ../cuffnorm_out
+# Count FPKM using cufflinks
+for SAMPLE in "$(find . -type f ! -name '.*' -a -name '*.bam')"
+do
+    bname="$(basename "${SAMPLE}" | cut -f 1 -d '.')"
+    echo "$(date '+%F %T'): Calculating FPKM on ${SAMPLE} using ${GTFFILE}" >> "${LOG_FNAME}"
+    echo "cuffquant "'"'"${GTFFILE}"'"'" "'"'"${SAMPLE}"'"'" && mv abundances.csv "'"'"${bname}.cxb"'"' >> "${LOG_FNAME}"
+    cuffquant "${GTFFILE}" "${SAMPLE}" && mv abundances.csv "${bname}.cxb"
+done
+
+# Normalize
+echo "$(date '+%F %T'): Normalizing cxb files, saving at ${WORKDIR}/allsamples/cuffnorm_out/" >> "${LOG_FNAME}"
+CXBS="$(find . -type f ! -name '.*' -a -name '*.cxb')"
+echo "cuffnorm "'"'"${GTFFILE}"'"'" "'"'"${CXBS[@]}"'"'" -o "'"'"${WORKDIR}/allsamples/cuffnorm_out/"'"' >> "${LOG_FNAME}"
+cuffnorm "${GTFFILE}" "${CXBS[@]}" -o "${WORKDIR}/allsamples/cuffnorm_out/"
 
 # do Subread count in R, report subread.counts.txt, tpm.txt, EdgeR.RData
 # Rsubread can run in multithreaded fashion
-R --vanilla CMD Batch prep.r ${GFFFILE}
+echo "$(date '+%F %T'): Running ${PREPR}" >> "${LOG_FNAME}"
+echo "R --vanilla CMD BATCH "'"'"${PREPR}"'"'" "'"'"${GTFFILE}"'"' >> "${LOG_FNAME}"
+R --vanilla CMD BATCH "${PREPR}" "${GTFFILE}"
 
-cd ..
+echo "cd "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
+cd "${WORKDIR}/allsamples"
 
+echo "$(date '+%F +%T'): Linking cuffnorm output and edgeR ourput into ${WORKDIR}/allsamples" >> "${LOG_FNAME}"
+echo "ln -s cuffnorm_out/genes.fpkm_table.renamed samples.fpkms.txt" >> "${LOG_FNAME}"
+echo "mv bams/subread.counts.txt samples.subread.counts.txt" >> "${LOG_FNAME}"
+echo "mv bams/EdgeR.RData ." >> "${LOG_FNAME}"
 ln -s cuffnorm_out/genes.fpkm_table.renamed samples.fpkms.txt
 mv bams/subread.counts.txt samples.subread.counts.txt
 mv bams/EdgeR.RData .
+
+echo "$(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"

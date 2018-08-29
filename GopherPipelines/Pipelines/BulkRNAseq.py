@@ -54,6 +54,11 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             os.path.realpath(__file__).rsplit(os.path.sep, 3)[0],
             'PBS',
             'run_summary_stats.pbs')
+        # Set the path to the prep.r script
+        self.r_prep = os.path.join(
+            os.path.realpath(__file__).rsplit(os.path.sep, 3)[0],
+            'R_Scripts',
+            'prep.r')
         return
 
     def _validate_args(self, a):
@@ -232,7 +237,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-W',
             '"depend=afterokarray:${single_id}"',
             '-v',
-            '"base_in='+ss+'"',
+            '"SampleSheet='+ss+',PREPR='+self.r_prep+'"',
             self.summary_script]
         # Write the second command
         handle.write('summary_id=$(' + ' '.join(summary_cmd) + ')\n')
