@@ -49,7 +49,7 @@ echo "mkdir -p "'"'"${WORKDIR}/allsamples/bams"'"'" && cd "'"'"${WORKDIR}/allsam
 mkdir -p "${WORKDIR}/allsamples/bams" && cd "${WORKDIR}/allsamples/bams"
 
 # Link single sample BAMs into the current directory
-for BAM in "$(find ${WORKDIR}/singlesamples -type f -name '*sorted.rmdup.bam')"
+for BAM in $(find "${WORKDIR}/singlesamples" -type f -name '*sorted.rmdup.bam')
 do
     if [ -e "${BAM}" ]
         then
@@ -60,7 +60,7 @@ do
 done
 
 # Count FPKM using cufflinks
-for SAMPLE in "$(find . -type f ! -name '.*' -a -name '*.bam')"
+for SAMPLE in $(find . -type f ! -name '.*' -a -name '*.bam')
 do
     bname="$(basename "${SAMPLE}" | cut -f 1 -d '.')"
     echo "$(date '+%F %T'): Calculating FPKM on ${SAMPLE} using ${GTFFILE}" >> "${LOG_FNAME}"
@@ -70,7 +70,7 @@ done
 
 # Normalize
 echo "$(date '+%F %T'): Normalizing cxb files, saving at ${WORKDIR}/allsamples/cuffnorm_out/" >> "${LOG_FNAME}"
-CXBS="$(find . -type f ! -name '.*' -a -name '*.cxb')"
+CXBS=($(find . -type f ! -name '.*' -a -name '*.cxb'))
 echo "cuffnorm "'"'"${GTFFILE}"'"'" "'"'"${CXBS[@]}"'"'" -o "'"'"${WORKDIR}/allsamples/cuffnorm_out/"'"' >> "${LOG_FNAME}"
 cuffnorm "${GTFFILE}" "${CXBS[@]}" -o "${WORKDIR}/allsamples/cuffnorm_out/"
 
