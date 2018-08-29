@@ -45,9 +45,9 @@ echo "$(date '+%F %T'): Summary started" > "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 
 # Check if the GTF file is gzipped - it should not be.
-if [ "$(file -b --mime-type "${GTFFILE}" )" = "application/x-gzip" ]
+if [ "$(file -b --mime-type "${GTFFILE}")" = "application/x-gzip" ]
 then
-    echo "${GTFFILE} appears to be gzipped. Decompressing into ${WORKDIR}" >> "${LOG_FNAME}"
+    echo "$(date '+%F %T'): ${GTFFILE} appears to be gzipped. Decompressing into ${WORKDIR}" >> "${LOG_FNAME}"
     echo "gzip -cd "'"'"${GTFFILE}"'"'" > "'"'"${WORKDIR}/annotations.gtf"'"' >> "${LOG_FNAME}"
     gzip -cd "${GTFFILE}" > "${WORKDIR}/annotations.gtf"
     REALGTF="${WORKDIR}/annotations.gtf"
@@ -75,8 +75,8 @@ for SAMPLE in $(find . ! -name '.*' -a -name '*.bam')
 do
     bname="$(basename "${SAMPLE}" | cut -f 1 -d '.')"
     echo "$(date '+%F %T'): Calculating FPKM on ${SAMPLE} using ${REALGTF}" >> "${LOG_FNAME}"
-    echo "cuffquant "'"'"${REALGTF}"'"'" "'"'"${SAMPLE}"'"'" && mv abundances.csv "'"'"${bname}.cxb"'"' >> "${LOG_FNAME}"
-    cuffquant "${REALGTF}" "${SAMPLE}" && mv abundances.csv "${bname}.cxb"
+    echo "cuffquant "'"'"${REALGTF}"'"'" "'"'"${SAMPLE}"'"'" && mv abundances.cxb "'"'"${bname}.cxb"'"' >> "${LOG_FNAME}"
+    cuffquant "${REALGTF}" "${SAMPLE}" && mv abundances.cxb "${bname}.cxb"
 done
 
 # Normalize
