@@ -44,6 +44,17 @@ LOG_FNAME="${OUTDIR}/BulkRNASeq_Summary_Log.txt"
 echo "$(date '+%F %T'): Summary started" > "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 
+# Check if the GTF file is gzipped - it should not be.
+if [ "$(file -b --mime-type "${GTFFILE}" )" = "application/x-gzip" ]
+then
+    echo "${GTFFILE} appears to be gzipped. Decompressing into ${WORKDIR}" >> "${LOG_FNAME}"
+    echo "gzip -cd "'"'"${GTFFILE}"'"'" > "'"'"${WORKDIR}/annotations.gtf"'"' >> "${LOG_FNAME}"
+    gzip -cd "${GTFFILE}" > "${WORKDIR}/annotations.gtf"
+    REALGTF="${WORKDIR}/annotations.gtf"
+else
+    REALGTF="${GTFFILE}"
+fi
+
 echo "$(date '+%F %T'): Making allsamples/bams directory." >> "${LOG_FNAME}"
 echo "mkdir -p "'"'"${WORKDIR}/allsamples/bams"'"'" && cd "'"'"${WORKDIR}/allsamples/bams"'"' >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/allsamples/bams" && cd "${WORKDIR}/allsamples/bams"
@@ -54,8 +65,8 @@ do
     if [ -e "${BAM}" ]
         then
             echo "$(date '+%F %T'): Linking ${BAM} into ${WORKDIR}/allsamples/bams" >> "${LOG_FNAME}"
-            echo "ln -s "'"'"${BAM}"'"'" ." >> "${LOG_FNAME}"
-            ln -s "${BAM}" .
+            echo "ln -s -f "'"'"${BAM}"'"'" ." >> "${LOG_FNAME}"
+            ln -s -f "${BAM}" .
     fi
 done
 
@@ -63,22 +74,22 @@ done
 for SAMPLE in $(find . ! -name '.*' -a -name '*.bam')
 do
     bname="$(basename "${SAMPLE}" | cut -f 1 -d '.')"
-    echo "$(date '+%F %T'): Calculating FPKM on ${SAMPLE} using ${GTFFILE}" >> "${LOG_FNAME}"
-    echo "cuffquant "'"'"${GTFFILE}"'"'" "'"'"${SAMPLE}"'"'" && mv abundances.csv "'"'"${bname}.cxb"'"' >> "${LOG_FNAME}"
-    cuffquant "${GTFFILE}" "${SAMPLE}" && mv abundances.csv "${bname}.cxb"
+    echo "$(date '+%F %T'): Calculating FPKM on ${SAMPLE} using ${REALGTF}" >> "${LOG_FNAME}"
+    echo "cuffquant "'"'"${REALGTF}"'"'" "'"'"${SAMPLE}"'"'" && mv abundances.csv "'"'"${bname}.cxb"'"' >> "${LOG_FNAME}"
+    cuffquant "${REALGTF}" "${SAMPLE}" && mv abundances.csv "${bname}.cxb"
 done
 
 # Normalize
 echo "$(date '+%F %T'): Normalizing cxb files, saving at ${WORKDIR}/allsamples/cuffnorm_out/" >> "${LOG_FNAME}"
 CXBS=($(find . -type f ! -name '.*' -a -name '*.cxb'))
-echo "cuffnorm "'"'"${GTFFILE}"'"'" "'"'"${CXBS[@]}"'"'" -o "'"'"${WORKDIR}/allsamples/cuffnorm_out/"'"' >> "${LOG_FNAME}"
-cuffnorm "${GTFFILE}" "${CXBS[@]}" -o "${WORKDIR}/allsamples/cuffnorm_out/"
+echo "cuffnorm "'"'"${REALGTF}"'"'" "'"'"${CXBS[@]}"'"'" -o "'"'"${WORKDIR}/allsamples/cuffnorm_out/"'"' >> "${LOG_FNAME}"
+cuffnorm "${REALGTF}" "${CXBS[@]}" -o "${WORKDIR}/allsamples/cuffnorm_out/"
 
 # do Subread count in R, report subread.counts.txt, tpm.txt, EdgeR.RData
 # Rsubread can run in multithreaded fashion
 echo "$(date '+%F %T'): Running ${PREPR}" >> "${LOG_FNAME}"
-echo "R --vanilla CMD BATCH "'"'"${PREPR}"'"'" "'"'"${GTFFILE}"'"' >> "${LOG_FNAME}"
-R --vanilla CMD BATCH "${PREPR}" "${GTFFILE}"
+echo "R --vanilla CMD BATCH "'"'"${PREPR}"'"'" "'"'"${REALGTF}"'"' >> "${LOG_FNAME}"
+R --vanilla CMD BATCH "${PREPR}" "${REALGTF}"
 
 echo "cd "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
 cd "${WORKDIR}/allsamples"
