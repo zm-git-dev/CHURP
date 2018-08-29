@@ -60,7 +60,7 @@ do
 done
 
 # Count FPKM using cufflinks
-for SAMPLE in $(find . -type f ! -name '.*' -a -name '*.bam')
+for SAMPLE in $(find . ! -name '.*' -a -name '*.bam')
 do
     bname="$(basename "${SAMPLE}" | cut -f 1 -d '.')"
     echo "$(date '+%F %T'): Calculating FPKM on ${SAMPLE} using ${GTFFILE}" >> "${LOG_FNAME}"
