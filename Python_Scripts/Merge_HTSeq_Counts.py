@@ -29,10 +29,16 @@ def main(counts_dir):
         with open(cts_files[s], 'r') as f:
             for line in f:
                 tmp = line.strip().split()
-                cts_mat[s][(tmp[0], tmp[1])] = tmp[2]
+                if len(tmp) > 2:
+                    key = tmp[0] + '\t' + tmp[1]
+                else:
+                    key = tmp[0]
+                cts_mat[s][key] = tmp[2]
+    # Get a list of the genes
+    genes = sorted([k for k, v in cts_mat.items()])
     # And print them out in order
     print('\t'.join([''] + sorted(cts_mat)))
-    for g in sorted(cts_mat[sorted(cts_mat)[0]]):
+    for g in genes:
         toprint = [g]
         for s in sorted(cts_mat):
             toprint.append(cts_mat[s][g])
