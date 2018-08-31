@@ -53,6 +53,7 @@ mkdir -p "${WORKDIR}/allsamples" && cd "${WORKDIR}/allsamples"
 
 # Merge the single-sample counts into a large matrix
 echo "$(date '+%F %T'): Merging read counts from all samples." >> "${LOG_FNAME}"
+echo "python3 "'"'"${MERGECOUNTS}"'"'" "'"'"${WORKDIR}/singlesamples"'"'" > merged_counts.txt" >> "${LOG_FNAME}"
 python3 "${MERGECOUNTS}" "${WORKDIR}/singlesamples" > merged_counts.txt
 
 # do Subread count in R, report subread.counts.txt, tpm.txt, EdgeR.RData
