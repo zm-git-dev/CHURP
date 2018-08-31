@@ -37,7 +37,9 @@ def main(counts_dir):
                     val = tmp[1]
                 cts_mat[s][key] = val
     # Get a list of the genes
-    genes = sorted([k for k, v in cts_mat.items()])
+    for sample in cts_mat:
+        genes = sorted(list(cts_mat[sample].items())[0])
+        break
     # And print them out in order
     print('\t'.join([''] + sorted(cts_mat)))
     for g in genes:
