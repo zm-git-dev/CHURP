@@ -14,7 +14,7 @@ def find_counts_files(c):
     cfiles = {}
     apath = os.path.abspath(os.path.expanduser(c))
     for cf in glob.iglob(apath + '/**/*.counts'):
-        sn = os.path.basename(cfile).rstrip('.counts')
+        sn = os.path.basename(cf).rstrip('.counts')
         cfiles[sn] = cf
     return cfiles
 
