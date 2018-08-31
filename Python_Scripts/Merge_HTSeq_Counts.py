@@ -29,7 +29,7 @@ def main(counts_dir):
         with open(cts_files[s], 'r') as f:
             for line in f:
                 tmp = line.strip().split()
-                cts_mat[s][tmp[0]] = tmp[1]
+                cts_mat[s][(tmp[0], tmp[1])] = tmp[2]
     # And print them out in order
     print('\t'.join([''] + sorted(cts_mat)))
     for g in sorted(cts_mat[sorted(cts_mat)[0]]):

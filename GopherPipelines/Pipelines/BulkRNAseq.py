@@ -232,7 +232,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         handle.write('single_id=$(' + ' '.join(aln_cmd) + ')\n')
         # This is the command for counting and normalizing reads
         summary_vars = ''.join([
-            'Samplesheet=',
+            'SampleSheet=',
             ss,
             ',PREPR=',
             self.r_prep,
