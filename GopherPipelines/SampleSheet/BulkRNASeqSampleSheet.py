@@ -34,10 +34,10 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             self.useropts['trim'] = 'no'
         else:
             self.useropts['trim'] = 'yes'
-        if args['stranded']:
-            self.useropts['stranded'] = 'yes'
+        if args['unstranded']:
+            self.useropts['unstranded'] = 'yes'
         else:
-            self.useropts['stranded'] = 'no'
+            self.useropts['unstranded'] = 'no'
         self.useropts['gtf'] = args['gtf']
         self.useropts['hisat2_idx'] = args['hisat2_idx']
         self.useropts['hisat2_threads'] = '-p ' + str(args['ppn']) + ' '
@@ -128,7 +128,7 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
                 'Hisat2index': self.useropts['hisat2_idx'],
                 'Hisat2Options': self.useropts['hisat2_threads'] +
                                  self.finalopts['hisat2'],
-                'Stranded': self.useropts['stranded'],
+                'Unstranded': self.useropts['unstranded'],
                 'AnnotationGTF': self.useropts['gtf']
                 }
         self.sheet_logger.debug(

@@ -79,9 +79,9 @@ def add_args(ap):
         action='store_true',
         default=False)
     ap_opt.add_argument(
-        '--stranded',
-        dest='stranded',
-        help='Stranded library?',
+        '--unstranded',
+        dest='unstranded',
+        help='Unstranded library? Default: false',
         action='store_true',
         default=False)
     ap_opt.add_argument(

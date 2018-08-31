@@ -34,7 +34,7 @@ while IFS="|" read -ra OPTS; do
     TRIMOPTS=${OPTS[6]}
     HISAT2INDEX=${OPTS[7]}
     HISAT2OPTS=${OPTS[8]}
-    STRANDEDLIB=${OPTS[9]}
+    UNSTRANDEDLIB=${OPTS[9]}
     GTFFILE=${OPTS[10]}
 done <<< "$IN"
 

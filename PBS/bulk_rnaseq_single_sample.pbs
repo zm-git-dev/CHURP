@@ -33,7 +33,7 @@ while IFS="|" read -ra OPTS; do
     TRIMOPTS=${OPTS[6]}
     HISAT2INDEX=${OPTS[7]}
     HISAT2OPTS=${OPTS[8]}
-    STRANDEDLIB=${OPTS[9]}
+    UNSTRANDED=${OPTS[9]}
     GTFFILE=${OPTS[10]}
 done <<< "$IN"
 
@@ -125,14 +125,14 @@ fi
 
 # Use htseq to count reads
 if [ ! -f htseq.done ]; then
-    if [ "${STRANDEDLIB}" = "yes" ]; then
+    if [ "${UNSTRANDED}" = "no" ]; then
+        echo "$(date '+%F %T'): Counting unstranded alignments in ${SAMPLENM} with ${REALGTF}" >> "${LOG_FNAME}"
+        echo "htseq-count -f bam -r name -s no -t exon -i gene_id --additional-attr=gene_name -m union "'"'"${SAMPLENM}.nsorted.bam"'"' '"'"${REALGTF}"'"'" > "'"'"${SAMPLENM}.counts"'"'" && touch htseq.done" >> "${LOG_FNAME}"
+        htseq-count -f bam -r name -s no -t exon -i gene_id --additional-attr=gene_name -m union "${SAMPLENM}.nsorted.bam" "${REALGTF}" > "${SAMPLENM}.counts" && touch htseq.done
+    else
         echo "$(date '+%F %T'): Counting stranded alignments in ${SAMPLENM} with ${REALGTF}" >> "${LOG_FNAME}"
         echo "htseq-count -f bam -r name -s yes -t exon -i gene_id --additional-attr=gene_name -m union "'"'"${SAMPLENM}.nsorted.bam"'"' '"'"${REALGTF}"'"'" > "'"'"${SAMPLENM}.counts"'"'" && touch htseq.done" >> "${LOG_FNAME}"
         htseq-count -f bam -r name -s yes -t exon -i gene_id --additional-attr=gene_name -m union "${SAMPLENM}.nsorted.bam" "${REALGTF}" > "${SAMPLENM}.counts" && touch htseq.done
-    else
-        echo "$(date '+%F %T'): Counting alignments in ${SAMPLENM} with ${REALGTF}" >> "${LOG_FNAME}"
-        echo "htseq-count -f bam -r name -s no -t exon -i gene_id --additional-attr=gene_name -m union "'"'"${SAMPLENM}.nsorted.bam"'"' '"'"${REALGTF}"'"'" > "'"'"${SAMPLENM}.counts"'"'" && touch htseq.done" >> "${LOG_FNAME}"
-        htseq-count -f bam -r name -s no -t exon -i gene_id --additional-attr=gene_name -m union "${SAMPLENM}.nsorted.bam" "${REALGTF}" > "${SAMPLENM}.counts" && touch htseq.done
     fi
 fi
 
