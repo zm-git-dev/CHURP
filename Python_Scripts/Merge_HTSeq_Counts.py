@@ -31,9 +31,11 @@ def main(counts_dir):
                 tmp = line.strip().split()
                 if len(tmp) > 2:
                     key = tmp[0] + '\t' + tmp[1]
+                    val = tmp[2]
                 else:
                     key = tmp[0]
-                cts_mat[s][key] = tmp[2]
+                    val = tmp[1]
+                cts_mat[s][key] = val
     # Get a list of the genes
     genes = sorted([k for k, v in cts_mat.items()])
     # And print them out in order
