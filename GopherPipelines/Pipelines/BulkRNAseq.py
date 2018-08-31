@@ -54,6 +54,11 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             os.path.realpath(__file__).rsplit(os.path.sep, 3)[0],
             'PBS',
             'run_summary_stats.pbs')
+        # set path to the merge htseq counts scripts
+        self.merge_htseq = os.path.join(
+            os.path.realpath(__file__).rsplit(os.path.sep, 3)[0],
+            'Python_Scripts',
+            'Merge_HTSeq_Counts.py')
         # Set the path to the prep.r script
         self.r_prep = os.path.join(
             os.path.realpath(__file__).rsplit(os.path.sep, 3)[0],
@@ -226,6 +231,13 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Write the first qsub command
         handle.write('single_id=$(' + ' '.join(aln_cmd) + ')\n')
         # This is the command for counting and normalizing reads
+        summary_vars = ''.join([
+            'Samplesheet=',
+            ss,
+            ',PREPR=',
+            self.r_prep,
+            ',MERGECOUNTS=',
+            self.merge_htseq])
         summary_cmd = [
             'qsub',
             '-q',
@@ -237,7 +249,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-W',
             '"depend=afterokarray:${single_id}"',
             '-v',
-            '"SampleSheet='+ss+',PREPR='+self.r_prep+'"',
+            '"' + summary_vars + '"',
             self.summary_script]
         # Write the second command
         handle.write('summary_id=$(' + ' '.join(summary_cmd) + ')\n')

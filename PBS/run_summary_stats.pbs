@@ -14,12 +14,16 @@ then
     exit 100
 fi
 
+# Make the R library folder for local installs
+mkdir -p "${HOME}/R/x86_64-pc-linux-gnu-library/3.5/" || exit 101
+
 # Read the first line of the samplesheet to get the working directory and the
 # GTF. This is not super elegant, but it works with the samplesheet format
 IN=$(head -n 1 "${SampleSheet}")
-# handle empty line and comment line
-[ -z "${IN// }" ] && echo "hit an empty line in sample sheet" && exit $?
-[ "$IN" = "#.*" ] && echo "hit a comment line in sample sheet" && exit $?
+# handle empty line and comment line. We return a 0 exit status because we do not
+# want a comment/blank line in the samplesheet to hold up the array jobs
+[ -z "${IN// }" ] && echo "hit an empty line in sample sheet" && exit 0
+[ "$IN" = "#.*" ] && echo "hit a comment line in sample sheet" && exit 0
 while IFS="|" read -ra OPTS; do 
     SAMPLENM=${OPTS[0]}
     R1FILE=${OPTS[1]}
@@ -36,7 +40,7 @@ done <<< "$IN"
 
 # load necessary modules
 module load R/3.5.0
-module load cufflinks/2.2.1
+module load python/3.6.3
 
 # Print the loaded modules to stderr and a log file
 module list -t
@@ -44,62 +48,28 @@ LOG_FNAME="${OUTDIR}/BulkRNASeq_Summary_Log.txt"
 echo "$(date '+%F %T'): Summary started" > "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 
-# Check if the GTF file is gzipped - it should not be.
-if [ "$(file -b --mime-type "${GTFFILE}")" = "application/x-gzip" ]
-then
-    echo "$(date '+%F %T'): ${GTFFILE} appears to be gzipped. Decompressing into ${WORKDIR}" >> "${LOG_FNAME}"
-    echo "gzip -cd "'"'"${GTFFILE}"'"'" > "'"'"${WORKDIR}/annotations.gtf"'"' >> "${LOG_FNAME}"
-    gzip -cd "${GTFFILE}" > "${WORKDIR}/annotations.gtf"
-    REALGTF="${WORKDIR}/annotations.gtf"
-else
-    REALGTF="${GTFFILE}"
-fi
+echo "mkdir -p "'"'"${WORKDIR}/allsamples"'"'" && cd "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
+mkdir -p "${WORKDIR}/allsamples" && cd "${WORKDIR}/allsamples"
 
-echo "$(date '+%F %T'): Making allsamples/bams directory." >> "${LOG_FNAME}"
-echo "mkdir -p "'"'"${WORKDIR}/allsamples/bams"'"'" && cd "'"'"${WORKDIR}/allsamples/bams"'"' >> "${LOG_FNAME}"
-mkdir -p "${WORKDIR}/allsamples/bams" && cd "${WORKDIR}/allsamples/bams"
-
-# Link single sample BAMs into the current directory
-for BAM in $(find "${WORKDIR}/singlesamples" -type f -name '*sorted.rmdup.bam')
-do
-    if [ -e "${BAM}" ]
-        then
-            echo "$(date '+%F %T'): Linking ${BAM} into ${WORKDIR}/allsamples/bams" >> "${LOG_FNAME}"
-            echo "ln -s -f "'"'"${BAM}"'"'" ." >> "${LOG_FNAME}"
-            ln -s -f "${BAM}" .
-    fi
-done
-
-# Count FPKM using cufflinks
-for SAMPLE in $(find . ! -name '.*' -a -name '*.bam')
-do
-    bname="$(basename "${SAMPLE}" | cut -f 1 -d '.')"
-    echo "$(date '+%F %T'): Calculating FPKM on ${SAMPLE} using ${REALGTF}" >> "${LOG_FNAME}"
-    echo "cuffquant "'"'"${REALGTF}"'"'" "'"'"${SAMPLE}"'"'" && mv abundances.cxb "'"'"${bname}.cxb"'"' >> "${LOG_FNAME}"
-    cuffquant "${REALGTF}" "${SAMPLE}" && mv abundances.cxb "${bname}.cxb"
-done
-
-# Normalize
-echo "$(date '+%F %T'): Normalizing cxb files, saving at ${WORKDIR}/allsamples/cuffnorm_out/" >> "${LOG_FNAME}"
-CXBS=($(find . -type f ! -name '.*' -a -name '*.cxb'))
-echo "cuffnorm "'"'"${REALGTF}"'"'" "'"'"${CXBS[@]}"'"'" -o "'"'"${WORKDIR}/allsamples/cuffnorm_out/"'"' >> "${LOG_FNAME}"
-cuffnorm "${REALGTF}" "${CXBS[@]}" -o "${WORKDIR}/allsamples/cuffnorm_out/"
+# Merge the single-sample counts into a large matrix
+echo "$(date '+%F %T'): Merging read counts from all samples." >> "${LOG_FNAME}"
+python3 "${MERGECOUNTS}" "${WORKDIR}/singlesamples" > merged_counts.txt
 
 # do Subread count in R, report subread.counts.txt, tpm.txt, EdgeR.RData
 # Rsubread can run in multithreaded fashion
-echo "$(date '+%F %T'): Running ${PREPR}" >> "${LOG_FNAME}"
-echo "R --vanilla CMD BATCH "'"'"${PREPR}"'"'" "'"'"${REALGTF}"'"' >> "${LOG_FNAME}"
-R --vanilla CMD BATCH "${PREPR}" "${REALGTF}"
+# echo "$(date '+%F %T'): Running ${PREPR}" >> "${LOG_FNAME}"
+# echo "R --vanilla CMD BATCH "'"'"${PREPR}"'"'" "'"'"${REALGTF}"'"' >> "${LOG_FNAME}"
+# R --vanilla CMD BATCH "${PREPR}" "${REALGTF}"
 
-echo "cd "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
-cd "${WORKDIR}/allsamples"
+# echo "cd "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
+# cd "${WORKDIR}/allsamples"
 
-echo "$(date '+%F +%T'): Linking cuffnorm output and edgeR ourput into ${WORKDIR}/allsamples" >> "${LOG_FNAME}"
-echo "ln -s cuffnorm_out/genes.fpkm_table.renamed samples.fpkms.txt" >> "${LOG_FNAME}"
-echo "mv bams/subread.counts.txt samples.subread.counts.txt" >> "${LOG_FNAME}"
-echo "mv bams/EdgeR.RData ." >> "${LOG_FNAME}"
-ln -s cuffnorm_out/genes.fpkm_table.renamed samples.fpkms.txt
-mv bams/subread.counts.txt samples.subread.counts.txt
-mv bams/EdgeR.RData .
+# echo "$(date '+%F +%T'): Linking cuffnorm output and edgeR ourput into ${WORKDIR}/allsamples" >> "${LOG_FNAME}"
+# echo "ln -s cuffnorm_out/genes.fpkm_table.renamed samples.fpkms.txt" >> "${LOG_FNAME}"
+# echo "mv bams/subread.counts.txt samples.subread.counts.txt" >> "${LOG_FNAME}"
+# echo "mv bams/EdgeR.RData ." >> "${LOG_FNAME}"
+# ln -s cuffnorm_out/genes.fpkm_table.renamed samples.fpkms.txt
+# mv bams/subread.counts.txt samples.subread.counts.txt
+# mv bams/EdgeR.RData .
 
-echo "$(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
+# echo "$(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"

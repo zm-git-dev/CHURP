@@ -19,9 +19,10 @@ fi
 # Assume there is a header line, so for ID n, the sample is n+1
 # Sample Sheet: SampleNM, R1, R2, Trim (yes or no), TrimmomaticOption, Hisat2Index, Hisat2Option, GTF/GFF
 IN=$(head -n "${PBS_ARRAYID}" "${SampleSheet}" | tail -1)
-# handle empty line and comment line
-[ -z "${IN// }" ] && echo "hit an empty line in sample sheet" && exit $?
-[ "$IN" = "#.*" ] && echo "hit a comment line in sample sheet" && exit $?
+# handle empty line and comment line. We return a 0 exit status because we do not
+# want a comment/blank line in the samplesheet to hold up the array jobs
+[ -z "${IN// }" ] && echo "hit an empty line in sample sheet" && exit 0
+[ "$IN" = "#.*" ] && echo "hit a comment line in sample sheet" && exit 0
 while IFS="|" read -ra OPTS; do 
     SAMPLENM=${OPTS[0]}
     R1FILE=${OPTS[1]}
@@ -42,6 +43,7 @@ module load fastqc/0.11.7
 module load trimmomatic/0.33
 module load java/jdk1.8.0_144
 module load samtools/1.7
+module load htseq/0.9.1
 
 module list -t
 
@@ -100,13 +102,38 @@ fi
 
 # use samtools to remove unmapped reads, could be done in picard too.
 if [ ! -f samtools.done ]; then
-    echo "$(date '+%F %T'): Sorting, indexing, and removing duplicates from HISAT2 alignment." >> "${LOG_FNAME}"
+    echo "$(date '+%F %T'): Sorting by read name, indexing, and removing duplicates from HISAT2 alignment." >> "${LOG_FNAME}"
     echo "samtools view -bh -F 4 -@ 8 "'"'"${SAMPLENM}"'"'".sam | samtools sort -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
     echo "samtools index "'"'"${SAMPLENM}.sorted.bam"'"' >> "${LOG_FNAME}"
     echo "samtools rmdup "'"'"${SAMPLENM}.sorted.bam"'"'" "'"'"${SAMPLENM}.sorted.rmdup.bam"'"' >> "${LOG_FNAME}"
     samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -o "${SAMPLENM}.sorted.bam" -@ 8 -O bam -T temp 
     samtools index "${SAMPLENM}.sorted.bam"
-    samtools rmdup "${SAMPLENM}.sorted.bam" "${SAMPLENM}.sorted.rmdup.bam" && touch samtools.done
+    samtools rmdup "${SAMPLENM}.sorted.bam" "${SAMPLENM}.sorted.rmdup.bam" 
+    samtools sort -@ 8 -O bam -T temp -n -o "${SAMPLENM}.nsorted.bam" "${SAMPLENM}.sorted.rmdup.bam" && touch samtools.done
+fi
+
+# Check if the GTF file is gzipped - it should not be.
+if [ "$(file -b --mime-type "${GTFFILE}")" = "application/x-gzip" ]
+then
+    echo "$(date '+%F %T'): ${GTFFILE} appears to be gzipped. Decompressing" >> "${LOG_FNAME}"
+    echo "gzip -cd "'"'"${GTFFILE}"'"'" > ""annotations.gtf" >> "${LOG_FNAME}"
+    gzip -cd "${GTFFILE}" > annotations.gtf
+    REALGTF="annotations.gtf"
+else
+    REALGTF="${GTFFILE}"
+fi
+
+# Use htseq to count reads
+if [ ! -f htseq.done ]; then
+    if [ "${STRANDEDLIB}" = "yes" ]; then
+        echo "$(date '+%F %T'): Counting stranded alignments in ${SAMPLENM} with ${REALGTF}" >> "${LOG_FNAME}"
+        echo "htseq-count -f bam -r name -s yes -t exon -i gene_id --additional-attr=gene_name -m union "'"'"${SAMPLENM}.nsorted.bam"'"' '"'"${REALGTF}"'"'" > "'"'"${SAMPLENM}.counts"'"'" && touch htseq.done" >> "${LOG_FNAME}"
+        htseq-count -f bam -r name -s yes -t exon -i gene_id --additional-attr=gene_name -m union "${SAMPLENM}.nsorted.bam" "${REALGTF}" > "${SAMPLENM}.counts" && touch htseq.done
+    else
+        echo "$(date '+%F %T'): Counting alignments in ${SAMPLENM} with ${REALGTF}" >> "${LOG_FNAME}"
+        echo "htseq-count -f bam -r name -s no -t exon -i gene_id --additional-attr=gene_name -m union "'"'"${SAMPLENM}.nsorted.bam"'"' '"'"${REALGTF}"'"'" > "'"'"${SAMPLENM}.counts"'"'" && touch htseq.done" >> "${LOG_FNAME}"
+        htseq-count -f bam -r name -s no -t exon -i gene_id --additional-attr=gene_name -m union "${SAMPLENM}.nsorted.bam" "${REALGTF}" > "${SAMPLENM}.counts" && touch htseq.done
+    fi
 fi
 
 echo "$(date '+%F %T'): Finished processing ${SAMPLENM}." >> "${LOG_FNAME}"
