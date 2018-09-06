@@ -52,7 +52,7 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             'trimmomaticOpts',
             'Hisat2index',
             'Hisat2Options',
-            'Stranded',
+            'Unstranded',
             'AnnotationGTF'])
         self._get_fq_paths(args['fq_folder'])
         self._resolve_options()
