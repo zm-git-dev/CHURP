@@ -44,7 +44,12 @@ def main(counts_dir):
     # And print them out in order
     print(','.join(['EnsemblID', 'GeneName'] + sorted(cts_mat)))
     for g in genes:
-        toprint = g.split()
+        # HTSeq outputs summary lines starting with __ that we want to pad with
+        # NA for symbol to avoid making a poorly-formatted matrix.
+        if g.startswith('__'):
+            toprint = [g, 'NA']
+        else:
+            toprint = g.split()
         for s in sorted(cts_mat):
             toprint.append(cts_mat[s][g])
         print(','.join(toprint))

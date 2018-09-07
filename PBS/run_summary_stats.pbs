@@ -58,21 +58,11 @@ echo "$(date '+%F %T'): Merging read counts from all samples." >> "${LOG_FNAME}"
 echo "python3 "'"'"${MERGECOUNTS}"'"'" "'"'"${WORKDIR}/singlesamples"'"'" > merged_counts.txt" >> "${LOG_FNAME}"
 python3 "${MERGECOUNTS}" "${WORKDIR}/singlesamples" > merged_counts.txt
 
-# do Subread count in R, report subread.counts.txt, tpm.txt, EdgeR.RData
-# Rsubread can run in multithreaded fashion
-# echo "$(date '+%F %T'): Running ${PREPR}" >> "${LOG_FNAME}"
-# echo "R --vanilla CMD BATCH "'"'"${PREPR}"'"'" "'"'"${REALGTF}"'"' >> "${LOG_FNAME}"
-# R --vanilla CMD BATCH "${PREPR}" "${REALGTF}"
-
-# echo "cd "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
-# cd "${WORKDIR}/allsamples"
-
-# echo "$(date '+%F +%T'): Linking cuffnorm output and edgeR ourput into ${WORKDIR}/allsamples" >> "${LOG_FNAME}"
-# echo "ln -s cuffnorm_out/genes.fpkm_table.renamed samples.fpkms.txt" >> "${LOG_FNAME}"
-# echo "mv bams/subread.counts.txt samples.subread.counts.txt" >> "${LOG_FNAME}"
-# echo "mv bams/EdgeR.RData ." >> "${LOG_FNAME}"
-# ln -s cuffnorm_out/genes.fpkm_table.renamed samples.fpkms.txt
-# mv bams/subread.counts.txt samples.subread.counts.txt
-# mv bams/EdgeR.RData .
+# Copy the merged counts into the output directory. The -u option to cp causes
+# the copy to happen only if the source file is newer than the destination file
+# or if the destination does not exist.
+echo "$(date '+%F %T'): Copying merged counts matrix into ${OUTDIR}" >> "${LOG_FNAME}"
+echo "cp -u merged_counts.txt "'"'"${OUTDIR}/merged_counts.txt"'"' >> "${LOG_FNAME}"
+cp -u merged_counts.txt "${OUTDIR}/merged_counts.txt"
 
 # echo "$(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
