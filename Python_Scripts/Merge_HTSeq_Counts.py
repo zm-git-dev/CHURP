@@ -42,12 +42,12 @@ def main(counts_dir):
         genes = sorted(genes)
         break
     # And print them out in order
-    print('\t'.join([''] + sorted(cts_mat)))
+    print(','.join(['EnsemblID', 'GeneName'] + sorted(cts_mat)))
     for g in genes:
-        toprint = [g]
+        toprint = g.split()
         for s in sorted(cts_mat):
             toprint.append(cts_mat[s][g])
-        print('\t'.join(toprint))
+        print(','.join(toprint))
     return
 
 
