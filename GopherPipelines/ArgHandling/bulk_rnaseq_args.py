@@ -64,6 +64,22 @@ def add_args(ap):
         action='store_true',
         default=False)
     ap_opt.add_argument(
+        '--make-groups-template',
+        help=('Make a CSV template for differential expression groups. This '
+              'file must be hand-edited and passed back with the -e option to '
+              'enable differential expression testing. See the manual for '
+              'details.'),
+        action='store_true',
+        default=False)
+    ap_opt.add_argument(
+        '--expr-groups',
+        '-e',
+        help=('CSV from --make-groups-template that lists experimental groups '
+              'for each sample. This file must be hand-edited to include '
+              'experimental groups to enable differential expression testing. '
+              'See the manual for details.'),
+        default=None)
+    ap_opt.add_argument(
         '--verbosity',
         '-v',
         metavar='<loglevel>',

@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=1,mem=16gb,walltime=8:00:00
+#PBS -l nodes=1:ppn=8,mem=16gb,walltime=8:00:00
 set -e
 set -u
 set -o pipefail
@@ -23,16 +23,17 @@ IN=$(head -n 1 "${SampleSheet}")
 [ "$IN" = "#.*" ] && echo "hit a comment line in sample sheet" && exit 0
 while IFS="|" read -ra OPTS; do 
     SAMPLENM=${OPTS[0]}
-    R1FILE=${OPTS[1]}
-    R2FILE=${OPTS[2]}
-    OUTDIR=${OPTS[3]}
-    WORKDIR=${OPTS[4]}
-    TRIM=${OPTS[5]}
-    TRIMOPTS=${OPTS[6]}
-    HISAT2INDEX=${OPTS[7]}
-    HISAT2OPTS=${OPTS[8]}
-    UNSTRANDEDLIB=${OPTS[9]}
-    GTFFILE=${OPTS[10]}
+    EXPR_GROUP=${OPTS[1]}
+    R1FILE=${OPTS[2]}
+    R2FILE=${OPTS[3]}
+    OUTDIR=${OPTS[5]}
+    WORKDIR=${OPTS[6]}
+    TRIM=${OPTS[7]}
+    TRIMOPTS=${OPTS[8]}
+    HISAT2INDEX=${OPTS[9]}
+    HISAT2OPTS=${OPTS[10]}
+    UNSTRANDEDLIB=${OPTS[11]}
+    GTFFILE=${OPTS[12]}
 done <<< "$IN"
 
 # load necessary modules
@@ -42,27 +43,66 @@ module load python/3.6.3
 # Print the loaded modules to stderr and a log file
 module list -t
 LOG_FNAME="${OUTDIR}/BulkRNASeq_Summary_Log.txt"
-echo "$(date '+%F %T'): Summary started" > "${LOG_FNAME}"
+echo "# $(date '+%F %T'): Summary started" > "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 
 # Set the R_LIBS_USER variable here. This is where packages will be loaded from
 # within R
-export R_LIBS_USER=""
-echo "export R_LIBS_USER="'""' >> "${LOG_FNAME}"
+echo "export R_LIBS_USER="'"/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/R"' >> "${LOG_FNAME}"
+export R_LIBS_USER="/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/R"
+
+# Set the path to the featureCounts executable.
+echo "# $(date '+%F %T'): Using featureCounts v. 1.6.2" >> "${LOG_FNAME}"
+echo "FEATURECOUNTS="'"/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/Supp/subread-1.6.2-Linux-x86_64/bin/featureCounts"' >> "${LOG_FNAME}"
+FEATURECOUNTS="/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/Supp/subread-1.6.2-Linux-x86_64/bin/featureCounts"
 
 echo "mkdir -p "'"'"${WORKDIR}/allsamples"'"'" && cd "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/allsamples" && cd "${WORKDIR}/allsamples"
 
-# Merge the single-sample counts into a large matrix
-echo "$(date '+%F %T'): Merging read counts from all samples." >> "${LOG_FNAME}"
-echo "python3 "'"'"${MERGECOUNTS}"'"'" "'"'"${WORKDIR}/singlesamples"'"'" > merged_counts.txt" >> "${LOG_FNAME}"
-python3 "${MERGECOUNTS}" "${WORKDIR}/singlesamples" > merged_counts.txt
+# Use featureCounts to make a merged counts matrix
+echo "# $(date '+%F %T'): Making a counts matrix for all samples." >> "${LOG_FNAME}"
+echo "BAM_LIST=(\$(find "'"'"\${WORKDIR}/singlesamples/"'"'" -type f -name '*.sorted.rmdup.bam' | sort -V))" >> "${LOG_FNAME}"
+BAM_LIST=($(find "${WORKDIR}/singlesamples/" -type f -name '*.sorted.rmdup.bam' | sort -V))
+if [ "${UNSTRANDEDLIB}" = "yes" ]
+then
+    echo "# $(date '+%F %T'): Library is unstranded." >> "${LOG_FNAME}"
+    echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -B -p -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
+    "${FEATURECOUNTS}" \
+    -a "${GTFFILE}" \
+    -B \
+    -p \
+    -Q 10 \
+    -s 0\
+    -o subread_counts.txt \
+    "${BAM_LIST[@]}"
+else
+    echo "# $(date '+%F %T'): Library is stranded." >> "${LOG_FNAME}"
+    echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -B -p -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
+    "${FEATURECOUNTS}" \
+    -a "${GTFFILE}" \
+    -B \
+    -p \
+    -Q 10 \
+    -s 1\
+    -o subread_counts.txt \
+    "${BAM_LIST[@]}"
+fi
 
 # Copy the merged counts into the output directory. The -u option to cp causes
 # the copy to happen only if the source file is newer than the destination file
 # or if the destination does not exist.
-echo "$(date '+%F %T'): Copying merged counts matrix into ${OUTDIR}" >> "${LOG_FNAME}"
-echo "cp -u merged_counts.txt "'"'"${OUTDIR}/merged_counts.txt"'"' >> "${LOG_FNAME}"
-cp -u merged_counts.txt "${OUTDIR}/merged_counts.txt"
+echo "# $(date '+%F %T'): Copying merged counts matrix and summary into ${OUTDIR}" >> "${LOG_FNAME}"
+echo "cp -u subread_counts.txt "'"'"${OUTDIR}/subread_counts.txt"'"' >> "${LOG_FNAME}"
+echo "cp -u subread_counts.txt.summary "'"'"${OUTDIR}/subread_counts.txt.summary"'"' >> "${LOG_FNAME}"
+cp -u subread_counts.txt "${OUTDIR}/subread_counts.txt"
+cp -u subread_counts.txt.summary "${OUTDIR}/subreads_counts.txt.summary"
 
-# echo "$(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
+# We also want to keep the sorted BAM files and the GTF used for counts, in
+# case the user wants to go back to it
+echo "# $(date '+%F %T'): Copying BAM files and GTF into ${OUTDIR}." >> "${LOG_FNAME}"
+echo "cp -u "'"'"${BAM_LIST[@]}"'"'" "'"'"${OUTDIR}"'"' >> "${LOG_FNAME}"
+echo "cp -u "'"'"${GTFFILE}"'"'" "'"'"${OUTDIR}"'"' >> "${LOG_FNAME}"
+cp -u "${BAM_LIST[@]}" "${OUTDIR}"
+cp -u "${GTFFILE}" "${OUTDIR}"
+
+echo "# $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"

@@ -66,6 +66,17 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'prep.r')
         return
 
+    def list_index(self):
+        """List valid index files for HISAT2 alignment."""
+        pass
+
+    def make_group_template(self):
+        """Take the sample dictionary and make the template CSV for the group
+        column of the samplesheet. We will auto-populate with a dummy value to
+        have the user fill in the correct value."""
+        dummy_group = 'NULL'
+        return
+
     def _validate_args(self, a):
         """Validate arguments for the BulkRNAseqPipeline object. We define it
         in this file because it only really needs to be accessible to this
@@ -77,8 +88,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         Further, sanitize the paths of the output dir, working dir, and hisat2
         index.
         """
-        # Check the completeness of the argument dictionary. Either -f or
-        # -u must be specified. (-x and -g) or -r must be specified.
+        # Check the completeness of the argument dictionary. -f must be
+        # specified and (-x and -g) or -r must be specified.
         if not a['fq_folder']:
             DieGracefully.die_gracefully(DieGracefully.BRNASEQ_INC_ARGS)
         elif not ((a['hisat2_idx'] and a['gtf']) or a['organism']):
@@ -116,6 +127,10 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self._validate_fastq_folder(a['fq_folder'])
         # Validate the hisat2 index
         self._validate_hisat_idx(a['hisat2_idx'])
+        # After validating the arguments, we will break out and do any of the
+        # "secondary" operations that this script performs. We will call the
+        # index list and the experimental group functions here.
+        """
         return a
 
     def _validate_fastq_folder(self, d):
