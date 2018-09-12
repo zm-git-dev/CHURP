@@ -61,8 +61,8 @@ mkdir -p "${WORKDIR}/allsamples" && cd "${WORKDIR}/allsamples"
 
 # Use featureCounts to make a merged counts matrix
 echo "# $(date '+%F %T'): Making a counts matrix for all samples." >> "${LOG_FNAME}"
-echo "BAM_LIST=(\$(find "'"'"\${WORKDIR}/singlesamples/"'"'" -type f -name '*.sorted.rmdup.bam' | sort -V))" >> "${LOG_FNAME}"
-BAM_LIST=($(find "${WORKDIR}/singlesamples/" -type f -name '*.sorted.rmdup.bam' | sort -V))
+echo "BAM_LIST=(\$(find . -type l -exec basename {} \\; | sort -V))" >> "${LOG_FNAME}"
+BAM_LIST=($(find . -type l -exec basename {} \\;| sort -V))
 if [ "${UNSTRANDEDLIB}" = "yes" ]
 then
     echo "# $(date '+%F %T'): Library is unstranded." >> "${LOG_FNAME}"

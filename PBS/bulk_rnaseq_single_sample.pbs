@@ -112,5 +112,14 @@ if [ ! -f samtools.done ]; then
     samtools rmdup "${SAMPLENM}.sorted.bam" "${SAMPLENM}.sorted.rmdup.bam" && touch samtools.done
 fi
 
+# the final step is to link the sorted.rmdup.bam file to the allsamples/
+# directory, as just the samplename. This is a bit of a hack to get featureCounts
+# to not print huge paths as samplenames
+echo "# $(date '+%F %T'): Linking ${SAMPLENM} into ${WORKDIR}/allsamples" >> "${LOG_FNAME}"
+echo "mkdir -p "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
+echo "ln -s "'"'"${SAMPLENM}.sorted.rmdup.bam"'"'" "'"'"${WORKDIR}/allsamples/${SAMPLENM}"'"' >> "${LOG_FNAME}"
+mkdir -p "${WORKDIR}/allsamples"
+ln -s "${SAMPLENM}.sorted.rmdup.bam" "${WORKDIR}/allsamples/${SAMPLENM}"
+
 echo "# $(date '+%F %T'): Finished processing ${SAMPLENM}." >> "${LOG_FNAME}"
 touch "${SAMPLENM}.done"
