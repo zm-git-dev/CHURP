@@ -10,7 +10,15 @@ from GopherPipelines.ArgHandling import sc_rnaseq_args
 
 # Longer help messages as constants
 PIPE_HELP = 'Gopher-pipelines for high-throughput sequencing data analysis.'
-BRNASEQ_HELP = 'Bulk RNAseq analysis, including QC, mapping, and expression.'
+LIST_HELP = ('List species shorthands for automatically setting alignment '
+             'targets and annotation databases.')
+GROUP_HELP = ('Make sample metadata CSV templates for statistical tests. These'
+              ' templates can be used to make files that designate groups for '
+              'differential expression testing, for example.')
+BRNASEQ_HELP = ('Bulk RNAseq analysis, including QC, mapping, and expression. '
+                'Alignment is performed with HISAT2. Read counts are '
+                'generated with featureCounts from the Subread package. '
+                'Expression anaylsis is done with edgeR in R.')
 SCRNASEQ_HELP = 'Single-cell RNAseq analysis.'
 
 
@@ -49,6 +57,16 @@ def pipeline_args():
         title='Pipelines',
         help='Available pipelines')
 
+    # Species list parser
+    list_parser = pipe_parser.add_parser(
+        'list_species',
+        help=LIST_HELP,
+        add_help=False)
+    # Group template parser
+    group_parser = pipe_parser.add_parser(
+        'group_template',
+        help=GROUP_HELP,
+        add_help=False)
     # This is the bulk_rnaseq parser
     bulk_rnaseq_parser = pipe_parser.add_parser(
         'bulk_rnaseq',
