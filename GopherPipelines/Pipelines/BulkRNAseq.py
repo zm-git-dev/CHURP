@@ -90,7 +90,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Set an output file name
         csv_name = default_files.default_group_csv(self.pipe_name)
         # Make the directory
-        dir_funs.make_dir(self.outdir, self.pipe_logger)
+        dir_funcs.make_dir(self.outdir, self.pipe_logger)
         csv_name = os.path.join(self.outdir, csv_name)
         if os.path.isfile(csv_name):
             self.pipe_logger.warning('Groups file %s exists, overwriting!',
