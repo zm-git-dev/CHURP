@@ -26,14 +26,14 @@ while IFS="|" read -ra OPTS; do
     EXPR_GROUP=${OPTS[1]}
     R1FILE=${OPTS[2]}
     R2FILE=${OPTS[3]}
-    OUTDIR=${OPTS[5]}
-    WORKDIR=${OPTS[6]}
-    TRIM=${OPTS[7]}
-    TRIMOPTS=${OPTS[8]}
-    HISAT2INDEX=${OPTS[9]}
-    HISAT2OPTS=${OPTS[10]}
-    UNSTRANDEDLIB=${OPTS[11]}
-    GTFFILE=${OPTS[12]}
+    OUTDIR=${OPTS[4]}
+    WORKDIR=${OPTS[5]}
+    TRIM=${OPTS[6]}
+    TRIMOPTS=${OPTS[7]}
+    HISAT2INDEX=${OPTS[8]}
+    HISAT2OPTS=${OPTS[9]}
+    UNSTRANDEDLIB=${OPTS[10]}
+    GTFFILE=${OPTS[11]}
 done <<< "$IN"
 
 # load necessary modules

@@ -117,9 +117,9 @@ fi
 # to not print huge paths as samplenames
 echo "# $(date '+%F %T'): Linking ${SAMPLENM} into ${WORKDIR}/allsamples" >> "${LOG_FNAME}"
 echo "mkdir -p "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
-echo "ln -s "'"'"${SAMPLENM}.sorted.rmdup.bam"'"'" "'"'"${WORKDIR}/allsamples/${SAMPLENM}"'"' >> "${LOG_FNAME}"
+echo "ln -s "'"'"${WORKDIR}/singlesamples/${SAMPLENM}.sorted.rmdup.bam"'"'" "'"'"${WORKDIR}/allsamples/${SAMPLENM}"'"' >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/allsamples"
-ln -s "${SAMPLENM}.sorted.rmdup.bam" "${WORKDIR}/allsamples/${SAMPLENM}"
+ln -s "${WORKDIR}/singlesamples/${SAMPLENM}.sorted.rmdup.bam" "${WORKDIR}/allsamples/${SAMPLENM}"
 
 echo "# $(date '+%F %T'): Finished processing ${SAMPLENM}." >> "${LOG_FNAME}"
 touch "${SAMPLENM}.done"
