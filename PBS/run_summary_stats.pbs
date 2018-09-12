@@ -95,7 +95,7 @@ echo "# $(date '+%F %T'): Copying merged counts matrix and summary into ${OUTDIR
 echo "cp -u subread_counts.txt "'"'"${OUTDIR}/subread_counts.txt"'"' >> "${LOG_FNAME}"
 echo "cp -u subread_counts.txt.summary "'"'"${OUTDIR}/subread_counts.txt.summary"'"' >> "${LOG_FNAME}"
 cp -u subread_counts.txt "${OUTDIR}/subread_counts.txt"
-cp -u subread_counts.txt.summary "${OUTDIR}/subreads_counts.txt.summary"
+cp -u subread_counts.txt.summary "${OUTDIR}/subread_counts.txt.summary"
 
 # We also want to keep the sorted BAM files and the GTF used for counts, in
 # case the user wants to go back to it
