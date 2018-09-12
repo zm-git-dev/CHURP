@@ -56,6 +56,7 @@ def dir_empty(d, l):
     l.debug('%s appears empty', p)
     return True
 
+
 def make_dir(d, l):
     """Try to safely make a directory."""
     # Set it to be a pathlib.Path object

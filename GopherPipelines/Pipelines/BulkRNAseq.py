@@ -16,6 +16,7 @@ from GopherPipelines.SampleSheet import BulkRNASeqSampleSheet
 from GopherPipelines.ArgHandling import set_verbosity
 from GopherPipelines.FileOps import species_list
 from GopherPipelines.FileOps import default_files
+from GopherPipelines.FileOps import dir_funcs
 
 
 class BulkRNAseqPipeline(Pipeline.Pipeline):
@@ -88,6 +89,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         dummy_value = 'NULL'
         # Set an output file name
         csv_name = default_files.default_group_csv(self.pipe_name)
+        # Make the directory
+        dir_funs.make_dir(self.outdir, self.pipe_logger)
         csv_name = os.path.join(self.outdir, csv_name)
         if os.path.isfile(csv_name):
             self.pipe_logger.warning('Groups file %s exists, overwriting!',
