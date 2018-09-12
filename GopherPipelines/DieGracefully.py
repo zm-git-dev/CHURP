@@ -17,6 +17,10 @@ BRNASEQ_CONFLICT = 21
 BAD_HISAT = 22
 BAD_GTF = 23
 BAD_ADAPT = 24
+BRNASEQ_BAD_GPS = 25
+BRNASEQ_NO_SAMP_GPS = 26
+BRNASEQ_LIST_SPECIES = 30
+BRNASEQ_MAKE_TEMPLATE = 31
 
 # Define a series of functions that just write messages to the terminal. We
 # will call these with a main error handling function at the end.
@@ -75,7 +79,8 @@ def brnaseq_inc():
 You did not specify sufficient options to run the bulk_rnaseq subcommand of
 gopher-pipelines. You must specify a FASTQ directory (-f). Additionally, you
 must either specify a path to a HISAT2 index (-x) and GTF (-g), or an organism
-name (-r). Please fix your command line and re-run.\n"""
+name (-r). If you are building a group template file, you need only specify a
+FASTQ directory. Please fix your command line and re-run.\n"""
     sys.stderr.write(msg)
     return
 
@@ -148,6 +153,55 @@ properly quoted or escaped, and try again.\n"""
     return
 
 
+def brnaseq_list_species():
+    """Call this exit function when a user passes the "--list-species" argument
+    to the bulk RNASeq pipeline."""
+    msg = """
+Please use one of the species databases listed above as an argument to the
+"-r" flag. You must type it exactly as shown, including capitalisation.\n"""
+    sys.stderr.write(msg)
+    return
+
+
+def brnaseq_make_template():
+    """Call this function when a user passes the "--make-groups-template"
+    argument to the bulk RNASeq pipeline."""
+    msg = """
+The groups template CSV file has been written to the output directory. Please
+edit the file to specify the experimental group to which each sample belongs.
+All pairwise comparisons of groups will be tested for differential expression.
+Samples that are part of a "NULL" group will not be included in any
+differential expression comparison. If all samples are "NULL," then no
+differential expression tests will be performed.\n"""
+    sys.stderr.write(msg)
+    return
+
+
+def brnaseq_bad_groups():
+    """Call this function when a user does passes an experimental groups file
+    that does not exist, or is not readable."""
+    msg = """
+The groups template CSV file that you have provided does not exist, or cannot
+be read. Please check your path for any typos and that any spaces or special
+characters are properly quoted or escaped.\n"""
+    sys.stderr.write(msg)
+    return
+
+
+def brnaseq_no_sample_groups():
+    """Call this function when a user supplies a groups CSV that does not have
+    any information for the samples in the FASTQ directory."""
+    msg = """
+The groups CSV file that you supplied does not contain any information about
+the samples that were found in the FASTQ directory. Check that you supplied the
+correct directory with -f, and that your sample names match exactly between the
+CSV and the FASTQ directory. Use the template from --make-groups-template to
+see the exact sample names that gopher-pipelines is using to match samples to
+groups.\n"""
+    sys.stderr.write(msg)
+    return
+
+
 def die_gracefully(e):
     """Print user-friendly error messages and exit."""
     err_dict = {
@@ -160,7 +214,11 @@ def die_gracefully(e):
         BRNASEQ_INC_ARGS: brnaseq_inc,
         BRNASEQ_CONFLICT: brnaseq_conflict,
         BAD_GTF: bad_gtf,
-        BAD_ADAPT: bad_adapter
+        BAD_ADAPT: bad_adapter,
+        BRNASEQ_LIST_SPECIES: brnaseq_list_species,
+        BRNASEQ_MAKE_TEMPLATE: brnaseq_make_template,
+        BRNASEQ_BAD_GPS: brnaseq_bad_groups,
+        BRNASEQ_NO_SAMP_GPS: brnaseq_no_sample_groups
         }
     try:
         err_dict[e]()

@@ -6,6 +6,7 @@ import os
 import re
 import pprint
 
+from GopherPipelines import DieGracefully
 from GopherPipelines.SampleSheet import SampleSheet
 from GopherPipelines.ArgHandling import set_verbosity
 
@@ -44,6 +45,7 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         # Set the column order to be the columns of the sample sheet. This will
         # eventually become the header of the sheet.
         self.column_order.extend([
+            'Group',
             'FastqR1files',
             'FastqR2file',
             'OutputDir',
@@ -56,6 +58,8 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             'AnnotationGTF'])
         self._get_fq_paths(args['fq_folder'])
         self._resolve_options()
+        # Set the sample group memberships based on the expr_groups argument
+        self._set_groups(args['expr_groups'])
         return
 
     def _get_fq_paths(self, d):
@@ -112,6 +116,59 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             pprint.pformat(self.samples))
         return
 
+    def _set_groups(self, groups):
+        """If the groups argument is NoneType, then there were no experimental
+        groups passed to the pipeline script, and we fill in 'NULL' for each
+        group. If it was passed, then we parse it for group memberships. We set
+        any overlapping sample groups to be the same value. We report any
+        non-overlapping samples as warnings, and complete non-overlap as an
+        error."""
+        if not groups:
+            self.sheet_logger.debug(
+                'No groups file passed. All samples are NULL group.')
+            for s in self.samples:
+                self.samples[s]['Group'] = 'NULL'
+            return
+        else:
+            self.sheet_logger.debug('Parsing %s for groups.', groups)
+            csv_gps = {}
+            with open(groups, 'r') as f:
+                for index, line in enumerate(f):
+                    if index == 0:
+                        continue
+                    else:
+                        tmp = line.strip().split(',')
+                        csv_gps[tmp[0]] = tmp[1]
+            self.sheet_logger.debug(
+                'CSV experimental groups:\n%s',
+                pprint.pformat(csv_gps))
+            # Calculate the overlaps
+            fq_samples = set(self.samples)
+            csv_samples = set(csv_gps)
+            fq_only = fq_samples - csv_samples
+            csv_only = csv_samples - fq_samples
+            overlap = fq_samples & csv_samples
+            # Thow an error if there are no overlapping samples
+            if len(overlap) == 0:
+                self.sheet_logger.error(
+                    'The FASTQ directory and CSV file appear to mismatch.')
+                DieGracefully.die_gracefully(DieGracefully.BRNASEQ_NO_SAMP_GPS)
+            # Drop warnings if there are exclusive samples
+            if len(fq_only) > 0:
+                self.sheet_logger.warning(
+                    'Samples found that do not have CSV entries, setting to NULL group:\n%s',
+                    '\n'.join(list(fq_only)))
+            if len(csv_only) > 0:
+                self.sheet_logger.warning(
+                    'Ignoring samples with groups but no reads in the FASTQ directory:\n%s',
+                    '\n'.join(list(csv_only)))
+            # Iterate through the sample dictionary and set groups
+            for s in self.samples:
+                gp = csv_gps.get(s, 'NULL')
+                self.sheet_logger.debug('Sample %s gets group %s.', s, gp)
+                self.samples[s]['Group'] = gp
+            return
+
     def compile(self, od, wd):
         """Iterate through the dictionary of samples, and fill-in the values
         that were supplied by the user."""
@@ -119,6 +176,7 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         for s in self.samples:
             # Key in the values based on the column names
             self.final_sheet[s] = {
+                'Group': self.samples[s]['Group'],
                 'FastqR1files': self.samples[s]['R1'],
                 'FastqR2file': self.samples[s]['R2'],
                 'OutputDir': str(od),

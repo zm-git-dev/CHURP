@@ -25,16 +25,17 @@ IN=$(head -n "${PBS_ARRAYID}" "${SampleSheet}" | tail -1)
 [ "$IN" = "#.*" ] && echo "hit a comment line in sample sheet" && exit 0
 while IFS="|" read -ra OPTS; do 
     SAMPLENM=${OPTS[0]}
-    R1FILE=${OPTS[1]}
-    R2FILE=${OPTS[2]}
-    OUTDIR=${OPTS[3]}
-    WORKDIR=${OPTS[4]}
-    TRIM=${OPTS[5]}
-    TRIMOPTS=${OPTS[6]}
-    HISAT2INDEX=${OPTS[7]}
-    HISAT2OPTS=${OPTS[8]}
-    UNSTRANDED=${OPTS[9]}
-    GTFFILE=${OPTS[10]}
+    EXPR_GROUP=${OPTS[1]}
+    R1FILE=${OPTS[2]}
+    R2FILE=${OPTS[3]}
+    OUTDIR=${OPTS[4]}
+    WORKDIR=${OPTS[5]}
+    TRIM=${OPTS[6]}
+    TRIMOPTS=${OPTS[7]}
+    HISAT2INDEX=${OPTS[8]}
+    HISAT2OPTS=${OPTS[9]}
+    UNSTRANDED=${OPTS[10]}
+    GTFFILE=${OPTS[11]}
 done <<< "$IN"
 
 # load necessary modules

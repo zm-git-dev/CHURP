@@ -7,6 +7,7 @@ import os
 import pprint
 
 import GopherPipelines
+from GopherPipelines.FileOps import default_files
 from GopherPipelines.FileOps import default_dirs
 from GopherPipelines.ArgHandling import bulk_rnaseq_args
 from GopherPipelines.ArgHandling import sc_rnaseq_args
@@ -63,9 +64,7 @@ class Samplesheet(object):
     def write_sheet(self, od, pn, delim):
         """Write the sheet into the given directory."""
         # Define a samplesheet output name
-        ssname = '.'.join([
-            GopherPipelines.TODAY, GopherPipelines.UNAME, pn,
-            'samplesheet.txt'])
+        ssname = default_files.default_samplesheet(pn)
         ssname = os.path.join(od, ssname)
         if os.path.isfile(ssname):
             self.sheet_logger.warning(

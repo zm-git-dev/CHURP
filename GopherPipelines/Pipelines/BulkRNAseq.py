@@ -15,6 +15,7 @@ from GopherPipelines.Pipelines import Pipeline
 from GopherPipelines.SampleSheet import BulkRNASeqSampleSheet
 from GopherPipelines.ArgHandling import set_verbosity
 from GopherPipelines.FileOps import species_list
+from GopherPipelines.FileOps import default_files
 
 
 class BulkRNAseqPipeline(Pipeline.Pipeline):
@@ -38,6 +39,14 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
 
         # And make a sample sheet from the args
         self.sheet = BulkRNASeqSampleSheet.BulkRNASeqSampleSheet(valid_args)
+
+        # After validating the arguments, we check to see if the user has
+        # passed any arguments that require us to do "special" tasks:
+        # list species databases or generate a template for a group
+        # CSV
+        if valid_args['make_groups_template']:
+            self._make_group_template()
+            DieGracefully.die_gracefully(DieGracefully.BRNASEQ_MAKE_TEMPLATE)
 
         # Set the paths to the single sample analysis script. This will be
         # submitted to the scheduler. This is a little ugly, but because the
@@ -70,11 +79,26 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         """List valid index files for HISAT2 alignment."""
         pass
 
-    def make_group_template(self):
+    def _make_group_template(self):
         """Take the sample dictionary and make the template CSV for the group
         column of the samplesheet. We will auto-populate with a dummy value to
-        have the user fill in the correct value."""
-        dummy_group = 'NULL'
+        have the user fill in the correct value. This is called after
+        initializing the samplesheet, so all of the samplenames and directories
+        have been validated."""
+        dummy_value = 'NULL'
+        # Set an output file name
+        csv_name = default_files.default_group_csv(self.pipe_name)
+        csv_name = os.path.join(self.outdir, csv_name)
+        if os.path.isfile(csv_name):
+            self.pipe_logger.warning('Groups file %s exists, overwriting!',
+                                     csv_name)
+        fh = open(csv_name, 'w')
+        # Write the header
+        fh.write('SampleName,Group\n')
+        for sample in sorted(self.sheet.samples):
+            fh.write(','.join([sample, dummy_value]) + '\n')
+        fh.flush()
+        fh.close()
         return
 
     def _validate_args(self, a):
@@ -88,49 +112,66 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         Further, sanitize the paths of the output dir, working dir, and hisat2
         index.
         """
+        # The first thing we check is the list-species argument, because it can
+        # run independently of anything else.
+        if a['list_species']:
+            self.list_index()
+            DieGracefully.die_gracefully(DieGracefully.BRNASEQ_LIST_SPECIES)
         # Check the completeness of the argument dictionary. -f must be
-        # specified and (-x and -g) or -r must be specified.
+        # specified and (-x and -g) or -r must be specified. After checking the
+        # FASTQ folder, check the helper commands
         if not a['fq_folder']:
             DieGracefully.die_gracefully(DieGracefully.BRNASEQ_INC_ARGS)
-        elif not ((a['hisat2_idx'] and a['gtf']) or a['organism']):
+        elif (not ((a['hisat2_idx'] and a['gtf']) or a['organism']) and
+              not a['make_groups_template']):
+            DieGracefully.die_gracefully(DieGracefully.BRNASEQ_INC_ARGS)
             DieGracefully.die_gracefully(DieGracefully.BRNASEQ_INC_ARGS)
         elif (a['hisat2_idx'] and a['gtf']) and a['organism']:
             DieGracefully.die_gracefully(DieGracefully.BRNASEQ_CONFLICT)
         # Convert all of the paths into absolute paths
+        a['fq_folder'] = os.path.realpath(
+            os.path.expanduser(str(a['fq_folder'])))
+        a['hisat2_idx'] = os.path.realpath(
+            os.path.expanduser(str(a['hisat2_idx'])))
         a['gtf'] = os.path.realpath(os.path.expanduser(str(a['gtf'])))
         a['adapters'] = os.path.realpath(
             os.path.expanduser(str(a['adapters'])))
-        a['fq_folder'] = os.path.realpath(
-            os.path.expanduser(str(a['fq_folder'])))
         a['outdir'] = os.path.realpath(os.path.expanduser(str(a['outdir'])))
         a['workdir'] = os.path.realpath(os.path.expanduser(str(a['workdir'])))
-        a['hisat2_idx'] = os.path.realpath(
-            os.path.expanduser(str(a['hisat2_idx'])))
+        if a['expr_groups']:
+            a['expr_groups'] = os.path.realpath(os.path.expanduser(str(
+                a['expr_groups'])))
         self.pipe_logger.debug('GTF: %s', a['gtf'])
         self.pipe_logger.debug('Adapters: %s', a['adapters'])
         self.pipe_logger.debug('FASTQ Folder: %s', a['fq_folder'])
         self.pipe_logger.debug('Output Dir: %s', a['outdir'])
         self.pipe_logger.debug('Working Dir: %s', a['workdir'])
         self.pipe_logger.debug('HISAT2 Idx: %s', a['hisat2_idx'])
-        # Check that the adapters and GTF file exist
-        try:
-            handle = open(a['gtf'], 'r')
-            handle.close()
-        except OSError:
-            DieGracefully.die_gracefully(DieGracefully.BAD_GTF)
-        try:
-            handle = open(a['adapters'], 'r')
-            handle.close()
-        except OSError:
-            DieGracefully.die_gracefully(DieGracefully.BAD_ADAPT)
-        # Validate the FASTQ folder
-        self._validate_fastq_folder(a['fq_folder'])
-        # Validate the hisat2 index
-        self._validate_hisat_idx(a['hisat2_idx'])
-        # After validating the arguments, we will break out and do any of the
-        # "secondary" operations that this script performs. We will call the
-        # index list and the experimental group functions here.
-        """
+        self.pipe_logger.debug('Expr Groups: %s', a['expr_groups'])
+        # These only matter if --list-species or --make-groups-template were
+        # not supplied
+        if not (a['make_groups_template'] or a['list_species']):
+            # Check that the adapters and GTF file exist
+            try:
+                handle = open(a['gtf'], 'r')
+                handle.close()
+            except OSError:
+                DieGracefully.die_gracefully(DieGracefully.BAD_GTF)
+            try:
+                handle = open(a['adapters'], 'r')
+                handle.close()
+            except OSError:
+                DieGracefully.die_gracefully(DieGracefully.BAD_ADAPT)
+            if a['expr_groups']:
+                try:
+                    handle = open(a['expr_groups'], 'r')
+                    handle.close()
+                except OSError:
+                    DieGracefully.die_gracefully(DieGracefully.BRNASEQ_BAD_GPS)
+            # Validate the FASTQ folder
+            self._validate_fastq_folder(a['fq_folder'])
+            # Validate the hisat2 index
+            self._validate_hisat_idx(a['hisat2_idx'])
         return a
 
     def _validate_fastq_folder(self, d):
@@ -196,11 +237,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         command depends on which pipeline we are running."""
         ss = self._prepare_samplesheet()
         # Make the script filename
-        pname = '.'.join([
-            GopherPipelines.TODAY,
-            GopherPipelines.UNAME,
-            self.pipe_name,
-            'pipeline.sh'])
+        pname = default_files.default_pipeline(self.pipe_name)
         pname = os.path.join(self.outdir, pname)
         if os.path.isfile(pname):
             self.pipe_logger.warning(
