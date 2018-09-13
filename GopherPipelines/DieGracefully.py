@@ -86,9 +86,9 @@ Samplesheet: {ss}
 
 Verify the information in the samplesheet, and run the pipeline script with
 bash while logged into Mesabi. You will recieve email notifications of job
-start/completion/error at your UMN X500 email address. Please include the
-samplesheet, pipeline script, and the error message with any error report
-to help[at]msi.umn.edu.\n"""
+start/completion/error at your UMN X500 email address. If you need to submit
+an error repor, please contact help[at]msi.umn.edu. Please include the
+samplesheet, pipeline script, and the error message with your report.\n"""
     sys.stderr.write(msg.format(pn=pipe_script, ss=samplesheet))
     return
 
