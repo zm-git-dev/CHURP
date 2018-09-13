@@ -265,12 +265,12 @@ def brnaseq_group_success(fname):
     msg = """----------
 SUCCESS
 
-Your experimental groups template has been written to {path}
+Template file: {path}
 
 All sample groups and any additional columns have specified have been filled
 with NULL. Please edit the file and write in the correct values for your
 dataset. Samples with the same "Group" label will be treated as replicates
-in the analysis. Any samples with a "Group" value of NULL will not be used in
+in the analysis. Samples with a "Group" value of NULL will not be used in
 downstream differential expression analysis. When you have edited the file to
 your liking, supply its path to the "bulk_rnaseq" pipeline with the -e
 option to enable group testing.\n"""
