@@ -47,21 +47,16 @@ class ExpGroup(object):
         self.group_logger.debug('Checking output directory %s', par)
         # First,check that it exists
         if dir_funcs.dir_exists(par, self.group_logger):
-            # Is it empty?
-            if dir_funcs.dir_empty(par, self.group_logger):
-                # And lastly, is it writeable?
-                if dir_funcs.dir_writeable(par, self.group_logger):
-                    # All good!
-                    self.group_logger.debug(
-                        'Output dir %s is valid', par)
-                    pass
-                else:
-                    self.group_logger.error(
-                        'Output dir %s cannot be written to!', par)
-                    DieGracefully.die_gracefully(DieGracefully.BAD_OUTDIR)
+            # And lastly, is it writeable?
+            if dir_funcs.dir_writeable(par, self.group_logger):
+                # All good!
+                self.group_logger.debug(
+                    'Output dir %s is valid', par)
+                pass
             else:
-                self.group_logger.info(
-                    'Output dir %s is not empty', par)
+                self.group_logger.error(
+                    'Output dir %s cannot be written to!', par)
+                DieGracefully.die_gracefully(DieGracefully.BAD_OUTDIR)
         else:
             self.group_logger.warning(
                 'Output dir %s does not exist, making it', par)

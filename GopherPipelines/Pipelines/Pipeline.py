@@ -95,7 +95,9 @@ class Pipeline(object):
                         'Output dir %s cannot be written to!', self.outdir)
                     DieGracefully.die_gracefully(DieGracefully.BAD_OUTDIR)
             else:
-                self.logger.warning('Output dir %s is not empty!', self.outdir)
+                self.logger.warning(
+                    'Output dir %s is not empty! Results may be clobbered.',
+                    self.outdir)
         else:
             self.logger.warning(
                 'Output dir %s does not exist, making it', self.outdir)
