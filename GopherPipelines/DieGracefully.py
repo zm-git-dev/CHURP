@@ -19,6 +19,7 @@ BAD_GTF = 23
 BAD_ADAPT = 24
 BRNASEQ_BAD_GPS = 25
 BRNASEQ_NO_SAMP_GPS = 26
+BRNASEQ_SUCCESS = 27
 GROUP_NO_PIPE = 50
 GROUP_BAD_COL = 51
 BRNASEQ_GROUP_SUCCESS = 52
@@ -69,6 +70,26 @@ allocated memory should be specified in megabytes (MB) as an integer between 1
 and 62000. The walltime should be specified in hours as an integer between 1 and
 96.\n"""
     sys.stderr.write(msg)
+    return
+
+
+def brnaseq_success(pipe_script, samplesheet):
+    """Call this function when the bulk RNAseq pipeline finishes successfully.
+    It will include the pipeline script and the samplesheet paths in the
+    output message."""
+    msg = """
+Samplesheet and pipeline script generation complete! Their paths are given
+below:
+
+Pipeline script: {pn}
+Samplesheet: {ss}
+
+Verify the information in the samplesheet, and run the pipeline script with
+bash while logged into Mesabi. You will recieve email notifications of job
+start/completion/error at your UMN X500 email address. Please include the
+samplesheet, pipeline script, and the error message with any error report
+to help[at]msi.umn.edu.\n"""
+    sys.stderr.write(msg.format(pn=pipe_script, ss=samplesheet))
     return
 
 
@@ -241,7 +262,8 @@ def die_gracefully(e, *args):
         BRNASEQ_NO_SAMP_GPS: brnaseq_no_sample_groups,
         GROUP_NO_PIPE: group_no_pipe,
         GROUP_BAD_COL: group_bad_col,
-        BRNASEQ_GROUP_SUCCESS: brnaseq_group_success
+        BRNASEQ_GROUP_SUCCESS: brnaseq_group_success,
+        BRNASEQ_SUCCESS: brnaseq_success
         }
     try:
         err_dict[e](*args)

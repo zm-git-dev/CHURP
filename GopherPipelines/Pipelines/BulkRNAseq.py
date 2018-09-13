@@ -270,4 +270,4 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug('qsub:\n%s', ' '.join(summary_cmd))
         handle.flush()
         handle.close()
-        return
+        return (pname, ss)
