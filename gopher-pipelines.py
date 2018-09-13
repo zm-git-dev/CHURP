@@ -4,10 +4,11 @@ types of high-throughput sequencing data analyses. This script is written to
 work on the University of Minnesota Supercomputing Institute clusters with
 data from the University of Minnesota Genomics Centre. The following analysis
 pipelines are supported:
+    - group_template
     - bulk_rnaseq
 Questions should be directed to help@msi.umn.edu.
-Version: 0.0
-2017-07-24
+Version: 0.0.0
+2018-09-13
 """
 
 # Check the Python version
@@ -59,8 +60,9 @@ def expr_group(args):
     try:
         grp_cmd[args['pipe_group']](args)
     except KeyError:
-            sys.stderr.write('Unknown pipeline! Perhaps this is a bug.\n')
-            exit(99)
+        # If we get here, then we should get trapped by the no-args help func
+        from GopherPipelines.ExperimentGroup import ExpGroup
+        e = ExpGroup.ExpGroup(args)
     return
 
 
