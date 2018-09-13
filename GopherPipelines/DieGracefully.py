@@ -31,7 +31,9 @@ BRNASEQ_GROUP_SUCCESS = 52
 def general_error():
     """This will be a generic error message for when something goes wrong that
     we can't identify."""
-    msg = """
+    msg = """----------
+ERROR
+
 gopher-pipelines has caught an unidentified error. Please send this error
 message, the command you typed, and debugging output to the MSI help desk
 (help@msi.umn.edu).\n"""
@@ -41,7 +43,9 @@ message, the command you typed, and debugging output to the MSI help desk
 
 def bad_outdir():
     """Call this function when the user supplies a bad output directory."""
-    msg = """
+    msg = """----------
+ERROR
+
 The output directory you have supplied is not suitable. Either you do not have
 permissions to write into it, or the disk is full. If you have verified that you
 can write into the directory, please contact the help desk (help@msi.umn.edu)
@@ -52,7 +56,9 @@ with this error and the debugging output.\n"""
 
 def bad_workdir():
     """Call this function when the user supplies a bad working directory."""
-    msg = """
+    msg = """----------
+ERROR
+
 The working directory you have supplied is not suitable. Either you do not have
 permissions to write into it, or the disk is full. If you have verified that you
 can write into the direcotry, please contact the help desk (help@msi.umn.edu)
@@ -63,7 +69,9 @@ with this error and the debugging output.\n"""
 
 def bad_resources():
     """Call this function when the user supplies illegal PBS resources."""
-    msg = """
+    msg = """----------
+ERROR
+
 The resouces you have specified are out of allowable bounds for our system. The
 number of processors per node (PPN) should be an integer between 1 and 24. The
 allocated memory should be specified in megabytes (MB) as an integer between 1
@@ -77,7 +85,9 @@ def brnaseq_success(pipe_script, samplesheet):
     """Call this function when the bulk RNAseq pipeline finishes successfully.
     It will include the pipeline script and the samplesheet paths in the
     output message."""
-    msg = """
+    msg = """----------
+SUCCESS
+
 Samplesheet and pipeline script generation complete! Their paths are given
 below:
 
@@ -96,7 +106,9 @@ samplesheet, pipeline script, and the error message with your report.\n"""
 def brnaseq_inc():
     """Call this function when the bulk_rnaseq arguments dictionary is
     incomplete."""
-    msg = """Error!
+    msg = """----------
+ERROR
+
 
 You did not specify sufficient options to run the bulk_rnaseq subcommand of
 gopher-pipelines. You must specify a FASTQ directory (-f). Additionally, you
@@ -110,7 +122,9 @@ FASTQ directory. Please fix your command line and re-run.\n"""
 def brnaseq_conflict():
     """Call this function when there are conflicting arguments passed to the
     bulk_rnaseq pipeline."""
-    msg = """Error!
+    msg = """----------
+ERROR
+
 
 You have specified conflicting options to the bulk_rnaseq subcommand. HISAT2
 index (-x) and GTF (-g) are both incompatible with organism (-r). Pass the help
@@ -122,7 +136,9 @@ re-run.\n"""
 
 def bad_hisat2():
     """Call this function when the user supplies a bad HISAT2 index."""
-    msg = """
+    msg = """----------
+ERROR
+
 The HISAT2 index that you have supplied is not valid. Please give the path to
 the base of the HISAT2 index (without the .*.ht2 extension). It should be given
 in the same way as would be given to HISTA2 directly. See the HISAT2 manual for
@@ -133,7 +149,9 @@ information on building an index from a FASTA file.\n"""
 
 def bad_fastq():
     """Call this fucntion when the user supplies a bad FASTQ folder."""
-    msg = """
+    msg = """----------
+ERROR
+
 The FASTQ directory that you have supplied either does not exist or cannot be
 read. If you have verified that you can read the directory contents, please
 contact the help desk (help@msi.umn.edu) with tihs error message and the
@@ -144,7 +162,9 @@ debugging output.\n"""
 
 def empty_fastq():
     """Call this fucntion when the user supplies an empty FASTQ folder."""
-    msg = """
+    msg = """----------
+ERROR
+
 The FASTQ directory that you have supplied does not appear to contain any FASTQ
 or gzipped FASTQ files. Please ensure that the files in the directory have names
 that end in one of the following: .fastq, .fastq.gz, .fq., .fq.gz
@@ -156,7 +176,9 @@ that end in one of the following: .fastq, .fastq.gz, .fq., .fq.gz
 def bad_gtf():
     """Call this function when the user supplies a GTF that does not exist or
     cannot be read."""
-    msg = """
+    msg = """----------
+ERROR
+
 The GTF you have supplied does not exist, or cannot be read. Please check your
 path for any typos and that any special characters are properly quoted or
 escaped and try again.\n"""
@@ -167,7 +189,9 @@ escaped and try again.\n"""
 def bad_adapter():
     """Call thsi function when the user supplies an adapters file that does not
     exist or cannot be read."""
-    msg = """
+    msg = """----------
+ERROR
+
 The adapters file that you have supplied either does not exist or cannot be
 read. Please check your path for any typos and that any special characters are
 properly quoted or escaped, and try again.\n"""
@@ -178,7 +202,9 @@ properly quoted or escaped, and try again.\n"""
 def brnaseq_bad_groups():
     """Call this function when a user does passes an experimental groups file
     that does not exist, or is not readable."""
-    msg = """
+    msg = """----------
+ERROR
+
 The groups template CSV file that you have provided does not exist, or cannot
 be read. Please check your path for any typos and that any spaces or special
 characters are properly quoted or escaped.\n"""
@@ -189,7 +215,9 @@ characters are properly quoted or escaped.\n"""
 def brnaseq_no_sample_groups():
     """Call this function when a user supplies a groups CSV that does not have
     any information for the samples in the FASTQ directory."""
-    msg = """
+    msg = """----------
+ERROR
+
 The groups CSV file that you supplied does not contain any information about
 the samples that were found in the FASTQ directory. Check that you supplied the
 correct directory with -f, and that your sample names match exactly between the
@@ -221,7 +249,9 @@ Currently available pipelines:
 def group_bad_col():
     """Call this function when a user supplies an invalid column name (contains
     a comma) to the group_template subcommand."""
-    msg = """
+    msg = """----------
+ERROR
+
 You have specified an invalid column name. Column names cannot contain commas,
 because the experimental group file is a comma-separated values file.\n"""
     sys.stderr.write(msg)
@@ -232,7 +262,9 @@ def brnaseq_group_success(fname):
     """Call this function when the group_template command finishes properly.
     It will tell the user where to file has been written, and what they need
     to do next."""
-    msg = """
+    msg = """----------
+SUCCESS
+
 Your experimental groups template has been written to {path}
 
 All sample groups and any additional columns have specified have been filled
