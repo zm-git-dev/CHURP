@@ -19,8 +19,9 @@ BAD_GTF = 23
 BAD_ADAPT = 24
 BRNASEQ_BAD_GPS = 25
 BRNASEQ_NO_SAMP_GPS = 26
-BRNASEQ_LIST_SPECIES = 30
-BRNASEQ_MAKE_TEMPLATE = 31
+GROUP_NO_PIPE = 50
+GROUP_BAD_COL = 51
+BRNASEQ_GROUP_SUCCESS = 52
 
 # Define a series of functions that just write messages to the terminal. We
 # will call these with a main error handling function at the end.
@@ -153,30 +154,6 @@ properly quoted or escaped, and try again.\n"""
     return
 
 
-def brnaseq_list_species():
-    """Call this exit function when a user passes the "--list-species" argument
-    to the bulk RNASeq pipeline."""
-    msg = """
-Please use one of the species databases listed above as an argument to the
-"-r" flag. You must type it exactly as shown, including capitalisation.\n"""
-    sys.stderr.write(msg)
-    return
-
-
-def brnaseq_make_template():
-    """Call this function when a user passes the "--make-groups-template"
-    argument to the bulk RNASeq pipeline."""
-    msg = """
-The groups template CSV file has been written to the output directory. Please
-edit the file to specify the experimental group to which each sample belongs.
-All pairwise comparisons of groups will be tested for differential expression.
-Samples that are part of a "NULL" group will not be included in any
-differential expression comparison. If all samples are "NULL," then no
-differential expression tests will be performed.\n"""
-    sys.stderr.write(msg)
-    return
-
-
 def brnaseq_bad_groups():
     """Call this function when a user does passes an experimental groups file
     that does not exist, or is not readable."""
@@ -202,7 +179,52 @@ groups.\n"""
     return
 
 
-def die_gracefully(e):
+def group_no_pipe():
+    """Call this function when a user runs the group_template pipeline, but
+    does not supply a pipeline for which to build a group template."""
+    msg = """Usage: gopher-pipelines.py group_template <pipeline> <options>
+
+This subcommand allows you to build templates for experimental metadata files.
+These files specify experimental conditions or treatment groups for comparisons
+in downstream analyses. The files from this subcommand, for example, can be
+used to perform differential gene expression testing among treatment groups.
+Takes a pipeline as an argument, followed by modifiers to control the output.
+See the pipeline-specific help (-h) or the user manual for details.
+
+Currently available pipelines:
+    - bulk_rnaseq\n"""
+    sys.stderr.write(msg)
+    return
+
+
+def group_bad_col():
+    """Call this function when a user supplies an invalid column name (contains
+    a comma) to the group_template subcommand."""
+    msg = """
+You have specified an invalid column name. Column names cannot contain commas,
+because the experimental group file is a comma-separated values file.\n"""
+    sys.stderr.write(msg)
+    return
+
+
+def brnaseq_group_success(fname):
+    """Call this function when the group_template command finishes properly.
+    It will tell the user where to file has been written, and what they need
+    to do next."""
+    msg = """
+Your experimental groups template has been written to {path}
+
+All sample groups and any additional columns have specified have been filled
+with NULL. Please edit the file and write in the correct values for your
+dataset. Any samples with a "Group" value of NULL will not be used in
+downstream differential expression analysis. When you have edited the file to
+your liking, supply its path to the "bulk_rnaseq" pipeline with the -e
+option to enable group testing.\n"""
+    sys.stderr.write(msg.format(path=fname))
+    return
+
+
+def die_gracefully(e, *args):
     """Print user-friendly error messages and exit."""
     err_dict = {
         BAD_OUTDIR: bad_outdir,
@@ -215,13 +237,14 @@ def die_gracefully(e):
         BRNASEQ_CONFLICT: brnaseq_conflict,
         BAD_GTF: bad_gtf,
         BAD_ADAPT: bad_adapter,
-        BRNASEQ_LIST_SPECIES: brnaseq_list_species,
-        BRNASEQ_MAKE_TEMPLATE: brnaseq_make_template,
         BRNASEQ_BAD_GPS: brnaseq_bad_groups,
-        BRNASEQ_NO_SAMP_GPS: brnaseq_no_sample_groups
+        BRNASEQ_NO_SAMP_GPS: brnaseq_no_sample_groups,
+        GROUP_NO_PIPE: group_no_pipe,
+        GROUP_BAD_COL: group_bad_col,
+        BRNASEQ_GROUP_SUCCESS: brnaseq_group_success
         }
     try:
-        err_dict[e]()
+        err_dict[e](*args)
     except KeyError:
         general_error()
     exit(e)

@@ -26,14 +26,47 @@ import argparse
 # Import the package here
 try:
     from GopherPipelines.ArgHandling import args
+    from GopherPipelines import DieGracefully
 except ImportError:
     sys.stderr.write('Error - GopherPipelines package cannot be not found!\n')
     exit(1)
 
 
+def sp_dbs(args):
+    """This function will read and display a list of available species
+    databases that can be used as targets for various pipelines."""
+    pass
+
+
+def expr_group(args):
+    """This function will generate experimental group CSV files for input into
+    the various pipelines."""
+
+    def brnaseq_group(a):
+        """Sub-function for calling the bulk RNAseq group template."""
+        from GopherPipelines.ExperimentGroup import BulkRNAseqGroup
+        eg = BulkRNAseqGroup.BulkRNAseqGroup(args)
+        eg.setup(args)
+        eg.write_sheet()
+        DieGracefully.die_gracefully(
+            DieGracefully.BRNASEQ_GROUP_SUCCESS,
+            eg.dest)
+        return
+
+    grp_cmd = {
+        'bulk_rnaseq': brnaseq_group
+        }
+    try:
+        grp_cmd[args['pipe_group']](args)
+    except KeyError:
+            sys.stderr.write('Unknown pipeline! Perhaps this is a bug.\n')
+            exit(99)
+    return
+
+
 def brnaseq(args):
-    """This function loads the bulk RNAseq pipeline module, and runs through the
-    steps for bulk RNAseq analysis."""
+    """This function loads the bulk RNAseq pipeline module, and runs through
+    the steps for bulk RNAseq analysis."""
     from GopherPipelines.Pipelines import BulkRNAseq
     p = BulkRNAseq.BulkRNAseqPipeline(args)
     p.setup(args)
@@ -51,9 +84,17 @@ def main():
         exit(3)
     else:
         pipe_args = args.pipeline_args()
+        cmd = {
+            'bulk_rnaseq': brnaseq,
+            'group_template': expr_group,
+            'list_species': sp_dbs
+            }
         # Choose which pipeline to run here
-        if pipe_args['pipeline'] == 'bulk_rnaseq':
-            brnaseq(pipe_args)
+        try:
+            cmd[pipe_args['pipeline']](pipe_args)
+        except KeyError:
+            sys.stderr.write('Unknown pipeline! Perhaps this is a bug.\n')
+            exit(99)
     return
 
 

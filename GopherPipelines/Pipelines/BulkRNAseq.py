@@ -76,34 +76,6 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'prep.r')
         return
 
-    def list_index(self):
-        """List valid index files for HISAT2 alignment."""
-        pass
-
-    def _make_group_template(self):
-        """Take the sample dictionary and make the template CSV for the group
-        column of the samplesheet. We will auto-populate with a dummy value to
-        have the user fill in the correct value. This is called after
-        initializing the samplesheet, so all of the samplenames and directories
-        have been validated."""
-        dummy_value = 'NULL'
-        # Set an output file name
-        csv_name = default_files.default_group_csv(self.pipe_name)
-        # Make the directory
-        dir_funcs.make_dir(self.outdir, self.pipe_logger)
-        csv_name = os.path.join(self.outdir, csv_name)
-        if os.path.isfile(csv_name):
-            self.pipe_logger.warning('Groups file %s exists, overwriting!',
-                                     csv_name)
-        fh = open(csv_name, 'w')
-        # Write the header
-        fh.write('SampleName,Group\n')
-        for sample in sorted(self.sheet.samples):
-            fh.write(','.join([sample, dummy_value]) + '\n')
-        fh.flush()
-        fh.close()
-        return
-
     def _validate_args(self, a):
         """Validate arguments for the BulkRNAseqPipeline object. We define it
         in this file because it only really needs to be accessible to this
@@ -115,11 +87,6 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         Further, sanitize the paths of the output dir, working dir, and hisat2
         index.
         """
-        # The first thing we check is the list-species argument, because it can
-        # run independently of anything else.
-        if a['list_species']:
-            self.list_index()
-            DieGracefully.die_gracefully(DieGracefully.BRNASEQ_LIST_SPECIES)
         # Check the completeness of the argument dictionary. -f must be
         # specified and (-x and -g) or -r must be specified. After checking the
         # FASTQ folder, check the helper commands

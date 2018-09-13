@@ -4,6 +4,7 @@ a huge function, so we will isolate it into this script for ease of development
 and maintenance."""
 
 import argparse
+from GopherPipelines.ArgHandling import group_template_args
 from GopherPipelines.ArgHandling import bulk_rnaseq_args
 from GopherPipelines.ArgHandling import sc_rnaseq_args
 
@@ -78,6 +79,7 @@ def pipeline_args():
         help=SCRNASEQ_HELP,
         add_help=False)
 
+    group_template_args.add_args(group_parser)
     bulk_rnaseq_args.add_args(bulk_rnaseq_parser)
     sc_rnaseq_args.add_args(sc_rnaseq_parser)
     pargs = parser.parse_args()
