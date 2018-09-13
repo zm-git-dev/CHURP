@@ -116,7 +116,10 @@ class ExpGroup(object):
         """Populate the sample dictionary with dummy values."""
         for sn in self.samples:
             for c in self.columns:
-                self.samples[sn][c] = dummy
+                if c == 'SampleName':
+                    self.samples[sn][c] = sn
+                else:
+                    self.samples[sn][c] = dummy
         self.group_logger.debug(
             'Sample groups:\n%s', pprint.pformat(self.samples))
         return
@@ -130,7 +133,7 @@ class ExpGroup(object):
         fh.write(','.join(self.columns) + '\n')
         for sn in sorted(self.samples):
             towrite = ','.join(
-                [sn] + [self.samples[sn][c] for c in self.columns]) + '\n'
+                [self.samples[sn][c] for c in self.columns]) + '\n'
             fh.write(towrite)
         fh.flush()
         fh.close()
