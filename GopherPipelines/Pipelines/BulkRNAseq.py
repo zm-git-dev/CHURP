@@ -41,14 +41,6 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # And make a sample sheet from the args
         self.sheet = BulkRNASeqSampleSheet.BulkRNASeqSampleSheet(valid_args)
 
-        # After validating the arguments, we check to see if the user has
-        # passed any arguments that require us to do "special" tasks:
-        # list species databases or generate a template for a group
-        # CSV
-        if valid_args['make_groups_template']:
-            self._make_group_template()
-            DieGracefully.die_gracefully(DieGracefully.BRNASEQ_MAKE_TEMPLATE)
-
         # Set the paths to the single sample analysis script. This will be
         # submitted to the scheduler. This is a little ugly, but because the
         # package contains the shell script data, it should be OK to define a
@@ -92,9 +84,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # FASTQ folder, check the helper commands
         if not a['fq_folder']:
             DieGracefully.die_gracefully(DieGracefully.BRNASEQ_INC_ARGS)
-        elif (not ((a['hisat2_idx'] and a['gtf']) or a['organism']) and
-              not a['make_groups_template']):
-            DieGracefully.die_gracefully(DieGracefully.BRNASEQ_INC_ARGS)
+        elif not ((a['hisat2_idx'] and a['gtf']) or a['organism']):
             DieGracefully.die_gracefully(DieGracefully.BRNASEQ_INC_ARGS)
         elif (a['hisat2_idx'] and a['gtf']) and a['organism']:
             DieGracefully.die_gracefully(DieGracefully.BRNASEQ_CONFLICT)
@@ -118,30 +108,27 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug('Working Dir: %s', a['workdir'])
         self.pipe_logger.debug('HISAT2 Idx: %s', a['hisat2_idx'])
         self.pipe_logger.debug('Expr Groups: %s', a['expr_groups'])
-        # These only matter if --list-species or --make-groups-template were
-        # not supplied
-        if not (a['make_groups_template'] or a['list_species']):
-            # Check that the adapters and GTF file exist
+        # Check that the adapters and GTF file exist
+        try:
+            handle = open(a['gtf'], 'r')
+            handle.close()
+        except OSError:
+            DieGracefully.die_gracefully(DieGracefully.BAD_GTF)
+        try:
+            handle = open(a['adapters'], 'r')
+            handle.close()
+        except OSError:
+            DieGracefully.die_gracefully(DieGracefully.BAD_ADAPT)
+        if a['expr_groups']:
             try:
-                handle = open(a['gtf'], 'r')
+                handle = open(a['expr_groups'], 'r')
                 handle.close()
             except OSError:
-                DieGracefully.die_gracefully(DieGracefully.BAD_GTF)
-            try:
-                handle = open(a['adapters'], 'r')
-                handle.close()
-            except OSError:
-                DieGracefully.die_gracefully(DieGracefully.BAD_ADAPT)
-            if a['expr_groups']:
-                try:
-                    handle = open(a['expr_groups'], 'r')
-                    handle.close()
-                except OSError:
-                    DieGracefully.die_gracefully(DieGracefully.BRNASEQ_BAD_GPS)
-            # Validate the FASTQ folder
-            self._validate_fastq_folder(a['fq_folder'])
-            # Validate the hisat2 index
-            self._validate_hisat_idx(a['hisat2_idx'])
+                DieGracefully.die_gracefully(DieGracefully.BRNASEQ_BAD_GPS)
+        # Validate the FASTQ folder
+        self._validate_fastq_folder(a['fq_folder'])
+        # Validate the hisat2 index
+        self._validate_hisat_idx(a['hisat2_idx'])
         return a
 
     def _validate_fastq_folder(self, d):

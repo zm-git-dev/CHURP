@@ -5,6 +5,7 @@ import glob
 import sys
 import os
 import pprint
+import re
 
 import GopherPipelines
 from GopherPipelines.FileOps import default_files

@@ -91,12 +91,7 @@ def main():
             'group_template': expr_group,
             'list_species': sp_dbs
             }
-        # Choose which pipeline to run here
-        try:
-            cmd[pipe_args['pipeline']](pipe_args)
-        except KeyError:
-            sys.stderr.write('Unknown pipeline! Perhaps this is a bug.\n')
-            exit(99)
+        cmd[pipe_args['pipeline']](pipe_args)
     return
 
 
