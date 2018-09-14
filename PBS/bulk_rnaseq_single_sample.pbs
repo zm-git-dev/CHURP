@@ -70,8 +70,8 @@ fi
 # Set Up a log file instead (?)
 if [ ! -f fastqc.done ]; then
     echo "# $(date '+%F %T'): Running fastqc on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
-    echo "fastqc -t 2 "'"'"${R1FILE}"'"'" "'"'"${R2FILE}"'"' >> "${LOG_FNAME}"
-    fastqc -t 2 "${R1FILE}" "${R2FILE}" && touch fastqc.done
+    echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${R1FILE}"'"'" "'"'"${R2FILE}"'"' >> "${LOG_FNAME}"
+    fastqc -t 2 --outdir="${WORKDIR}" "${R1FILE}" "${R2FILE}" && touch fastqc.done
 fi
 
 # To use -basein option, fastq file must be in format *_R1_*.fastq and *_R2_*.fastq
@@ -83,8 +83,8 @@ if [ "${TRIM}" = "yes" ]; then
     fi
     if [ ! -f fastqc.trim.done ]; then
         echo "# $(date '+%F %T'): Running fastqc on trimmed fastq files." >> "${LOG_FNAME}"
-        echo "fastqc -t 2 "'"'"${SAMPLENM}_1P"'"'" "'"'"${SAMPLENM}_2P"'"' >> "${LOG_FNAME}"
-        fastqc -t 2 "${SAMPLENM}_1P" "${SAMPLENM}_2P" && touch fastqc.trim.done
+        echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"'" "'"'"${SAMPLENM}_2P"'"' >> "${LOG_FNAME}"
+        fastqc -t 2 --outdir="${WORKDIR}" "${SAMPLENM}_1P" "${SAMPLENM}_2P" && touch fastqc.trim.done
     fi
 fi
 
