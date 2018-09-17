@@ -82,6 +82,14 @@ def add_args(ap):
         action='store_true',
         default=False)
     ap_opt.add_argument(
+        '--min-gene-length',
+        '-l',
+        dest='mingene',
+        help=('Minimum gene length to retain for edgeR analysis, in bp. '
+              'Default: 200'),
+        type=int,
+        default=200)
+    ap_opt.add_argument(
         '--unstranded',
         dest='unstranded',
         help='Unstranded library? Default: false',

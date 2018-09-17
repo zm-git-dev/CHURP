@@ -102,8 +102,13 @@ else
 fi
 
 # Summarize the merged count data, including descriptive summaries and differential expression tests if >1 group present.
-echo "Rscript "'"'"${RSUMMARY}"'"'" "'"'"${OUTDIR}"'"'" "'"'"${WORKDIR}"'"'" "'"'"${SampleSheet}"'"'" "'"'"${WORKDIR}/subread_counts.txt"'"'" &> Rout.txt" >> "${LOG_FNAME}"
-Rscript "${RSUMMARY}" "${OUTDIR}" "${WORKDIR}" "${SampleSheet}" "${WORKDIR}/subread_counts.txt" &> Rout.txt
+echo "# $(date '+%F %T'): Running edgeR analysis on counts" >> "${LOG_FNAME}"
+echo "Rscript "'"'"${RSUMMARY}"'"'" "'"'"${OUTDIR}"'"'" "'"'"${WORKDIR}"'"'" "'"'"${SampleSheet}"'"'" "'"'"${WORKDIR}/subread_counts.txt"'"' '"'"${MINLEN}"'"' " &> Rout.txt" >> "${LOG_FNAME}"
+Rscript "${RSUMMARY}" "${OUTDIR}" "${WORKDIR}" "${SampleSheet}" "${WORKDIR}/subread_counts.txt" "${MINLEN}" &> Rout.txt
+
+echo "# ----- Output from ${RSUMMARY} below" >> "${LOG_FNAME}"
+cat Rout.txt >> "${LOG_FNAME}"
+echo "# ----- End output from ${RSUMMARY}" >> "${LOG_FNAME}"
 
 # Copy the merged counts into the output directory. The -u option to cp causes
 # the copy to happen only if the source file is newer than the destination file

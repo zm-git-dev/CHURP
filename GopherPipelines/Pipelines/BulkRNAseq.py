@@ -38,6 +38,9 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug(
             'Validated args:\n%s', pprint.pformat(valid_args))
 
+        # Set the minimum gene length
+        self.min_gene_len = str(valid_args['mingene'])
+
         # And make a sample sheet from the args
         self.sheet = BulkRNASeqSampleSheet.BulkRNASeqSampleSheet(valid_args)
 
@@ -230,7 +233,11 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Write the first qsub command
         handle.write('single_id=$(' + ' '.join(aln_cmd) + ')\n')
         # This is the command for counting and normalizing reads
-        summary_vars = ''.join(['SampleSheet=', ss])
+        summary_vars = ''.join([
+            'SampleSheet=',
+            ss,
+            ',MINLEN=',
+            self.min_gene_len])
         summary_cmd = [
             'qsub',
             '-q',
