@@ -77,7 +77,7 @@ then
     "${BAM_LIST[@]}"
 else
     echo "# $(date '+%F %T'): Library is stranded." >> "${LOG_FNAME}"
-    echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -B -p -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
+    echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -B -p -Q 10 -s 1 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
     "${FEATURECOUNTS}" \
     -a "${GTFFILE}" \
     -B \
