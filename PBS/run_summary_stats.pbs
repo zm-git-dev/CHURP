@@ -88,6 +88,10 @@ else
     "${BAM_LIST[@]}"
 fi
 
+# Summarize the merged count data, including descriptive summaries and differential expression tests if >1 group present.
+
+Rscript "${RSUMMARY}" "${OUTDIR}" "${WORKDIR}" "${SampleSheet}" "${WORKDIR}/subread_counts.txt" &> Rout.txt
+
 # Copy the merged counts into the output directory. The -u option to cp causes
 # the copy to happen only if the source file is newer than the destination file
 # or if the destination does not exist.
