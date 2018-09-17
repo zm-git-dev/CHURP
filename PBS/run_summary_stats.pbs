@@ -48,12 +48,12 @@ module list -t 2>> "${LOG_FNAME}"
 
 # Set the R_LIBS_USER variable here. This is where packages will be loaded from
 # within R
-echo "export R_LIBS_USER="'"/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/R"' >> "${LOG_FNAME}"
+echo "export R_LIBS_USER="'"'"/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/R"'"' >> "${LOG_FNAME}"
 export R_LIBS_USER="/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/R"
 
 # Set the path to the featureCounts executable.
 echo "# $(date '+%F %T'): Using featureCounts v. 1.6.2" >> "${LOG_FNAME}"
-echo "FEATURECOUNTS="'"/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/Supp/subread-1.6.2-Linux-x86_64/bin/featureCounts"' >> "${LOG_FNAME}"
+echo "FEATURECOUNTS="'"'"/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/Supp/subread-1.6.2-Linux-x86_64/bin/featureCounts"'"' >> "${LOG_FNAME}"
 FEATURECOUNTS="/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/Supp/subread-1.6.2-Linux-x86_64/bin/featureCounts"
 
 echo "mkdir -p "'"'"${WORKDIR}/allsamples"'"'" && cd "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
