@@ -49,7 +49,9 @@ module load htseq/0.9.1
 module list -t
 
 # Print the loaded module information to a file
-LOG_FNAME="${OUTDIR}/${SAMPLENM}_Log.txt"
+LOGDIR="${OUTDIR}/Logs"
+mkdir -p "${LOG_DIR}"
+LOG_FNAME="${LOGDIR}/${SAMPLENM}_Log.txt"
 echo "# $(date '+%F %T'): Analysis for ${SAMPLENM} started" > "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 

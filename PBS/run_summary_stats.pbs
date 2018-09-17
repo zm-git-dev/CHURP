@@ -40,11 +40,24 @@ done <<< "$IN"
 module load R/3.5.0
 module load python/3.6.3
 
+# Make directories for the output files. We want to keep the outdir organized
+LOGDIR="${OUTDIR}/Logs"
+COUNTSDIR="${OUTDIR}/Counts"
+PLOTSDIR="${OUTDIR}/Plots"
+DEGDIR="${OUTDIR}/DEGs"
+
+mkdir -p "${LOGDIR}" "${COUNTSDIR}" "${PLOTSDIR}" "${DEGDIR}"
+
 # Print the loaded modules to stderr and a log file
 module list -t
-LOG_FNAME="${OUTDIR}/BulkRNASeq_Summary_Log.txt"
+LOG_FNAME="${LOGDIR}/BulkRNASeq_Summary_Log.txt"
 echo "# $(date '+%F %T'): Summary started" > "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
+
+# Set the path to the R summary script here. We hard-code this because it
+# should be stable within versions of the gopher-pipeline
+echo "RSUMMARY="'"'"/home/msistaff/public/gopher-pipeline-refactor/PBS/"'"' >> "${LOG_FNAME}"
+RSUMMARY="/home/msistaff/public/gopher-pipeline-refactor/PBS/"
 
 # Set the R_LIBS_USER variable here. This is where packages will be loaded from
 # within R
@@ -89,24 +102,28 @@ else
 fi
 
 # Summarize the merged count data, including descriptive summaries and differential expression tests if >1 group present.
-
+echo "Rscript "'"'"${RSUMMARY}"'"'" "'"'"${OUTDIR}"'"'" "'"'"${WORKDIR}"'"'" "'"'"${SampleSheet}"'"'" "'"'"${WORKDIR}/subread_counts.txt"'"'" &> Rout.txt" >> "${LOG_FNAME}"
 Rscript "${RSUMMARY}" "${OUTDIR}" "${WORKDIR}" "${SampleSheet}" "${WORKDIR}/subread_counts.txt" &> Rout.txt
 
 # Copy the merged counts into the output directory. The -u option to cp causes
 # the copy to happen only if the source file is newer than the destination file
 # or if the destination does not exist.
-echo "# $(date '+%F %T'): Copying merged counts matrix and summary into ${OUTDIR}" >> "${LOG_FNAME}"
-echo "cp -u subread_counts.txt "'"'"${OUTDIR}/subread_counts.txt"'"' >> "${LOG_FNAME}"
-echo "cp -u subread_counts.txt.summary "'"'"${OUTDIR}/subread_counts.txt.summary"'"' >> "${LOG_FNAME}"
-cp -u subread_counts.txt "${OUTDIR}/subread_counts.txt"
-cp -u subread_counts.txt.summary "${OUTDIR}/subread_counts.txt.summary"
+echo "# $(date '+%F %T'): Copying merged counts matrix and summary into ${COUNTSDIR}" >> "${LOG_FNAME}"
+echo "cp -u subread_counts.txt "'"'"${COUNTSDIR}/subread_counts.txt"'"' >> "${LOG_FNAME}"
+echo "cp -u subread_counts.txt.summary "'"'"${COUNTSDIR}/subread_counts.txt.summary"'"' >> "${LOG_FNAME}"
+cp -u subread_counts.txt "${COUNTSDIR}/subread_counts.txt"
+cp -u subread_counts.txt.summary "${COUNTSDIR}/subread_counts.txt.summary"
 
 # We also want to keep the sorted BAM files and the GTF used for counts, in
 # case the user wants to go back to it
 echo "# $(date '+%F %T'): Copying BAM files and GTF into ${OUTDIR}." >> "${LOG_FNAME}"
-echo "cp -u "'"'"${BAM_LIST[@]}"'"'" "'"'"${OUTDIR}"'"' >> "${LOG_FNAME}"
 echo "cp -u "'"'"${GTFFILE}"'"'" "'"'"${OUTDIR}"'"' >> "${LOG_FNAME}"
-cp -u "${BAM_LIST[@]}" "${OUTDIR}"
 cp -u "${GTFFILE}" "${OUTDIR}"
+
+# Link the work directories to the output directory
+echo "ln -sf "'"'"${WORKDIR}/singlesamples"'"'" "'"'"${OUTDIR}/singlesamples_work_directory"'"' >> "${LOG_FNAME}"
+echo "ln -sf "'"'"${WORKDIR}/allsamples"'"'" "'"'"${OUTDIR}/allsamples_work_directory"'"' >> "${LOG_FNAME}"
+ln -sf "${WORKDIR}/singlesamples" "${OUTDIR}/singlesamples_work_directory"
+ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
 
 echo "# $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
