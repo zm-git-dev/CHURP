@@ -56,8 +56,8 @@ module list -t 2>> "${LOG_FNAME}"
 
 # Set the path to the R summary script here. We hard-code this because it
 # should be stable within versions of the gopher-pipeline
-echo "RSUMMARY="'"'"/home/msistaff/public/gopher-pipeline-refactor/PBS/"'"' >> "${LOG_FNAME}"
-RSUMMARY="/home/msistaff/public/gopher-pipeline-refactor/PBS/"
+echo "RSUMMARY="'"'"/home/msistaff/public/gopher-pipeline-refactor/R_Scripts/summarize_bulk_rnaseq.R"'"' >> "${LOG_FNAME}"
+RSUMMARY="/home/msistaff/public/gopher-pipeline-refactor/R_Scripts/summarize_bulk_rnaseq.R"
 
 # Set the R_LIBS_USER variable here. This is where packages will be loaded from
 # within R
