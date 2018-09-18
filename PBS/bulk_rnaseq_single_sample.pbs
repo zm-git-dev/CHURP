@@ -50,7 +50,7 @@ module list -t
 
 # Print the loaded module information to a file
 LOGDIR="${OUTDIR}/Logs"
-mkdir -p "${LOG_DIR}"
+mkdir -p "${LOGDIR}"
 LOG_FNAME="${LOGDIR}/${SAMPLENM}_Log.txt"
 echo "# $(date '+%F %T'): Analysis for ${SAMPLENM} started" > "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
