@@ -31,11 +31,12 @@ while IFS="|" read -ra OPTS; do
     OUTDIR=${OPTS[4]}
     WORKDIR=${OPTS[5]}
     TRIM=${OPTS[6]}
-    TRIMOPTS=${OPTS[7]}
-    HISAT2INDEX=${OPTS[8]}
-    HISAT2OPTS=${OPTS[9]}
-    UNSTRANDED=${OPTS[10]}
-    GTFFILE=${OPTS[11]}
+    RMDUP=${OPTS[7]}
+    TRIMOPTS=${OPTS[8]}
+    HISAT2INDEX=${OPTS[9]}
+    HISAT2OPTS=${OPTS[10]}
+    UNSTRANDED=${OPTS[11]}
+    GTFFILE=${OPTS[12]}
 done <<< "$IN"
 
 # load necessary modules
@@ -105,11 +106,18 @@ fi
 
 # use samtools to remove unmapped reads, could be done in picard too.
 if [ ! -f samtools.done ]; then
-    echo "# $(date '+%F %T'): Sorting by read name, indexing, and removing duplicates from HISAT2 alignment." >> "${LOG_FNAME}"
-    echo "samtools view -bh -F 4 -@ 8 "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
-    echo "samtools rmdup "'"'"${SAMPLENM}.sorted.bam"'"'" "'"'"${SAMPLENM}.sorted.rmdup.bam"'"' >> "${LOG_FNAME}"
-    samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ 8 -O bam -T temp 
-    samtools rmdup "${SAMPLENM}.sorted.bam" "${SAMPLENM}.sorted.rmdup.bam" && touch samtools.done
+    if [ "${RMDUP}" = "yes" ]; then
+        echo "# $(date '+%F %T'): Sorting by read name and removing duplicates from HISAT2 alignment." >> "${LOG_FNAME}"
+        echo "samtools view -bh -F 4 -@ 8 "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
+        echo "samtools rmdup "'"'"${SAMPLENM}.sorted.bam"'"'" "'"'"${SAMPLENM}.sorted.rmdup.bam"'"' >> "${LOG_FNAME}"
+        samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ 8 -O bam -T temp 
+        samtools rmdup "${SAMPLENM}.sorted.bam" "${SAMPLENM}.sorted.rmdup.bam" && touch samtools.done
+        FINAL_BAM="${SAMPLENM}.sorted.rmdup.bam"
+    else
+        echo "# $(date '+%F %T'): Sorting by read name" >> "${LOG_FNAME}"
+        echo "samtools view -bh -F 4 -@ 8 "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
+        samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ 8 -O bam -T temp && touch samtools.done
+        FINAL_BAM="${SAMPLENM}.sorted.bam"
 fi
 
 # the final step is to link the sorted.rmdup.bam file to the allsamples/
@@ -117,9 +125,9 @@ fi
 # to not print huge paths as samplenames
 echo "# $(date '+%F %T'): Linking ${SAMPLENM} into ${WORKDIR}/allsamples" >> "${LOG_FNAME}"
 echo "mkdir -p "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
-echo "ln -sf "'"'"${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}.sorted.rmdup.bam"'"'" "'"'"${WORKDIR}/allsamples/${SAMPLENM}"'"' >> "${LOG_FNAME}"
+echo "ln -sf "'"'"${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}"'"'" "'"'"${WORKDIR}/allsamples/${SAMPLENM}"'"' >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/allsamples"
-ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}.sorted.rmdup.bam" "${WORKDIR}/allsamples/${SAMPLENM}"
+ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}" "${WORKDIR}/allsamples/${SAMPLENM}"
 
 echo "# $(date '+%F %T'): Finished processing ${SAMPLENM}." >> "${LOG_FNAME}"
 touch "${SAMPLENM}.done"

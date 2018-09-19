@@ -29,11 +29,12 @@ while IFS="|" read -ra OPTS; do
     OUTDIR=${OPTS[4]}
     WORKDIR=${OPTS[5]}
     TRIM=${OPTS[6]}
-    TRIMOPTS=${OPTS[7]}
-    HISAT2INDEX=${OPTS[8]}
-    HISAT2OPTS=${OPTS[9]}
-    UNSTRANDEDLIB=${OPTS[10]}
-    GTFFILE=${OPTS[11]}
+    RMDUP=${OPTS[7]}
+    TRIMOPTS=${OPTS[8]}
+    HISAT2INDEX=${OPTS[9]}
+    HISAT2OPTS=${OPTS[10]}
+    UNSTRANDED=${OPTS[11]}
+    GTFFILE=${OPTS[12]}
 done <<< "$IN"
 
 # load necessary modules

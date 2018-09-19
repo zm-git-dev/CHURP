@@ -35,6 +35,10 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             self.useropts['trim'] = 'no'
         else:
             self.useropts['trim'] = 'yes'
+        if args['rmdup']:
+            self.useropts['rmdup'] = 'no'
+        else:
+            self.useropts['rmdup'] = 'yes'
         if args['unstranded']:
             self.useropts['unstranded'] = 'yes'
         else:
@@ -51,6 +55,7 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             'OutputDir',
             'WorkingDir',
             'TRIM',
+            'RMDUP',
             'trimmomaticOpts',
             'Hisat2index',
             'Hisat2Options',
@@ -130,6 +135,7 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
                 'OutputDir': str(od),
                 'WorkingDir': str(wd),
                 'TRIM': self.useropts['trim'],
+                'RMDUP': self.useropts['rmdup'],
                 'trimmomaticOpts': self.finalopts['trimmomatic'],
                 'Hisat2index': self.useropts['hisat2_idx'],
                 'Hisat2Options': self.useropts['hisat2_threads'] +

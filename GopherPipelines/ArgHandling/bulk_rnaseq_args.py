@@ -5,13 +5,20 @@ import argparse
 from GopherPipelines.FileOps import default_dirs
 
 # Long help messages as constants
-EXTRA_OPT_HELP = """Must be passed as a quoted string with = after the option.
+EXTRA_TRIM_HELP = """Must be passed as a quoted string with = after the option.
 
 Example:
 --trimmomatic-opts="-phred64 -threads 4".
+"""
 
-This is unfortunately due to a known bug in argparse that prevents proper
-handling of options with dashes in them."""
+EXTRA_HISAT_HELP = """Must be passed as a quoted string with = after the option.
+
+Example:
+--hisat2-opts="--phred64 --no-unal"
+
+By default, the only option that is set is the number of processors to use for
+HISAT2 alignment, which is auto-filled from the --ppn option.
+"""
 
 
 def add_args(ap):
@@ -48,8 +55,7 @@ def add_args(ap):
         dest='organism',
         required=False,
         help=('Organism shorthand for automatically setting a HISAT2 index and'
-              ' GTF annotation file. Pass --list-species to see a full list. '
-              'Incompatible with -x and -g.'))
+              ' GTF annotation file. Incompatible with -x and -g.'))
     # Make an argument group for optional arguments
     ap_opt = ap.add_argument_group(
         'Optional Arguments')
@@ -78,7 +84,7 @@ def add_args(ap):
     ap_opt.add_argument(
         '--purge',
         dest='purge',
-        help='Purge results from previous runs?',
+        help='If supplied, overwrite files from pervious runs.',
         action='store_true',
         default=False)
     ap_opt.add_argument(
@@ -92,7 +98,9 @@ def add_args(ap):
     ap_opt.add_argument(
         '--unstranded',
         dest='unstranded',
-        help='Unstranded library? Default: false',
+        help=('If supplied, count reads as "unstranded" in featureCounts. '
+              'The default RNAseq library prep protocol used by UMGC is '
+              'stranded. Default: false'),
         action='store_true',
         default=False)
     ap_opt.add_argument(
@@ -105,9 +113,15 @@ def add_args(ap):
               'to not be used.'),
         default='/home/msistaff/public/all_adapter.fa')
     ap_opt.add_argument(
+        '--rmdup',
+        dest='rmdup',
+        help='If supplied, remove duplicates. Default: No duplicate removal.',
+        action='store_true',
+        default=False)
+    ap_opt.add_argument(
         '--no-trim',
         dest='no_trim',
-        help='If supplied, do not trim reads with Trimmomatic.',
+        help='If supplied, do not trim reads. Default: Trim reads.',
         action='store_true',
         default=False)
     ap_opt.add_argument(
@@ -127,14 +141,14 @@ def add_args(ap):
     ap_opt.add_argument(
         '--trimmomatic-opts',
         metavar='<trimmomatic options>',
-        help='Trimmomatic options. ' + EXTRA_OPT_HELP,
+        help='Trimmomatic options. ' + EXTRA_TRIM_HELP,
         dest='trimmomatic',
         type=str,
         default='')
     ap_opt.add_argument(
         '--hisat2-opts',
         metavar='<HISAT2 options>',
-        help='HISAT2 options. ' + EXTRA_OPT_HELP,
+        help='HISAT2 options. ' + EXTRA_HISAT_HELP,
         dest='hisat2',
         type=str,
         default='')
