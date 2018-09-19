@@ -106,11 +106,9 @@ fi
 # use samtools to remove unmapped reads, could be done in picard too.
 if [ ! -f samtools.done ]; then
     echo "# $(date '+%F %T'): Sorting by read name, indexing, and removing duplicates from HISAT2 alignment." >> "${LOG_FNAME}"
-    echo "samtools view -bh -F 4 -@ 8 "'"'"${SAMPLENM}"'"'".sam | samtools sort -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
-    echo "samtools index "'"'"${SAMPLENM}.sorted.bam"'"' >> "${LOG_FNAME}"
+    echo "samtools view -bh -F 4 -@ 8 "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
     echo "samtools rmdup "'"'"${SAMPLENM}.sorted.bam"'"'" "'"'"${SAMPLENM}.sorted.rmdup.bam"'"' >> "${LOG_FNAME}"
-    samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -o "${SAMPLENM}.sorted.bam" -@ 8 -O bam -T temp 
-    samtools index "${SAMPLENM}.sorted.bam"
+    samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ 8 -O bam -T temp 
     samtools rmdup "${SAMPLENM}.sorted.bam" "${SAMPLENM}.sorted.rmdup.bam" && touch samtools.done
 fi
 
