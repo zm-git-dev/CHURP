@@ -118,6 +118,7 @@ if [ ! -f samtools.done ]; then
         echo "samtools view -bh -F 4 -@ 8 "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
         samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ 8 -O bam -T temp && touch samtools.done
         FINAL_BAM="${SAMPLENM}.sorted.bam"
+    fi
 fi
 
 # the final step is to link the sorted.rmdup.bam file to the allsamples/
