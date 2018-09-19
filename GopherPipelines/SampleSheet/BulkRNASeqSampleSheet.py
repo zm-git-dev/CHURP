@@ -36,9 +36,9 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         else:
             self.useropts['trim'] = 'yes'
         if args['rmdup']:
-            self.useropts['rmdup'] = 'no'
-        else:
             self.useropts['rmdup'] = 'yes'
+        else:
+            self.useropts['rmdup'] = 'no'
         if args['unstranded']:
             self.useropts['unstranded'] = 'yes'
         else:
