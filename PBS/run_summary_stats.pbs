@@ -77,7 +77,7 @@ mkdir -p "${WORKDIR}/allsamples" && cd "${WORKDIR}/allsamples"
 echo "# $(date '+%F %T'): Making a counts matrix for all samples." >> "${LOG_FNAME}"
 echo "BAM_LIST=(\$(find . -type l -exec basename {} \\; | sort -V))" >> "${LOG_FNAME}"
 BAM_LIST=($(find . -type l -exec basename {} \\;| sort -V))
-if [ "${UNSTRANDEDLIB}" = "yes" ]
+if [ "${UNSTRANDED}" = "yes" ]
 then
     echo "# $(date '+%F %T'): Library is unstranded." >> "${LOG_FNAME}"
     echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -B -p -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
