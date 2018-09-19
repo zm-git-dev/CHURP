@@ -96,7 +96,7 @@ else
     -B \
     -p \
     -Q 10 \
-    -s 1\
+    -s 2\
     -o subread_counts.txt \
     "${BAM_LIST[@]}"
 fi
