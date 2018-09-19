@@ -14,7 +14,7 @@ Version: 0.0.0
 # Check the Python version
 try:
     import sys
-    assert sys.version_info.major == 3
+    assert sys.version_info[0] == 3
 except AssertionError:
     sys.stderr.write('Error - this pipeline requires Python 3!\n')
     exit(2)
