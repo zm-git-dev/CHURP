@@ -105,7 +105,7 @@ fi
 # Summarize the merged count data, including descriptive summaries and differential expression tests if >1 group present.
 echo "# $(date '+%F %T'): Running edgeR analysis on counts" >> "${LOG_FNAME}"
 echo "Rscript "'"'"${RSUMMARY}"'"'" "'"'"${OUTDIR}"'"'" "'"'"${WORKDIR}"'"'" "'"'"${SampleSheet}"'"'" "'"'"${WORKDIR}/subread_counts.txt"'"' '"'"${MINLEN}"'"' " &> Rout.txt" >> "${LOG_FNAME}"
-Rscript "${RSUMMARY}" "${OUTDIR}" "${WORKDIR}" "${SampleSheet}" "${WORKDIR}/subread_counts.txt" "${MINLEN}" &> Rout.txt
+Rscript "${RSUMMARY}" "${OUTDIR}" "${WORKDIR}" "${SampleSheet}" "${WORKDIR}/allsamples/subread_counts.txt" "${MINLEN}" &> Rout.txt
 
 echo "# ----- Output from ${RSUMMARY} below" >> "${LOG_FNAME}"
 cat Rout.txt >> "${LOG_FNAME}"
