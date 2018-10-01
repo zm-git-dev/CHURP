@@ -2,7 +2,7 @@
 # Gopher pipelines version 0.0.1 bulk RNA-seq summary script
 # R version 3.5.0
 # All relevant R libraries are installed at /panfs/roc/groups/14/msistaff/public/gopher-pipelines/v0/R/
-# Usage: Rscript summarize_counts.R <work_dir> <out_dir> <sample sheet path> <merged_counts_path> <min_feature_length> &> Rout.txt
+# Usage: Rscript summarize_counts.R <out_dir> <work_dir> <sample sheet path> <merged_counts_path> <min_feature_length> &> Rout.txt
 # See run_summary_stats.pbs for additional run context.
 # See https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf for the edgeR user manual.
 # Contact help@msi.umn.edu for questions
@@ -22,8 +22,8 @@ library('gtools')
 
 #grab the working and output directories, as well as the sample sheet, and merged raw counts matrix
 args <- commandArgs(trailingOnly = T)
-work_dir <- args[1]
-out_dir <- args[2]
+out_dir <- args[1]
+work_dir <- args[2]
 samp_sheet <- args[3]
 fc_mat <- args[4]
 min_len <- args[5]
