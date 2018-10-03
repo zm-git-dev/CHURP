@@ -56,6 +56,16 @@ LOG_FNAME="${LOGDIR}/${SAMPLENM}_Log.txt"
 echo "# $(date '+%F %T'): Analysis for ${SAMPLENM} started" > "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 
+# Check if we are running in paired or single end mode
+if [ -z "${R2FILE}" ]
+then
+    PE="false"
+    echo "# No R2 file detected; running ${SAMPLENM} as single-end" >> "${LOG_FNAME}"
+else
+    PE="true"
+    echo "# R2 file detected; running ${SAMPLENM} as paired-end" >> "${LOG_FNAME}"
+fi
+
 # set working directory
 echo "mkdir -p "'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" && cd "'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"' >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}" && cd "${WORKDIR}/singlesamples/${SAMPLENM}"
@@ -72,12 +82,21 @@ fi
 
 # Set Up a log file instead (?)
 if [ ! -f fastqc.done ]; then
-    echo "# $(date '+%F %T'): Running fastqc on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
-    echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${R1FILE}"'"'" "'"'"${R2FILE}"'"' >> "${LOG_FNAME}"
-    fastqc -t 2 --outdir="${WORKDIR}" "${R1FILE}" "${R2FILE}" && touch fastqc.done
+    if [ "${PE}" = "true" ]
+    then
+        echo "# $(date '+%F %T'): Running fastqc on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
+        echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${R1FILE}"'"'" "'"'"${R2FILE}"'"' >> "${LOG_FNAME}"
+        fastqc -t 2 --outdir="${WORKDIR}" "${R1FILE}" "${R2FILE}" && touch fastqc.done
+    else
+        echo "# $(date '+%F %T'): Running fastqc on ${R1FILE}." >> "${LOG_FNAME}"
+        echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${R1FILE}"'"' >> "${LOG_FNAME}"
+        fastqc --outdir="${WORKDIR}" "${R1FILE}" && touch fastqc.done
+    fi
 fi
 
 # To use -basein option, fastq file must be in format *_R1_*.fastq and *_R2_*.fastq
+# trimmomatic can handle the -basein and -baseout options if there is only one
+# read (single end).
 if [ "${TRIM}" = "yes" ]; then
     if [ ! -f trimmomatic.done ]; then
         echo "# $(date '+%F %T'): Running trimmomatic on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
@@ -85,22 +104,42 @@ if [ "${TRIM}" = "yes" ]; then
         java -jar "${TRIMMOMATIC}"/trimmomatic.jar PE -threads 8 -basein "${R1FILE}" -baseout "${SAMPLENM}" ${TRIMOPTS} 2>trim.log && touch trimmomatic.done
     fi
     if [ ! -f fastqc.trim.done ]; then
-        echo "# $(date '+%F %T'): Running fastqc on trimmed fastq files." >> "${LOG_FNAME}"
-        echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"'" "'"'"${SAMPLENM}_2P"'"' >> "${LOG_FNAME}"
-        fastqc -t 2 --outdir="${WORKDIR}" "${SAMPLENM}_1P" "${SAMPLENM}_2P" && touch fastqc.trim.done
+        if [ "${PE}" = "true" ]
+        then
+            echo "# $(date '+%F %T'): Running fastqc on trimmed fastq files." >> "${LOG_FNAME}"
+            echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"'" "'"'"${SAMPLENM}_2P"'"' >> "${LOG_FNAME}"
+            fastqc -t 2 --outdir="${WORKDIR}" "${SAMPLENM}_1P" "${SAMPLENM}_2P" && touch fastqc.trim.done
+        else
+            echo "# $(date '+%F %T'): Running fastqc on trimmed fastq file." >> "${LOG_FNAME}"
+            echo "fastqc --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"' >> "${LOG_FNAME}"
+            fastqc --outdir="${WORKDIR}" "${SAMPLENM}_1P" && touch fastqc.trim.done
+        fi
     fi
 fi
 
 if [ ! -f hisat2.done ]; then
     if [ "${TRIM}" = "yes" ]; then
-        echo "# $(date '+%F %T'): Aligning trimmed reads with HISAT2." >> "${LOG_FNAME}"
-        # This string is so ugly because we we have to quote the arguments to hisat2 in a weird way to protect them from splitting
-        echo "hisat2 ${HISAT2OPTS} -x "'"'"'${HISAT2INDEX}'"'"'" -1 "'"'"'${SAMPLENM}_1P'"'"'" -2 "'"'"'${SAMPLENM}_2P'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
-        hisat2 ${HISAT2OPTS} -x "'${HISAT2INDEX}'" -1 "'${SAMPLENM}_1P'" -2 "'${SAMPLENM}_2P'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+        if [ "${PE}" = "true" ]
+        then
+            echo "# $(date '+%F %T'): Aligning trimmed reads with HISAT2." >> "${LOG_FNAME}"
+            # This string is so ugly because we we have to quote the arguments to hisat2 in a weird way to protect them from splitting
+            echo "hisat2 ${HISAT2OPTS} -x "'"'"'${HISAT2INDEX}'"'"'" -1 "'"'"'${SAMPLENM}_1P'"'"'" -2 "'"'"'${SAMPLENM}_2P'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
+            hisat2 ${HISAT2OPTS} -x "'${HISAT2INDEX}'" -1 "'${SAMPLENM}_1P'" -2 "'${SAMPLENM}_2P'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+        else
+            echo "# $(date '+%F %T'): Aligning trimmed reads with HISAT2." >> "${LOG_FNAME}"
+            echo "hisat2 ${HISAT2OPTS} -x "'"'"'${HISAT2INDEX}'"'"'" -U "'"'"'${SAMPLENM}_1P'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
+            hisat2 ${HISAT2OPTS} -x "'${HISAT2INDEX}'" -U "'${SAMPLENM}_1P'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+        fi
     else
-        echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
-        echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -1 "'"'"'${R1FILE}'"'"'" -2 "'"'"'${R2FILE}'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
-        hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -1 "'${R1FILE}'" -2 "'${R2FILE}'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+        if [ "${PE}" = "true" ]
+        then
+            echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
+            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -1 "'"'"'${R1FILE}'"'"'" -2 "'"'"'${R2FILE}'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
+            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -1 "'${R1FILE}'" -2 "'${R2FILE}'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+        else
+            echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
+            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -U "'"'"'${R1FILE}'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
+            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -U "'${R1FILE}'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
     fi
 fi
 

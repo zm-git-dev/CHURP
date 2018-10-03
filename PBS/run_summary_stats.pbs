@@ -55,6 +55,19 @@ LOG_FNAME="${LOGDIR}/BulkRNASeq_Summary_Log.txt"
 echo "# $(date '+%F %T'): Summary started" > "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 
+if [ -z "${R2FILE}" ]
+then
+    PE="false"
+    echo "# No R2 file detected; running ${SAMPLENM} as single-end" >> "${LOG_FNAME}"
+    echo "# NOTE! We are assuming that all samples were subject to the same preparation and sequencing protocols." >> "${LOG_FNAME}"
+    echo "# NOTE! We do not support mixing of single-end and paired-end samples for counts and differential expression testing." >> "${LOG_FNAME}"
+else
+    PE="true"
+    echo "# R2 file detected; running ${SAMPLENM} as paired-end" >> "${LOG_FNAME}"
+    echo "# NOTE! We are assuming that all samples were subject to the same preparation and sequencing protocols." >> "${LOG_FNAME}"
+    echo "# NOTE! We do not support mixing of single-end and paired-end samples for counts and differential expression testing." >> "${LOG_FNAME}"
+fi
+
 # Set the path to the R summary script here. We hard-code this because it
 # should be stable within versions of the gopher-pipeline
 echo "RSUMMARY="'"'"/home/msistaff/public/gopher-pipeline-refactor/R_Scripts/summarize_bulk_rnaseq.R"'"' >> "${LOG_FNAME}"
@@ -79,27 +92,27 @@ echo "BAM_LIST=(\$(find . -type l -exec basename {} \\; | sort -V))" >> "${LOG_F
 BAM_LIST=($(find . -type l -exec basename {} \\;| sort -V))
 if [ "${UNSTRANDED}" = "yes" ]
 then
-    echo "# $(date '+%F %T'): Library is unstranded." >> "${LOG_FNAME}"
-    echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -B -p -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
-    "${FEATURECOUNTS}" \
-    -a "${GTFFILE}" \
-    -B \
-    -p \
-    -Q 10 \
-    -s 0\
-    -o subread_counts.txt \
-    "${BAM_LIST[@]}"
+    if [ "${PE}" = "true" ]
+    then
+        echo "# $(date '+%F %T'): Library is unstranded and paired-end" >> "${LOG_FNAME}"
+        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -B -p -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
+        "${FEATURECOUNTS}" -a "${GTFFILE}" -B -p -Q 10 -s 0 -o subread_counts.txt "${BAM_LIST[@]}"
+    else
+        echo "# $(date '+%F %T'): Library is unstranded and single-end" >> "${LOG_FNAME}"
+        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
+        "${FEATURECOUNTS}" -a "${GTFFILE}" -B -p -Q 10 -s 0 -o subread_counts.txt "${BAM_LIST[@]}"
+    fi
 else
-    echo "# $(date '+%F %T'): Library is stranded." >> "${LOG_FNAME}"
-    echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -B -p -Q 10 -s 1 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
-    "${FEATURECOUNTS}" \
-    -a "${GTFFILE}" \
-    -B \
-    -p \
-    -Q 10 \
-    -s 2\
-    -o subread_counts.txt \
-    "${BAM_LIST[@]}"
+    if [ "${PE}" = "true" ]
+    then
+        echo "# $(date '+%F %T'): Library is stranded and paired-end." >> "${LOG_FNAME}"
+        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -B -p -Q 10 -s 2 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
+        "${FEATURECOUNTS}" -a "${GTFFILE}" -B -p -Q 10 -s 2 -o subread_counts.txt "${BAM_LIST[@]}"
+    else
+        echo "# $(date '+%F %T'): Library is stranded and single-end" >> "${LOG_FNAME}"
+        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -Q 10 -s 2 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
+        "${FEATURECOUNTS}" -a "${GTFFILE}" -Q 10 -s 2 -o subread_counts.txt "${BAM_LIST[@]}"
+    fi
 fi
 
 # Summarize the merged count data, including descriptive summaries and differential expression tests if >1 group present.
