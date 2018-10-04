@@ -28,7 +28,7 @@ divisions of the pipeline:
     - ~~Write `-l` option to `qsub` based on user input for `threads` and `mem`.~~ (Done)
     - ~~Build `qsub` command (see `pipeline.sh`)~~ (Done)
     - ~~Add `--overwrite` option~~ (Done)
-    - Write program versions and date/time info into samplesheet data
+    - ~~Write program versions and date/time info into samplesheet data~~
     - ~~`BulkRNASeqPipeline`: check HISAT2 index exists and is complete~~ (Done)
     - `BulkRNASeqPipeline`: list available organisms in risdb
 - **Samplesheet Object**
