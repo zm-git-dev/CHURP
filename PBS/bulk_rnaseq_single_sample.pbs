@@ -140,6 +140,7 @@ if [ ! -f hisat2.done ]; then
             echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
             echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -U "'"'"'${R1FILE}'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
             hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -U "'${R1FILE}'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+        fi
     fi
 fi
 
