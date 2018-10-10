@@ -85,12 +85,12 @@ if [ ! -f fastqc.done ]; then
     if [ "${PE}" = "true" ]
     then
         echo "# $(date '+%F %T'): Running fastqc on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
-        echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${R1FILE}"'"'" "'"'"${R2FILE}"'"' >> "${LOG_FNAME}"
-        fastqc -t 2 --outdir="${WORKDIR}" "${R1FILE}" "${R2FILE}" && touch fastqc.done
+        echo "fastqc -t 2 --outdir="'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" "'"'"${R1FILE}"'"'" "'"'"${R2FILE}"'"' >> "${LOG_FNAME}"
+        fastqc -t 2 --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" "${R2FILE}" && touch fastqc.done
     else
         echo "# $(date '+%F %T'): Running fastqc on ${R1FILE}." >> "${LOG_FNAME}"
-        echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${R1FILE}"'"' >> "${LOG_FNAME}"
-        fastqc --outdir="${WORKDIR}" "${R1FILE}" && touch fastqc.done
+        echo "fastqc -t 2 --outdir="'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" "'"'"${R1FILE}"'"' >> "${LOG_FNAME}"
+        fastqc --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" && touch fastqc.done
     fi
 fi
 
@@ -100,8 +100,8 @@ fi
 if [ "${TRIM}" = "yes" ]; then
     if [ ! -f trimmomatic.done ]; then
         echo "# $(date '+%F %T'): Running trimmomatic on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
-        echo "java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads 8 -basein "'"'"${R1FILE}"'"'" -baseout "'"'"${SAMPLENM}"'"'" ${TRIMOPTS} 2>trim.log" >> "${LOG_FNAME}"
-        java -jar "${TRIMMOMATIC}"/trimmomatic.jar PE -threads 8 -basein "${R1FILE}" -baseout "${SAMPLENM}" ${TRIMOPTS} 2>trim.log && touch trimmomatic.done
+        echo "java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads ${PBS_NUM_PPN} -basein "'"'"${R1FILE}"'"'" -baseout "'"'"${SAMPLENM}"'"'" ${TRIMOPTS} 2>trim.log" >> "${LOG_FNAME}"
+        java -jar "${TRIMMOMATIC}"/trimmomatic.jar PE -threads "${PBS_NUM_PPN}" -basein "${R1FILE}" -baseout "${SAMPLENM}" ${TRIMOPTS} 2>trim.log && touch trimmomatic.done
     fi
     if [ ! -f fastqc.trim.done ]; then
         if [ "${PE}" = "true" ]
@@ -131,15 +131,42 @@ if [ ! -f hisat2.done ]; then
             hisat2 ${HISAT2OPTS} -x "'${HISAT2INDEX}'" -U "'${SAMPLENM}_1P'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
         fi
     else
+        # Hisat2 chokes on our quoted reads files if they are gzipped. This is
+        # only an issue if we are not trimming because by default we are not
+        # gzipping the trimmed reads.
         if [ "${PE}" = "true" ]
         then
             echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
-            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -1 "'"'"'${R1FILE}'"'"'" -2 "'"'"'${R2FILE}'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
-            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -1 "'${R1FILE}'" -2 "'${R2FILE}'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+            R1_GZ=$(file -i -b -L "${R1FILE}" | grep -q "gzip")
+            R2_GZ=$(file -i -b -L "${R2FILE}" | grep -q "gzip")
+            if [ "${R1_GZ}" = "0" ]
+            then
+                echo "# $(date '+%F %T'): Your R1 file appears to be gzipped." >> "${LOG_FNAME}"
+                R1_CMD="<(gzip -cd ${R1FILE})"
+            else
+                R1_CMD="'${R1FILE}'"
+            fi
+            if [ "${R2_GZ}" = "0" ]
+            then
+                echo "# $(date '+%F %T'): Your R2 file appears to be gzipped." >> "${LOG_FNAME}"
+                R2_CMD="<(gzip -cd ${R2FILE})"
+            else
+                R2_CMD="'${R2FILE}'"
+            fi
+            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -1 ${R1_CMD} -2 ${R2CMD} -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
+            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -1 ${R1_CMD} -2 ${R2_CMD} -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
         else
+            R1_GZ=$(file -i -b -L "${R1FILE}" | grep -q "gzip")
+            if [ "${R1_GZ}" = "0" ]
+            then
+                echo "# $(date '+%F %T'): Your R1 file appears to be gzipped." >> "${LOG_FNAME}"
+                R1_CMD="<(gzip -cd ${R1FILE})"
+            else
+                R1_CMD="'${R1FILE}'"
+            fi
             echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
-            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -U "'"'"'${R1FILE}'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
-            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -U "'${R1FILE}'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -U ${R1_CMD} -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
+            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -U ${R1_CMD} -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
         fi
     fi
 fi
@@ -150,13 +177,13 @@ if [ ! -f samtools.done ]; then
         echo "# $(date '+%F %T'): Sorting by read name and removing duplicates from HISAT2 alignment." >> "${LOG_FNAME}"
         echo "samtools view -bh -F 4 -@ 8 "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
         echo "samtools rmdup "'"'"${SAMPLENM}.sorted.bam"'"'" "'"'"${SAMPLENM}.sorted.rmdup.bam"'"' >> "${LOG_FNAME}"
-        samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ 8 -O bam -T temp 
+        samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp 
         samtools rmdup "${SAMPLENM}.sorted.bam" "${SAMPLENM}.sorted.rmdup.bam" && touch samtools.done
         FINAL_BAM="${SAMPLENM}.sorted.rmdup.bam"
     else
         echo "# $(date '+%F %T'): Sorting by read name" >> "${LOG_FNAME}"
         echo "samtools view -bh -F 4 -@ 8 "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
-        samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ 8 -O bam -T temp && touch samtools.done
+        samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp && touch samtools.done
         FINAL_BAM="${SAMPLENM}.sorted.bam"
     fi
 fi
