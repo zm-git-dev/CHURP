@@ -19,6 +19,7 @@ library('ggplot2')
 library('reshape2')
 library('gplots')
 library('gtools')
+library('grid')
 
 #grab the working and output directories, as well as the sample sheet, and merged raw counts matrix
 args <- commandArgs(trailingOnly = T)
@@ -34,9 +35,9 @@ setwd(work_dir)
 # Read in data and prep relevant data and set output files
 ############################
 
-#Grab information about sample group membership 
+# Grab information about sample group membership 
 sheet = read.table(samp_sheet, sep = "|", header = F, comment.char = "#")
-groups = sheet$V2
+groups = as.vector(sheet$V2)
 uniq_groups = unique(groups)
 n_groups = length(uniq_groups)
 
@@ -74,10 +75,22 @@ edge_mat <- calcNormFactors(edge_mat)
 # Generate descriptive accounts of the data (MDS, Normalized Counts, Counts Distributions, and a Heatmap) 
 ############################
 
+# set a diverging color palette. From http://colorbrewer2.org/#type=qualitative&scheme=Set1&n=6
+pal <- c('#e41a1c','#377eb8','#4daf4a','#984ea3')
+col_vec <- pal[match(groups,uniq_groups)]
+
+# legend code adapted from https://support.bioconductor.org/p/101530/
 # Set the MDS plot pdf and write the plot
 pdf(mds_plot)
-plotMDS(edge_mat, cex = 0.75)
+opar <- par(no.readonly = TRUE)
+par(xpd = TRUE, mar = par()$mar + c(0, 0, 0, 5))
+plotMDS(edge_mat, cex = 0.75, col = col_vec)
+legend(par("usr")[2], mean(par("usr")[3:4]), legend = uniq_groups, text.col = unique(col_vec), bty = "n")
+par(opar)
 dev.off()
+
+## set par back to original
+#par(opar)
 
 # Set a variable holding the log(1+CPM) counts.
 cpm_counts <- cpm(edge_mat, log = T, prior.count = 1)
@@ -87,10 +100,15 @@ cdf <- data.frame(edge_mat$genes, cpm_counts)
 write.table(cdf, file = counts_list, sep = '\t', quote = FALSE, row.names = FALSE)
 tidy_cdf <- melt(cdf, id.vars = "genes", variable.name = "sample_id", value.name = "per_feature_count")
 
+# manually add group information to tidy_cdf
+tidy_cdf$group <- factor(rep(match(groups,uniq_groups), each = nrow(edge_mat$genes)))
+
 # Set the counts plot pdf and write the violin plot of normalized counts per sample
 pdf(counts_plot)
-ggplot(tidy_cdf, aes(x = sample_id, y = per_feature_count)) + geom_violin()
+p <- ggplot(tidy_cdf, aes(x = sample_id, y = per_feature_count, fill = group)) + geom_violin(trim = F) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, size = 7))
+p + labs(x = "Sample ID", y = "Feature count -- log(1+cpm)")
 dev.off()
+
 
 # Calculate count variance across samples and select the top 500 variance features.
 cpm_counts <- cpm(edge_mat, log = T, prior.count = 1)
@@ -100,7 +118,8 @@ high_var <- cpm_counts[select_var,]
 
 # Set the heatmap pdf and plot the normalized counts heatmap
 pdf(hmap)
-heatmap.2(high_var,trace="none", main = "Top 500 variance genes", cexCol = 0.75, dendrogram = "column", labRow = "")
+heatmap.2(high_var,trace="none", main = "Top 500 variance genes", cexCol = 0.75, dendrogram = "column", labRow = "", ColSideColors = col_vec, srtCol = 45, margins = c(8,8))
+legend('left', title = 'Groups', legend = uniq_groups, fill = unique(col_vec), cex = 0.8, box.lty = 0 )
 dev.off()
 
 ############################
@@ -139,7 +158,3 @@ for (row in 1:nrow(combos)){
 	de_file <- paste(out_dir, "/DEGs/DE_", comp, "_list.txt", sep = "") 
 	write.table(tags$table[which(tags$table$FDR < 0.05),], file = de_file, sep = '\t', quote = FALSE, row.names = FALSE)
 }
-
-
-
-
