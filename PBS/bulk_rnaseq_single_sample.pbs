@@ -137,16 +137,14 @@ if [ ! -f hisat2.done ]; then
         if [ "${PE}" = "true" ]
         then
             echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
-            R1_GZ=$(file -i -b -L "${R1FILE}" | grep -q "gzip")
-            R2_GZ=$(file -i -b -L "${R2FILE}" | grep -q "gzip")
-            if [ "${R1_GZ}" = "0" ]
+            if $(file -i -b -L "${R1FILE}" | grep -q "gzip")
             then
                 echo "# $(date '+%F %T'): Your R1 file appears to be gzipped." >> "${LOG_FNAME}"
                 R1_CMD="<(gzip -cd ${R1FILE})"
             else
                 R1_CMD="'${R1FILE}'"
             fi
-            if [ "${R2_GZ}" = "0" ]
+            if $(file -i -b -L "${R2FILE}" | grep -q "gzip")
             then
                 echo "# $(date '+%F %T'): Your R2 file appears to be gzipped." >> "${LOG_FNAME}"
                 R2_CMD="<(gzip -cd ${R2FILE})"
@@ -156,8 +154,7 @@ if [ ! -f hisat2.done ]; then
             echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -1 ${R1_CMD} -2 ${R2CMD} -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
             hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -1 ${R1_CMD} -2 ${R2_CMD} -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
         else
-            R1_GZ=$(file -i -b -L "${R1FILE}" | grep -q "gzip")
-            if [ "${R1_GZ}" = "0" ]
+            if $(file -i -b -L "${R1FILE}" | grep -q "gzip")
             then
                 echo "# $(date '+%F %T'): Your R1 file appears to be gzipped." >> "${LOG_FNAME}"
                 R1_CMD="<(gzip -cd ${R1FILE})"
