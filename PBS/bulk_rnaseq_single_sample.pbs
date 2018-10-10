@@ -45,7 +45,6 @@ module load fastqc/0.11.7
 module load trimmomatic/0.33
 module load java/jdk1.8.0_144
 module load samtools/1.7
-module load htseq/0.9.1
 
 module list -t
 
@@ -137,33 +136,12 @@ if [ ! -f hisat2.done ]; then
         if [ "${PE}" = "true" ]
         then
             echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
-            if $(file -i -b -L "${R1FILE}" | grep -q "gzip")
-            then
-                echo "# $(date '+%F %T'): Your R1 file appears to be gzipped." >> "${LOG_FNAME}"
-                R1_CMD="<(gzip -cd ${R1FILE})"
-            else
-                R1_CMD="'${R1FILE}'"
-            fi
-            if $(file -i -b -L "${R2FILE}" | grep -q "gzip")
-            then
-                echo "# $(date '+%F %T'): Your R2 file appears to be gzipped." >> "${LOG_FNAME}"
-                R2_CMD="<(gzip -cd ${R2FILE})"
-            else
-                R2_CMD="'${R2FILE}'"
-            fi
-            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -1 ${R1_CMD} -2 ${R2CMD} -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
-            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -1 ${R1_CMD} -2 ${R2_CMD} -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" <(gzip -cd "${R1FILE}" || cat "${R1FILE}") -2 <(gzip -cd "${R2FILE}" || cat "${R2FILE}") -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
+            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -1 <(gzip -cd "${R1FILE}" || cat "${R1FILE}") -2 <(gzip -cd "${R2FILE}" || cat "${R2FILE}") -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
         else
-            if $(file -i -b -L "${R1FILE}" | grep -q "gzip")
-            then
-                echo "# $(date '+%F %T'): Your R1 file appears to be gzipped." >> "${LOG_FNAME}"
-                R1_CMD="<(gzip -cd ${R1FILE})"
-            else
-                R1_CMD="'${R1FILE}'"
-            fi
             echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
-            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -U ${R1_CMD} -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
-            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -U ${R1_CMD} -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -U <(gzip -cd "${R1FILE}" || cat "${R1FILE}") -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
+            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -U <(gzip -cd "${R1FILE}" || cat "${R1FILE}") -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
         fi
     fi
 fi
