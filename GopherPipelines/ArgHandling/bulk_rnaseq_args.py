@@ -21,7 +21,8 @@ Example:
 --hisat2-opts="--phred64 --no-unal"
 
 By default we set the following options: -p (number of threads),
---no-mixed (do not split pairs), 
+--no-mixed (do not split pairs), and --new-summary (machine-friendly summary).
+See the HISAT2 manual for all options available.
 """
 
 
