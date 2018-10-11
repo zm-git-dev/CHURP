@@ -212,6 +212,11 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         qsub_resources = '"mem=' + str(self.mem) + 'mb'
         qsub_resources += ',nodes=1:ppn=' + str(self.ppn)
         qsub_resources += ',walltime=' + str(self.walltime * 3600) + '"'
+        # Set the group string here
+        if self.group:
+            qsub_group = '-A' + ' ' + self.group
+        else:
+            qsub_group = ''
         qsub_array = '1'
         if len(self.sheet.final_sheet) > 1:
             qsub_array += '-' + str(len(self.sheet.final_sheet))
@@ -226,6 +231,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-q', 'mesabi',
             '-m', 'abe',
             '-M', '"${user_email}"',
+            qsub_group,
             '-o', '"${OUTDIR}"',
             '-e', '"${OUTDIR}"',
             '-l', qsub_resources,
@@ -245,6 +251,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-q', 'mesabi',
             '-m', 'abe',
             '-M', '"${user_email}"',
+            qsub_group,
             '-o', '"${OUTDIR}"',
             '-e', '"${OUTDIR}"',
             '-W', '"depend=afterokarray:${single_id}"',

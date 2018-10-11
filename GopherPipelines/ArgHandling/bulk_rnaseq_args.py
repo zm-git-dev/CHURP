@@ -9,6 +9,10 @@ EXTRA_TRIM_HELP = """Must be passed as a quoted string with = after the option.
 
 Example:
 --trimmomatic-opts="-phred64 -threads 4".
+
+By default we use the following options:
+4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18. See the
+Trimmomatic manual for explanation of these parameters.
 """
 
 EXTRA_HISAT_HELP = """Must be passed as a quoted string with = after the option.
@@ -16,8 +20,8 @@ EXTRA_HISAT_HELP = """Must be passed as a quoted string with = after the option.
 Example:
 --hisat2-opts="--phred64 --no-unal"
 
-By default, the only option that is set is the number of processors to use for
-HISAT2 alignment, which is auto-filled from the --ppn option.
+By default we set the following options: -p (number of threads),
+--no-mixed (do not split pairs), 
 """
 
 
@@ -156,6 +160,14 @@ def add_args(ap):
     # Make an argument for scheduler options
     ap_sched = ap.add_argument_group(
         'Scheduler Options')
+    ap_sched.add_argument(
+        '--group',
+        '-A',
+        metavar='<MSI group>',
+        dest='pbs_group',
+        help='MSI group to charge for SU usage. Defaults to primary group.',
+        type=str,
+        default=None)
     ap_sched.add_argument(
         '--ppn',
         '-p',

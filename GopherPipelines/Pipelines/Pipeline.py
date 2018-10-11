@@ -30,6 +30,7 @@ class Pipeline(object):
         # These are empty, and will get populated by the sub-class.
         self.single_sample_script = ''
         # Set the scheduler resources and PBS options here
+        self.group = args['pbs_group']
         self.ppn = args['ppn']
         self.mem = args['mem']
         self.walltime = args['walltime']
