@@ -11,8 +11,8 @@ Example:
 --trimmomatic-opts="-phred64 -threads 4".
 
 By default we use the following options:
-4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18. See the
-Trimmomatic manual for explanation of these parameters.
+ILLUMINACLIP:4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18.
+See the Trimmomatic manual for explanation of these parameters.
 """
 
 EXTRA_HISAT_HELP = """Must be passed as a quoted string with = after the option.
