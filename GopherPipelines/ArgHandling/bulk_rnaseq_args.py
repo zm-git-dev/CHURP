@@ -114,9 +114,9 @@ def add_args(ap):
         metavar='<adapter file.fa>',
         dest='adapters',
         help=('Adapters to use for trimming with Trimmomatic. Defaults to '
-              '/home/msistaff/public/all_adapter.fa. --no-trim causes these '
-              'to not be used.'),
-        default='/home/msistaff/public/all_adapter.fa')
+              '$TRIMMOMATIC/adapters/all_illumina_adapters.fa. --no-trim '
+              'causes these to not be used.'),
+        default='$TRIMMOMATIC/adapters/all_illumina_adapters.fa')
     ap_opt.add_argument(
         '--rmdup',
         dest='rmdup',
