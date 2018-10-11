@@ -45,6 +45,7 @@ module load fastqc/0.11.7
 module load trimmomatic/0.33
 module load java/jdk1.8.0_144
 module load samtools/1.7
+module load picard/2.9.0
 
 module list -t
 
@@ -161,6 +162,16 @@ if [ ! -f samtools.done ]; then
         samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp && touch samtools.done
         FINAL_BAM="${SAMPLENM}.sorted.bam"
     fi
+fi
+
+# Use picard to collect the insert size metrics, but only if paired end
+if [ "${PE}" = "true" ]
+then
+    echo "# $(date + '%F %T'): Collecting insert size metrics for ${SAMPLENM}" >> "${LOG_FNAME}"
+    echo "mkdir -o ${OUTDIR}/InsertSizeMetrics" >> "${LOG_FNAME}"
+    mkdir -p "${OUTDIR}/InsertSizeMetrics"
+    echo "${PTOOL}/picard.jar CollectInsertSizeMetrics I="'"'"${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}"'"'" O="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt"'"'" H="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"'"' >> "${LOG_FNAME}"
+    ${PTOOL}/picard.jar CollectInsertSizeMetrics I="${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}" O="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" H="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"
 fi
 
 # the final step is to link the sorted.rmdup.bam file to the allsamples/
