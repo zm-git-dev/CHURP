@@ -45,7 +45,8 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             self.useropts['unstranded'] = 'no'
         self.useropts['gtf'] = args['gtf']
         self.useropts['hisat2_idx'] = args['hisat2_idx']
-        self.useropts['hisat2_threads'] = '-p ' + str(args['ppn']) + ' '
+        self.useropts['hisat2_threads'] = '-p ' + str(args['ppn'])
+        self.useropts['hisat2_other'] = '--no-mixed --new-summary'
         # Set the column order to be the columns of the sample sheet. This will
         # eventually become the header of the sheet.
         self.column_order.extend([
@@ -138,7 +139,8 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
                 'RMDUP': self.useropts['rmdup'],
                 'trimmomaticOpts': self.finalopts['trimmomatic'],
                 'Hisat2index': self.useropts['hisat2_idx'],
-                'Hisat2Options': self.useropts['hisat2_threads'] +
+                'Hisat2Options': self.useropts['hisat2_threads'] + ' ' +
+                                 self.useropts['hisat2_other'] + ' ' +
                                  self.finalopts['hisat2'],
                 'Unstranded': self.useropts['unstranded'],
                 'AnnotationGTF': self.useropts['gtf']
