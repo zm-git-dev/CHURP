@@ -91,8 +91,6 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         a['hisat2_idx'] = os.path.realpath(
             os.path.expanduser(str(a['hisat2_idx'])))
         a['gtf'] = os.path.realpath(os.path.expanduser(str(a['gtf'])))
-        a['adapters'] = os.path.realpath(
-            os.path.expanduser(str(a['adapters'])))
         a['outdir'] = os.path.realpath(os.path.expanduser(str(a['outdir'])))
         a['workdir'] = os.path.realpath(os.path.expanduser(str(a['workdir'])))
         if a['expr_groups']:
@@ -115,6 +113,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             a['adapters'] = '$TRIMMOMATIC/adapters/all_illumina_adapters.fa'
         else:
             try:
+                a['adapters'] = os.path.realpath(
+                    os.path.expanduser(str(a['adapters'])))
                 handle = open(a['adapters'], 'r')
                 handle.close()
             except OSError:
