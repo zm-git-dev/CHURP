@@ -215,20 +215,22 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         qsub_array = '1'
         if len(self.sheet.final_sheet) > 1:
             qsub_array += '-' + str(len(self.sheet.final_sheet))
+        # Write a few variables into the header of the script so they are
+        # easy to find
+        handle.write('OUTDIR=' + '"' + self.outdir + '"\n')
+        handle.write('WORKDIR=' + '"' + self.workdir + '"\n')
+        handle.write('SAMPLESHEET=' + '"' + ss + '"\n')
+        handle.write('PURGE=' + '"' + self.purge + '"\n')
         aln_cmd = [
             'qsub',
-            '-q',
-            'mesabi',
-            '-m',
-            'abe',
-            '-M',
-            '"${user_email}"',
-            '-l',
-            qsub_resources,
-            '-t',
-            qsub_array,
-            '-v',
-            '"SampleSheet='+ss+',PURGE=' + self.purge + '"',
+            '-q', 'mesabi',
+            '-m', 'abe',
+            '-M', '"${user_email}"',
+            '-o', '"${OUTDIR}"',
+            '-e', '"${OUTDIR}"',
+            '-l', qsub_resources,
+            '-t', qsub_array,
+            '-v', '"SampleSheet=${SAMPLESHEET},PURGE=${PURGE}"',
             self.single_sample_script]
         # Write the first qsub command
         handle.write('single_id=$(' + ' '.join(aln_cmd) + ')\n')
@@ -240,20 +242,18 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             self.min_gene_len])
         summary_cmd = [
             'qsub',
-            '-q',
-            'mesabi',
-            '-m',
-            'abe',
-            '-M',
-            '"${user_email}"',
-            '-W',
-            '"depend=afterokarray:${single_id}"',
-            '-v',
-            '"' + summary_vars + '"',
+            '-q', 'mesabi',
+            '-m', 'abe',
+            '-M', '"${user_email}"',
+            '-o', '"${OUTDIR}"',
+            '-e', '"${OUTDIR}"',
+            '-W', '"depend=afterokarray:${single_id}"',
+            '-v', '"' + summary_vars + '"',
             self.summary_script]
         # Write the second command
         handle.write('summary_id=$(' + ' '.join(summary_cmd) + ')\n')
         # Write some echo statements for users' information
+        handle.write('echo "Output and logs will be written to ${OUTDIR}"\n')
         handle.write('echo "Emails will be sent to ${user_email}"\n')
         handle.write('echo "Single samples job array ID: ${single_id}"\n')
         handle.write('echo "Summary job ID: ${summary_id}"\n')
