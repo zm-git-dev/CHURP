@@ -101,18 +101,18 @@ if [ "${TRIM}" = "yes" ]; then
     if [ ! -f trimmomatic.done ]; then
         echo "# $(date '+%F %T'): Running trimmomatic on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
         echo "java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads ${PBS_NUM_PPN} -basein "'"'"${R1FILE}"'"'" -baseout "'"'"${SAMPLENM}"'"'" ${TRIMOPTS} 2>trim.log" >> "${LOG_FNAME}"
-        java -jar "${TRIMMOMATIC}"/trimmomatic.jar PE -threads "${PBS_NUM_PPN}" -basein "${R1FILE}" -baseout "${SAMPLENM}" ${TRIMOPTS} 2>trim.log && touch trimmomatic.done
+        java -jar "${TRIMMOMATIC}"/trimmomatic.jar PE -threads "${PBS_NUM_PPN}" -basein "${R1FILE}" -baseout "${SAMPLENM}" "$(echo ${TRIMOPTS})" 2>trim.log && touch trimmomatic.done
     fi
     if [ ! -f fastqc.trim.done ]; then
         if [ "${PE}" = "true" ]
         then
             echo "# $(date '+%F %T'): Running fastqc on trimmed fastq files." >> "${LOG_FNAME}"
             echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"'" "'"'"${SAMPLENM}_2P"'"' >> "${LOG_FNAME}"
-            fastqc -t 2 --outdir="${WORKDIR}" "${SAMPLENM}_1P" "${SAMPLENM}_2P" && touch fastqc.trim.done
+            fastqc -t 2 --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_1P" "${SAMPLENM}_2P" && touch fastqc.trim.done
         else
             echo "# $(date '+%F %T'): Running fastqc on trimmed fastq file." >> "${LOG_FNAME}"
             echo "fastqc --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"' >> "${LOG_FNAME}"
-            fastqc --outdir="${WORKDIR}" "${SAMPLENM}_1P" && touch fastqc.trim.done
+            fastqc --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_1P" && touch fastqc.trim.done
         fi
     fi
 fi
