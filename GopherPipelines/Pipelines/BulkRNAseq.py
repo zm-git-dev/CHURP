@@ -59,6 +59,10 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             os.path.realpath(__file__).rsplit(os.path.sep, 3)[0],
             'PBS',
             'run_summary_stats.pbs')
+        self.de_script = os.path.join(
+            os.path.realpath(__file__).rsplit(os.path.sep, 3)[0],
+            'R_Scripts',
+            'summarize_bulk_rnaseq.R')
         return
 
     def _validate_args(self, a):
@@ -224,6 +228,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # easy to find
         handle.write('OUTDIR=' + '"' + self.outdir + '"\n')
         handle.write('WORKDIR=' + '"' + self.workdir + '"\n')
+        handle.write('DE_SCRIPT=' + '"' + self.de_script + '"\n')
         handle.write('SAMPLESHEET=' + '"' + ss + '"\n')
         handle.write('PURGE=' + '"' + self.purge + '"\n')
         aln_cmd = [
@@ -242,10 +247,10 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         handle.write('single_id=$(' + ' '.join(aln_cmd) + ')\n')
         # This is the command for counting and normalizing reads
         summary_vars = ''.join([
-            'SampleSheet=',
-            ss,
+            'SampleSheet=${SAMPLESHEET}',
             ',MINLEN=',
-            self.min_gene_len])
+            self.min_gene_len,
+            ',RSUMMARY=${DE_SCRIPT}'])
         summary_cmd = [
             'qsub',
             '-q', 'mesabi',
