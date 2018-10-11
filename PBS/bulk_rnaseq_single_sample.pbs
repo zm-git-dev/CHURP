@@ -170,8 +170,9 @@ then
     echo "# $(date + '%F %T'): Collecting insert size metrics for ${SAMPLENM}" >> "${LOG_FNAME}"
     echo "mkdir -o ${OUTDIR}/InsertSizeMetrics" >> "${LOG_FNAME}"
     mkdir -p "${OUTDIR}/InsertSizeMetrics"
-    echo "${PTOOL}/picard.jar CollectInsertSizeMetrics I="'"'"${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}"'"'" O="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt"'"'" H="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"'"' >> "${LOG_FNAME}"
-    ${PTOOL}/picard.jar CollectInsertSizeMetrics I="${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}" O="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" H="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"
+    mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"
+    echo "_JAVA_OPTIONS="'"'"-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"'"'" ${PTOOL}/picard.jar CollectInsertSizeMetrics I="'"'"${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}"'"'" O="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt"'"'" H="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"'"' >> "${LOG_FNAME}"
+    _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar CollectInsertSizeMetrics I="${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}" O="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" H="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"
 fi
 
 # the final step is to link the sorted.rmdup.bam file to the allsamples/
