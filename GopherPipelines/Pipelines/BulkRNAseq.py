@@ -111,11 +111,14 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             handle.close()
         except OSError:
             DieGracefully.die_gracefully(DieGracefully.BAD_GTF)
-        try:
-            handle = open(a['adapters'], 'r')
-            handle.close()
-        except OSError:
-            DieGracefully.die_gracefully(DieGracefully.BAD_ADAPT)
+        if not a['adapters']:
+            a['adapters'] = '$TRIMMOMATIC/adapters/all_illumina_adapters.fa'
+        else:
+            try:
+                handle = open(a['adapters'], 'r')
+                handle.close()
+            except OSError:
+                DieGracefully.die_gracefully(DieGracefully.BAD_ADAPT)
         if a['expr_groups']:
             try:
                 handle = open(a['expr_groups'], 'r')
