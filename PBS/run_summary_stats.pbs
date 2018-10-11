@@ -95,23 +95,23 @@ then
     if [ "${PE}" = "true" ]
     then
         echo "# $(date '+%F %T'): Library is unstranded and paired-end" >> "${LOG_FNAME}"
-        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -B -p -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" -a "${GTFFILE}" -B -p -Q 10 -s 0 -o subread_counts.txt "${BAM_LIST[@]}"
+        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -T ${PBS_NUM_PPN} -B -p -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
+        "${FEATURECOUNTS}" -a "${GTFFILE}" -T ${PBS_NUM_PPN} -B -p -Q 10 -s 0 -o subread_counts.txt "${BAM_LIST[@]}"
     else
         echo "# $(date '+%F %T'): Library is unstranded and single-end" >> "${LOG_FNAME}"
-        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" -a "${GTFFILE}" -B -p -Q 10 -s 0 -o subread_counts.txt "${BAM_LIST[@]}"
+        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -T ${PBS_NUM_PPN} -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
+        "${FEATURECOUNTS}" -a "${GTFFILE}" -T ${PBS_NUM_PPN} -B -Q 10 -s 0 -o subread_counts.txt "${BAM_LIST[@]}"
     fi
 else
     if [ "${PE}" = "true" ]
     then
         echo "# $(date '+%F %T'): Library is stranded and paired-end." >> "${LOG_FNAME}"
-        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -B -p -Q 10 -s 2 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" -a "${GTFFILE}" -B -p -Q 10 -s 2 -o subread_counts.txt "${BAM_LIST[@]}"
+        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -T ${PBS_NUM_PPN} -B -p -Q 10 -s 2 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
+        "${FEATURECOUNTS}" -a "${GTFFILE}" -T ${PBS_NUM_PPN} -B -p -Q 10 -s 2 -o subread_counts.txt "${BAM_LIST[@]}"
     else
         echo "# $(date '+%F %T'): Library is stranded and single-end" >> "${LOG_FNAME}"
-        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -Q 10 -s 2 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" -a "${GTFFILE}" -Q 10 -s 2 -o subread_counts.txt "${BAM_LIST[@]}"
+        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -T ${PBS_NUM_PPN} -Q 10 -s 2 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
+        "${FEATURECOUNTS}" -a "${GTFFILE}" -T ${PBS_NUM_PPN} -Q 10 -s 2 -o subread_counts.txt "${BAM_LIST[@]}"
     fi
 fi
 
