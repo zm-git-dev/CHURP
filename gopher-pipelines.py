@@ -78,9 +78,13 @@ def brnaseq(args):
             DieGracefully.BRNASEQ_SUCCESS,
             pipeline_fname,
             samplesheet_fname)
+    elif qsub_dat[2].returncode != 0:
+        DieGracefully.die_gracefully(
+            DieGracefully.BRNASEQ_SUBMIT_FAIL,
+            qsub_dat)
     else:
         DieGracefully.die_gracefully(
-            DieGracefully.BRNASEQ_SUBMIT,
+            DieGracefully.BRNASEQ_SUBMIT_OK,
             pipeline_fname,
             samplesheet_fname,
             qsub_dat)

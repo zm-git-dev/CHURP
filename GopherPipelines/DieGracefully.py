@@ -20,7 +20,8 @@ BAD_ADAPT = 24
 BRNASEQ_BAD_GPS = 25
 BRNASEQ_NO_SAMP_GPS = 26
 BRNASEQ_SUCCESS = 27
-BRNASEQ_SUBMIT = 28
+BRNASEQ_SUBMIT_OK = 28
+BRNASEQ_SUBMIT_FAIL = 29
 GROUP_NO_PIPE = 50
 GROUP_BAD_COL = 51
 BRNASEQ_GROUP_SUCCESS = 52
@@ -279,7 +280,7 @@ option to enable group testing.\n"""
     return
 
 
-def brnaseq_auto_submit(pipe_script, samplesheet, qsub_msg):
+def brnaseq_auto_submit_ok(pipe_script, samplesheet, qsub_msg):
     """Call this function when the user gives the --submit flag to the
     bulk_rnaseq pipeline."""
     msg = """----------
@@ -305,6 +306,23 @@ Qsub stdout:\n"""
     return
 
 
+def brnaseq_auto_submit_fail(qsub_msg):
+    """Call this function when auto-submitting and qsub returns an exit status
+    that is not 0."""
+    msg = """----------
+ERROR
+
+Auto-submission of your pipeline jobs failed! There may be an error with the
+scheduler. Check the MSI status page to be sure that the queues are online. If
+the problem persists, please contact the MSI help desk at help@msi.umn.edu.
+
+The output from qsub is shown below:\n"""
+    msg += qsub_msg[1].decode('utf-8')
+    msg += '\n'
+    sys.stderr.write(msg)
+    return
+
+
 def die_gracefully(e, *args):
     """Print user-friendly error messages and exit."""
     err_dict = {
@@ -324,7 +342,8 @@ def die_gracefully(e, *args):
         GROUP_BAD_COL: group_bad_col,
         BRNASEQ_GROUP_SUCCESS: brnaseq_group_success,
         BRNASEQ_SUCCESS: brnaseq_success,
-        BRNASEQ_SUBMIT: brnaseq_auto_submit
+        BRNASEQ_SUBMIT_OK: brnaseq_auto_submit_ok,
+        BRNASEQ_SUBMIT_FAIL: brnaseq_auto_submit_fail
         }
     try:
         err_dict[e](*args)
