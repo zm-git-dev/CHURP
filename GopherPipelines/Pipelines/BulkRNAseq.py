@@ -37,6 +37,9 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug('New BulkRNAseqPipeline instance.')
         self.pipe_logger.debug(
             'Validated args:\n%s', pprint.pformat(valid_args))
+        self.real_out = valid_args['outdir']
+        self.real_work = valid_args['workdir']
+        self.submit = valid_args['auto_submit']
 
         # Set the minimum gene length
         self.min_gene_len = str(valid_args['mingene'])
@@ -276,4 +279,17 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug('qsub:\n%s', ' '.join(summary_cmd))
         handle.flush()
         handle.close()
-        return (pname, ss)
+        # Check if we want to automatically submit the script
+        if self.submit:
+            import subprocess
+            qsub_cmd = ['bash', pname]
+            qsub_proc = subprocess.Popen(
+                qsub_cmd,
+                shell=False,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+            qsub_stdout, qsub_stderr = qsub_proc.communicate()
+            qsub_dat = (qsub_stdout, qsub_stderr)
+        else:
+            qsub_dat = None
+        return (pname, ss, qsub_dat)

@@ -20,6 +20,7 @@ BAD_ADAPT = 24
 BRNASEQ_BAD_GPS = 25
 BRNASEQ_NO_SAMP_GPS = 26
 BRNASEQ_SUCCESS = 27
+BRNASEQ_SUBMIT = 28
 GROUP_NO_PIPE = 50
 GROUP_BAD_COL = 51
 BRNASEQ_GROUP_SUCCESS = 52
@@ -278,6 +279,34 @@ option to enable group testing.\n"""
     return
 
 
+def brnaseq_auto_submit(pipe_script, samplesheet, qsub_msg):
+    """Call this function when the user gives the --submit flag to the
+    bulk_rnaseq pipeline."""
+    msg = """----------
+SUCCESS
+
+Your pipeline has been submitted. For reference, the pipeline script and the
+samplesheet are given at the paths below:
+
+Pipeline script: {pn}
+Samplesheet: {ss}
+
+Below is the output from qsub:
+
+Qsub stdout:
+{qo}
+
+Qsub stderr:
+{qe}\n"""
+    sys.stderr.write(
+        msg.format(
+            pn=pipe_script,
+            ss=samplesheet,
+            qo=qsub_msg[0],
+            qe=qsub_msg[1]))
+    return
+
+
 def die_gracefully(e, *args):
     """Print user-friendly error messages and exit."""
     err_dict = {
@@ -296,7 +325,8 @@ def die_gracefully(e, *args):
         GROUP_NO_PIPE: group_no_pipe,
         GROUP_BAD_COL: group_bad_col,
         BRNASEQ_GROUP_SUCCESS: brnaseq_group_success,
-        BRNASEQ_SUCCESS: brnaseq_success
+        BRNASEQ_SUCCESS: brnaseq_success,
+        BRNASEQ_SUBMIT: brnaseq_auto_submit
         }
     try:
         err_dict[e](*args)

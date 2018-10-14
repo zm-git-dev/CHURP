@@ -15,7 +15,8 @@ ILLUMINACLIP:4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18.
 See the Trimmomatic manual for explanation of these parameters.
 """
 
-EXTRA_HISAT_HELP = """Must be passed as a quoted string with = after the option.
+EXTRA_HISAT_HELP = """Must be passed as a quoted string with = after the
+option.
 
 Example:
 --hisat2-opts="--phred64 --no-unal"
@@ -157,6 +158,12 @@ def add_args(ap):
         dest='hisat2',
         type=str,
         default='')
+    ap_opt.add_argument(
+        '--submit',
+        help='Automatically submit pipeline jobs.',
+        dest='auto_submit',
+        action='store_true',
+        default=False)
 
     # Make an argument for scheduler options
     ap_sched = ap.add_argument_group(
