@@ -291,13 +291,11 @@ samplesheet are given at the paths below:
 Pipeline script: {pn}
 Samplesheet: {ss}
 
-Below is the output from qsub:
-
-Qsub stdout:
-{qo}
-
-Qsub stderr:
-{qe}\n"""
+Below is the output from qsub.
+Qsub stdout:\n"""
+    msg += qsub_msg[0]
+    msg += '\nQsub stderr:\n'
+    msg += qsub_msg[1] + '\n'
     sys.stderr.write(
         msg.format(
             pn=pipe_script,
