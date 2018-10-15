@@ -1,5 +1,3 @@
-# DEV BRANCH!
-
 # `gopher-pipelines` Recfator
 This repository contains the Python refactoring of `gohper-pipelines`.
 
