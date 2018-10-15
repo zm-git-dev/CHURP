@@ -108,7 +108,7 @@ if [ "${TRIM}" = "yes" ]; then
         else
             echo "# $(date '+%F %T'): Running trimmomatic on ${R1FILE}." >> "${LOG_FNAME}"
             echo "java -jar ${TRIMMOMATIC}/trimmomatic.jar SE -threads ${PBS_NUM_PPN} -basein "'"'"${R1FILE}"'"'" -baseout "'"'"${SAMPLENM}"'"'" ${TRIMOPTS} 2>trim.log" >> "${LOG_FNAME}"
-            java -jar "${TRIMMOMATIC}"/trimmomatic.jar SE -threads "${PBS_NUM_PPN}" -basein "${R1FILE}" -baseout "${SAMPLENM}" $(echo "${TRIMOPTS}" | envsubst) 2>trim.log && touch trimmomatic.done
+            java -jar "${TRIMMOMATIC}"/trimmomatic.jar SE -threads "${PBS_NUM_PPN}" "${R1FILE}" "${SAMPLENM}_trimmed" $(echo "${TRIMOPTS}" | envsubst) 2>trim.log && touch trimmomatic.done
         fi
     fi
     if [ ! -f fastqc.trim.done ]; then
@@ -120,7 +120,7 @@ if [ "${TRIM}" = "yes" ]; then
         else
             echo "# $(date '+%F %T'): Running fastqc on trimmed fastq file." >> "${LOG_FNAME}"
             echo "fastqc --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"' >> "${LOG_FNAME}"
-            fastqc --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_1P" && touch fastqc.trim.done
+            fastqc --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_trimmed" && touch fastqc.trim.done
         fi
     fi
 fi
@@ -136,7 +136,7 @@ if [ ! -f hisat2.done ]; then
         else
             echo "# $(date '+%F %T'): Aligning trimmed reads with HISAT2." >> "${LOG_FNAME}"
             echo "hisat2 ${HISAT2OPTS} -x "'"'"'${HISAT2INDEX}'"'"'" -U "'"'"'${SAMPLENM}_1P'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
-            hisat2 ${HISAT2OPTS} -x "'${HISAT2INDEX}'" -U "'${SAMPLENM}_1P'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+            hisat2 ${HISAT2OPTS} -x "'${HISAT2INDEX}'" -U "'${SAMPLENM}_trimmed'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
         fi
     else
         # Hisat2 chokes on our quoted reads files if they are gzipped. This is
