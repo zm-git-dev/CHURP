@@ -100,9 +100,16 @@ fi
 # read (single end).
 if [ "${TRIM}" = "yes" ]; then
     if [ ! -f trimmomatic.done ]; then
-        echo "# $(date '+%F %T'): Running trimmomatic on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
-        echo "java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads ${PBS_NUM_PPN} -basein "'"'"${R1FILE}"'"'" -baseout "'"'"${SAMPLENM}"'"'" ${TRIMOPTS} 2>trim.log" >> "${LOG_FNAME}"
-        java -jar "${TRIMMOMATIC}"/trimmomatic.jar PE -threads "${PBS_NUM_PPN}" -basein "${R1FILE}" -baseout "${SAMPLENM}" $(echo "${TRIMOPTS}" | envsubst) 2>trim.log && touch trimmomatic.done
+        if [ "${PE}" = "true" ]
+        then
+            echo "# $(date '+%F %T'): Running trimmomatic on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
+            echo "java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads ${PBS_NUM_PPN} -basein "'"'"${R1FILE}"'"'" -baseout "'"'"${SAMPLENM}"'"'" ${TRIMOPTS} 2>trim.log" >> "${LOG_FNAME}"
+            java -jar "${TRIMMOMATIC}"/trimmomatic.jar PE -threads "${PBS_NUM_PPN}" -basein "${R1FILE}" -baseout "${SAMPLENM}" $(echo "${TRIMOPTS}" | envsubst) 2>trim.log && touch trimmomatic.done
+        else
+            echo "# $(date '+%F %T'): Running trimmomatic on ${R1FILE}." >> "${LOG_FNAME}"
+            echo "java -jar ${TRIMMOMATIC}/trimmomatic.jar SE -threads ${PBS_NUM_PPN} -basein "'"'"${R1FILE}"'"'" -baseout "'"'"${SAMPLENM}"'"'" ${TRIMOPTS} 2>trim.log" >> "${LOG_FNAME}"
+            java -jar "${TRIMMOMATIC}"/trimmomatic.jar SE -threads "${PBS_NUM_PPN}" -basein "${R1FILE}" -baseout "${SAMPLENM}" $(echo "${TRIMOPTS}" | envsubst) 2>trim.log && touch trimmomatic.done
+        fi
     fi
     if [ ! -f fastqc.trim.done ]; then
         if [ "${PE}" = "true" ]
