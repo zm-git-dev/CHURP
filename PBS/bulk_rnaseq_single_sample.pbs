@@ -175,7 +175,7 @@ if [ ! -f samtools.done ]; then
         samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
         # Sort the bam by coordinate, too
         samtools sort -o "${SAMPLENM}_Coord.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
-        samtools index "${SAMPLENM}_Coords.sorted.bam" && touch samtools.done
+        samtools index "${SAMPLENM}_Coord.sorted.bam" && touch samtools.done
         FINAL_BAM="${SAMPLENM}.sorted.bam"
         COORD_BAM="${SAMPLENM}_Coord.sorted.bam"
         COORD_BAI="${SAMPLENM}_Coord.sorted.bam.bai"
