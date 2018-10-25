@@ -164,7 +164,7 @@ if [ ! -f samtools.done ]; then
         samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
         samtools rmdup "${SAMPLENM}.sorted.bam" "${SAMPLENM}.sorted.rmdup.bam"
         # Sort the bam by coordinate, too
-        samtools sort -o "${SAMPLENM}_Coord.sorted.rmdup.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
+        samtools sort -o "${SAMPLENM}_Coord.sorted.rmdup.bam" -@ ${PBS_NUM_PPN} -O bam -T temp "${SAMPLENM}.sorted.rmdup.bam"
         samtools index "${SAMPLENM}_Coord.sorted.rmdup.bam" && touch samtools.done
         FINAL_BAM="${SAMPLENM}.sorted.rmdup.bam"
         COORD_BAM="${SAMPLENM}_Coord.sorted.rmdup.bam"
@@ -174,7 +174,7 @@ if [ ! -f samtools.done ]; then
         echo "samtools view -bh -F 4 -@ 8 "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
         samtools view -bh -F 4 -@ 8 "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
         # Sort the bam by coordinate, too
-        samtools sort -o "${SAMPLENM}_Coord.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
+        samtools sort -o "${SAMPLENM}_Coord.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp "${SAMPLENM}.sorted.bam"
         samtools index "${SAMPLENM}_Coord.sorted.bam" && touch samtools.done
         FINAL_BAM="${SAMPLENM}.sorted.bam"
         COORD_BAM="${SAMPLENM}_Coord.sorted.bam"
