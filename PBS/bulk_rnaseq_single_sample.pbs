@@ -96,6 +96,16 @@ if [ ! -f fastqc.done ]; then
     fi
 fi
 
+# The fastqc files are auto-extracted, so we search for the directories that
+# end in '_fastqc', pull out the total number of reads, then throw away the
+# directory
+for fastqc_out_dir in $(find "${OUTDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '_fastqc')
+do
+    out_pref=${fastqc_out_dir/_fastqc/.readcount.txt}
+    echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
+    mv "${fastqc_out_dir}" "${fastqc_out_dir}.processed"
+done
+
 # To use -basein option, fastq file must be in format *_R1_*.fastq and *_R2_*.fastq
 # trimmomatic can handle the -basein and -baseout options if there is only one
 # read (single end).
@@ -117,23 +127,21 @@ if [ "${TRIM}" = "yes" ]; then
         then
             echo "# $(date '+%F %T'): Running fastqc on trimmed fastq files." >> "${LOG_FNAME}"
             echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"'" "'"'"${SAMPLENM}_2P"'"' >> "${LOG_FNAME}"
-            fastqc -t 2 --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_1P" "${SAMPLENM}_2P" && touch fastqc.trim.done
+            fastqc -t 2 --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_1P" "${SAMPLENM}_2P" && touch fastqc.trim.done
         else
             echo "# $(date '+%F %T'): Running fastqc on trimmed fastq file." >> "${LOG_FNAME}"
             echo "fastqc --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"' >> "${LOG_FNAME}"
-            fastqc --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_trimmed" && touch fastqc.trim.done
+            fastqc --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_trimmed" && touch fastqc.trim.done
         fi
     fi
 fi
 
-# unzip the fastQC reports and grab the number of reads for the summary
-# for zipfile in "$(find "${OUTDIR}/singesamples/${SAMPLENM}" -type f -name '*.zip')"
-# do
-#     zipdir=${zipfile/.zip/}
-#     summary=${zipfile/.zip/.nreads}
-#     unzip "${zipfile}"
-#     echo "${SAMPLENM} $(grep '^Total Sequences' ${zipdir}/fastqc_data.txt | cut -f 2)" >> "${summary}"
-# done
+for fastqc_out_dir in $(find "${OUTDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '_fastqc')
+do
+    out_pref=${fastqc_out_dir/_fastqc/.trimmed.readcount.txt}
+    echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
+    mv "${fastqc_out_dir}" "${fastqc_out_dir}.processed"
+done
 
 if [ ! -f hisat2.done ]; then
     if [ "${TRIM}" = "yes" ]; then
