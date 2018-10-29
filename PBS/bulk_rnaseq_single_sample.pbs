@@ -101,7 +101,7 @@ fi
 # directory
 for fastqc_out_dir in $(find "${WORKDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '*_fastqc')
 do
-    out_pref=${fastqc_out_dir/_fastqc/.readcount.txt}
+    out_pref=${fastqc_out_dir/_fastqc/.raw_readcount.txt}
     echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
     mv "${fastqc_out_dir}" "${fastqc_out_dir}.processed"
 done
@@ -138,7 +138,7 @@ fi
 
 for fastqc_out_dir in $(find "${WORKDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '*_fastqc')
 do
-    out_pref=${fastqc_out_dir/_fastqc/.trimmed.readcount.txt}
+    out_pref=${fastqc_out_dir/_fastqc/.trimmed_readcount.txt}
     echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
     mv "${fastqc_out_dir}" "${fastqc_out_dir}.processed"
 done
