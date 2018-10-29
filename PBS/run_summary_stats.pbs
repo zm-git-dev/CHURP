@@ -137,12 +137,15 @@ cp -u "${GTFFILE}" "${OUTDIR}"
 # AWK command from S. Munro to make a translation table fo Ensembl IDs and
 # gene names
 echo "# $(date '+%F %T'): Generating translation table of gene name and Ensembl ID." >> "${LOG_FNAME}"
-awk -F "\t" '$3 == "gene" { print $9 }' <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") | tr -d ";\"" | awk -F " " -v OFS="\t" ' {print $2 , $6} ' > "${OUTDIR}/gene_id_gene_name_map.txt"
+awk -F "\t" '$3 == "gene" { print $9 }' <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") | tr -d ';"' | awk -F " " -v OFS="\t" '{print $2 , $6}' > "${OUTDIR}/gene_id_gene_name_map.txt"
 
 # Link the work directories to the output directory
 echo "ln -sf "'"'"${WORKDIR}/singlesamples"'"'" "'"'"${OUTDIR}/singlesamples_work_directory"'"' >> "${LOG_FNAME}"
 echo "ln -sf "'"'"${WORKDIR}/allsamples"'"'" "'"'"${OUTDIR}/allsamples_work_directory"'"' >> "${LOG_FNAME}"
 ln -sf "${WORKDIR}/singlesamples" "${OUTDIR}/singlesamples_work_directory"
 ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
+
+# We will generate an HTML report
+# Rscript -e "library(rmarkdown); rmarkdown::render('Test_Rmd_Rscript.Rmd')"
 
 echo "# $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
