@@ -87,11 +87,12 @@ if [ ! -f fastqc.done ]; then
     then
         echo "# $(date '+%F %T'): Running fastqc on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
         echo "fastqc -t 2 --outdir="'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" "'"'"${R1FILE}"'"'" "'"'"${R2FILE}"'"' >> "${LOG_FNAME}"
-        fastqc -t 2 --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" "${R2FILE}" && touch fastqc.done
+        fastqc -t 2 --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" "${R2FILE}" && touch fastqc.done
+
     else
         echo "# $(date '+%F %T'): Running fastqc on ${R1FILE}." >> "${LOG_FNAME}"
         echo "fastqc -t 2 --outdir="'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" "'"'"${R1FILE}"'"' >> "${LOG_FNAME}"
-        fastqc --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" && touch fastqc.done
+        fastqc --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" && touch fastqc.done
     fi
 fi
 
@@ -124,6 +125,15 @@ if [ "${TRIM}" = "yes" ]; then
         fi
     fi
 fi
+
+# unzip the fastQC reports and grab the number of reads for the summary
+# for zipfile in "$(find "${OUTDIR}/singesamples/${SAMPLENM}" -type f -name '*.zip')"
+# do
+#     zipdir=${zipfile/.zip/}
+#     summary=${zipfile/.zip/.nreads}
+#     unzip "${zipfile}"
+#     echo "${SAMPLENM} $(grep '^Total Sequences' ${zipdir}/fastqc_data.txt | cut -f 2)" >> "${summary}"
+# done
 
 if [ ! -f hisat2.done ]; then
     if [ "${TRIM}" = "yes" ]; then
