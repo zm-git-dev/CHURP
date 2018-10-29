@@ -26,6 +26,18 @@ GROUP_NO_PIPE = 50
 GROUP_BAD_COL = 51
 BRNASEQ_GROUP_SUCCESS = 52
 
+# We will append a little message to the end that says the pipelines were
+# developed by RIS and funded by UMII
+CREDITS = """----------
+Thank you for using the refactor of gopher-pipelines. This software was
+developed by the Research Informatics Solutions (RIS) group at MSI with funding
+from the University of Minnesota Informatics Institute (UMII). For help, please
+contact help@msi.umn.edu.
+
+https://www.msi.umn.edu/
+https://research.umn.edu/units/umii\n
+"""
+
 # Define a series of functions that just write messages to the terminal. We
 # will call these with a main error handling function at the end.
 
@@ -39,6 +51,7 @@ ERROR
 gopher-pipelines has caught an unidentified error. Please send this error
 message, the command you typed, and debugging output to the MSI help desk
 (help@msi.umn.edu).\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -52,6 +65,7 @@ The output directory you have supplied is not suitable. Either you do not have
 permissions to write into it, or the disk is full. If you have verified that you
 can write into the directory, please contact the help desk (help@msi.umn.edu)
 with this error and the debugging output.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -65,6 +79,7 @@ The working directory you have supplied is not suitable. Either you do not have
 permissions to write into it, or the disk is full. If you have verified that you
 can write into the direcotry, please contact the help desk (help@msi.umn.edu)
 with this error and the debugging output.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -79,6 +94,7 @@ number of processors per node (PPN) should be an integer between 1 and 24. The
 allocated memory should be specified in megabytes (MB) as an integer between 1
 and 62000. The walltime should be specified in hours as an integer between 1 and
 96.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -101,6 +117,7 @@ bash while logged into Mesabi. You will recieve email notifications of job
 start/completion/error at your UMN X500 email address. If you need to submit
 an error report, please contact help[at]msi.umn.edu. Please include the
 samplesheet, pipeline script, and the error message with your report.\n"""
+    msg += CREDITS
     sys.stderr.write(msg.format(pn=pipe_script, ss=samplesheet))
     return
 
@@ -117,6 +134,7 @@ gopher-pipelines. You must specify a FASTQ directory (-f). Additionally, you
 must either specify a path to a HISAT2 index (-x) and GTF (-g), or an organism
 name (-r). If you are building a group template file, you need only specify a
 FASTQ directory. Please fix your command line and re-run.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -132,6 +150,7 @@ You have specified conflicting options to the bulk_rnaseq subcommand. HISAT2
 index (-x) and GTF (-g) are both incompatible with organism (-r). Pass the help
 option (-h) to see all available options. Please fix your command line and
 re-run.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -145,6 +164,7 @@ The HISAT2 index that you have supplied is not valid. Please give the path to
 the base of the HISAT2 index (without the .*.ht2 extension). It should be given
 in the same way as would be given to HISTA2 directly. See the HISAT2 manual for
 information on building an index from a FASTA file.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -158,6 +178,7 @@ The FASTQ directory that you have supplied either does not exist or cannot be
 read. If you have verified that you can read the directory contents, please
 contact the help desk (help@msi.umn.edu) with tihs error message and the
 debugging output.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -171,6 +192,7 @@ The FASTQ directory that you have supplied does not appear to contain any FASTQ
 or gzipped FASTQ files. Please ensure that the files in the directory have names
 that end in one of the following: .fastq, .fastq.gz, .fq., .fq.gz
 (case sensitive).\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -184,6 +206,7 @@ ERROR
 The GTF you have supplied does not exist, or cannot be read. Please check your
 path for any typos and that any special characters are properly quoted or
 escaped and try again.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -197,6 +220,7 @@ ERROR
 The adapters file that you have supplied either does not exist or cannot be
 read. Please check your path for any typos and that any special characters are
 properly quoted or escaped, and try again.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -210,6 +234,7 @@ ERROR
 The groups template CSV file that you have provided does not exist, or cannot
 be read. Please check your path for any typos and that any spaces or special
 characters are properly quoted or escaped.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -226,6 +251,7 @@ correct directory with -f, and that your sample names match exactly between the
 CSV and the FASTQ directory. Use the template from --make-groups-template to
 see the exact sample names that gopher-pipelines is using to match samples to
 groups.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -244,6 +270,7 @@ See the pipeline-specific help (-h) or the user manual for details.
 
 Currently available pipelines:
     - bulk_rnaseq\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -256,6 +283,7 @@ ERROR
 
 You have specified an invalid column name. Column names cannot contain commas,
 because the experimental group file is a comma-separated values file.\n"""
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
@@ -276,6 +304,7 @@ in the analysis. Samples with a "Group" value of NULL will not be used in
 downstream differential expression analysis. When you have edited the file to
 your liking, supply its path to the "bulk_rnaseq" pipeline with the -e
 option to enable group testing.\n"""
+    msg += CREDITS
     sys.stderr.write(msg.format(path=fname))
     return
 
@@ -297,6 +326,7 @@ Qsub stdout:\n"""
     msg += qsub_msg[0].decode('utf-8')
     msg += '\nQsub stderr:\n'
     msg += qsub_msg[1].decode('utf-8') + '\n'
+    msg += CREDITS
     sys.stderr.write(
         msg.format(
             pn=pipe_script,
@@ -319,6 +349,7 @@ the problem persists, please contact the MSI help desk at help@msi.umn.edu.
 The output from qsub is shown below:\n"""
     msg += qsub_msg[1].decode('utf-8')
     msg += '\n'
+    msg += CREDITS
     sys.stderr.write(msg)
     return
 
