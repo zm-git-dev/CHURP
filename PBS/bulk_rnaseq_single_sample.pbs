@@ -99,7 +99,7 @@ fi
 # The fastqc files are auto-extracted, so we search for the directories that
 # end in '_fastqc', pull out the total number of reads, then throw away the
 # directory
-for fastqc_out_dir in $(find "${OUTDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '_fastqc')
+for fastqc_out_dir in $(find "${WORKDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '_fastqc')
 do
     out_pref=${fastqc_out_dir/_fastqc/.readcount.txt}
     echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
@@ -136,7 +136,7 @@ if [ "${TRIM}" = "yes" ]; then
     fi
 fi
 
-for fastqc_out_dir in $(find "${OUTDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '_fastqc')
+for fastqc_out_dir in $(find "${WORKDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '_fastqc')
 do
     out_pref=${fastqc_out_dir/_fastqc/.trimmed.readcount.txt}
     echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
