@@ -245,7 +245,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         handle.write('REPORT_SCRIPT=' + '"' + self.report_script + '"\n')
         handle.write('SAMPLESHEET=' + '"' + ss + '"\n')
         handle.write('PURGE=' + '"' + self.purge + '"\n')
-        handle.write('PIPE_SCRIPT=' + '"' + '$(pwd -P)/$0' + '"\n')
+        handle.write('PIPE_SCRIPT=' + '"' + '$0' + '"\n')
         aln_cmd = [
             'qsub',
             '-q', 'mesabi',

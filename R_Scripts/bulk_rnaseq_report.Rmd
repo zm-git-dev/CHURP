@@ -32,9 +32,39 @@ cat $pipeline
 ## Samplesheet
 The path to the samplesheet is ``r params['samplesheet']``
 
-The samplesheet is printed below:
+The samplesheet is printed below, verbatim:
 ```{bash samplesheet, echo=FALSE, comment=NA}
 cat $samplesheet
+```
+
+The raw samplesheet is difficult to read, so we will print out a readable
+summary below:
+
+```{r samplesheet_readable, echo=FALSE, message=FALSE}
+library(knitr)
+sheet <- read.table(as.character(params['samplesheet']), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+# Change the full R1/R2 paths into basenames
+sheet$V3 <- as.character(sapply(sheet$V3, basename))
+sheet$V4 <- as.character(sapply(sheet$V4, basename))
+# And the reference, too
+sheet$V10 <- as.character(sapply(sheet$V10, basename))
+sheet$V13 <- as.character(sapply(sheet$V13, basename))
+# Drop the output and work directories, columns 5 and 6
+sheet <- sheet[,-c(5, 6)]
+# Make the names nice
+names(sheet) <- c(
+    "Sample Name",
+    "Group",
+    "R1",
+    "R2",
+    "Trim?",
+    "Remove Dups?",
+    "Trimmomatic Options",
+    "Reference Genome",
+    "HISAT2 Options",
+    "Untranded Library?",
+    "GTF Name")
+kable(sheet, caption="Summary of samplesheet.")
 ```
 
 ## Software Environment
@@ -45,7 +75,7 @@ first_sample=$(head -n 1 $samplesheet | cut -f 1 -d '|')
 log_name="${outdir}/Logs/${first_sample}_Log.txt"
 log_start=$(($(grep -n '^#BEGIN_MODULES' "${log_name}" | cut -f 1 -d ':') + 2))
 log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
-sed -n "${log_start},${log_end}p;${log_end}q" "${log_name}"
+head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
 ```
 
 Here are the software modules that were loaded for the summary and differential
@@ -55,7 +85,7 @@ expression analysis:
 log_name="${outdir}/Logs/BulkRNASeq_Summary_Log.txt"
 log_start=$(($(grep -n '^#BEGIN_MODULES' "${log_name}" | cut -f 1 -d ':') + 2))
 log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
-sed -n "${log_start},${log_end}p;${log_end}q" "${log_name}"
+head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
 ```
 
 # Read Summaries
