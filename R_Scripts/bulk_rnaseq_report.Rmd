@@ -1,0 +1,191 @@
+---
+title: "Bulk RNAseq Pipeline Summary"
+output:
+    html_document:
+        toc: true
+        toc_depth: 3
+        toc_float: true
+        number_sections: true
+date: "`r format(Sys.time(), '%Y-%m-%d, %T')`"
+params:
+    pipeline: NA
+    samplesheet: NA
+    outdir: NA
+    workdir: NA
+---
+
+```{r exportvars, echo=FALSE, message=FALSE}
+for(key in names(params)) {
+    do.call('Sys.setenv', params[key])
+}
+```
+
+# Run Parameters
+## Pipeline Script
+The path to the pipeline script is ``r params['pipeline']``
+
+The pipeline script is printed below:
+```{bash pipeline_script, echo=FALSE, comment=NA}
+cat $pipeline
+```
+
+## Samplesheet
+The path to the samplesheet is ``r params['samplesheet']``
+
+The samplesheet is printed below:
+```{bash samplesheet, echo=FALSE, comment=NA}
+cat $samplesheet
+```
+
+## Software Environment
+Here are the software modules that were loaded for the single-sample analysis:
+
+```{bash single_sample_modules, echo=FALSE, comment=NA}
+first_sample=$(head -n 1 $samplesheet | cut -f 1 -d '|')
+log_name="${outdir}/Logs/${first_sample}_Log.txt"
+log_start=$(($(grep -n '^#BEGIN_MODULES' "${log_name}" | cut -f 1 -d ':') + 2))
+log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
+sed -n "${log_start},${log_end}p;${log_end}q" "${log_name}"
+```
+
+Here are the software modules that were loaded for the summary and differential
+expression analysis:
+
+```{bash summary_modules, echo=FALSE, comment=NA}
+log_name="${outdir}/Logs/BulkRNASeq_Summary_Log.txt"
+log_start=$(($(grep -n '^#BEGIN_MODULES' "${log_name}" | cut -f 1 -d ':') + 2))
+log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
+sed -n "${log_start},${log_end}p;${log_end}q" "${log_name}"
+```
+
+# Read Summaries
+## Read Counts
+```{r read_counts, echo=FALSE, message=FALSE}
+library(knitr)
+read_summary <- read.table(paste(params['workdir'], 'allsamples', 'Read_Counts.txt', sep='/'), header=F)
+names(read_summary) <- c(
+    "Sample Name",
+    "Raw R1 Count",
+    "Raw R2 Count",
+    "Trimmed R1 Count",
+    "Trimmed R2 Count")
+kable(read_summary, caption="Read count summary.")
+```
+
+Should we try to include some quality summaries, too?
+
+# Alignment Summaries
+## Mapping Statistics
+```{r map_stats, echo=FALSE, message=FALSE}
+library(knitr)
+mapping_summary <- read.table(paste(params['workdir'], 'allsamples', 'Mapping_Stats.txt', sep='/'), header=F)
+names(mapping_summary) <- c(
+    "Sample Name",
+    "Mapping Rate",
+    "Fragments Mapped",
+    "MAPQ = 0",
+    "Max Read Length",
+    "Average Read Length",
+    "Average Read Quality")
+kable(mapping_summary, caption="Summary of read mapping.")
+```
+
+## Insert Size Metrics
+```{r is_stats, echo=FALSE, message=FALSE}
+library(knitr)
+is_summary <- read.table(paste(params['workdir'], 'allsamples', 'IS_Stats.txt', sep='/'), header=F)
+is_summary$V3 <- round(is_summary$V3, 3)
+is_summary$V4 <- round(is_summary$V4, 3)
+names(is_summary) <- c(
+    "Sample Name",
+    "Median Insert Size",
+    "Mean Insert Size",
+    "Insert Size StdDev")
+kable(is_summary, caption="Insert size summary.")
+```
+
+## Counts Summaries
+Shown below is a distribution of expression values as log2(1+CPM). CPM (counts-per-million)
+is a transformation of raw counts that accounts for the number of fragments
+sequenced in the library, like FPKM. It does not account for gene length like
+FPKM, however. You can compare CPM values for the same gene across samples,
+but do not compare CPM values for different genes in the same sample.
+
+```{r cpm_summary, echo=FALSE, message=FALSE, out.width="750", out.height="750"}
+library(knitr)
+cpm_plot <- paste(params['outdir'], 'Plots', 'cpm_plot.pdf', sep='/')
+# Include as graphics
+include_graphics(cpm_plot)
+```
+
+We then calculated the variance in CPM values for each gene across the sequenced
+samples. The 500 genes with the highest variance in expression were used to
+generate the following heatmap:
+
+```{r var_hmp, echo=FALSE, message=FALSE, out.width="750", out.height="750"}
+library(knitr)
+heatmap_plot <- paste(params['outdir'], 'Plots', 'high_variance_heatmap.pdf', sep='/')
+include_graphics(heatmap_plot)
+```
+
+CPM values were then used to generate a multidimensional scaling (MDS) plot,
+which functions similarly to a principal components plot:
+
+```{r mds_plot, echo=FALSE, message=FALSE, out.width="750", out.height="750"}
+library(knitr)
+mds_plot <- paste(params['outdir'], 'Plots', 'mds_plot.pdf', sep='/')
+include_graphics(mds_plot)
+```
+
+These plots are available as PDF vector images at the following path:
+
+`r paste(params['outdir'], 'Plots', sep='/')`
+
+# DEG Testing
+If experimental groups were supplied, we test for differential expression
+among them with a quasi-likelihood test (using `glmQLFit` in `edgeR`). We apply
+a `0.05` false discovery rate correction to the differential expression tests.
+If you did not supply experimental groups, then this section will mostly be
+empty.
+
+## Experimental Groups
+The following experimental groups were supplied to the pipeline. These are read
+out of the samplesheet:
+
+```{r expr_groups, echo=FALSE, message=FALSE}
+library(knitr)
+sheet <- read.table(as.character(params['samplesheet']), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+# Keep only the sample name and the group
+sheet_sub <- sheet[,c(1, 2)]
+names(sheet_sub) <- c("Sample Name", "Group")
+kable(sheet_sub, caption="Experimental groups.")
+```
+
+## DEG List
+The top differentially expressed genes are given below.
+
+```{r degs, echo=FALSE, message=FALSE, results="asis"}
+library(knitr)
+degdir <- paste(params['outdir'], 'DEGs', sep='/')
+if(!dir.exists(degdir)) {
+    print("There were no groups defined, so there are no differentially expressed genes.")
+} else {
+    deg_files <- list.files(degdir, full.names=TRUE)
+    if(length(deg_files) == 0) {
+        print("There were no groups defined, so there are no differentially expressed genes.")
+    } else {
+        for(i in 1:length(deg_files)) {
+            curr_f <- deg_files[i]
+            fname <- basename(curr_f)
+            gps <- unlist(strsplit(fname, "_"))[2]
+            d <- read.table(curr_f, header=TRUE)
+            if(nrow(d) > 10) {
+                lim <- 10
+            } else {
+                lim <- nrow(d)
+            }
+            print(kable(d[1:lim,], caption=paste("DEGs at the 0.05 FDR for ", gps, sep="")))
+        }
+    }
+}
+```

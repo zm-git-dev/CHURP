@@ -55,7 +55,9 @@ LOGDIR="${OUTDIR}/Logs"
 mkdir -p "${LOGDIR}"
 LOG_FNAME="${LOGDIR}/${SAMPLENM}_Log.txt"
 echo "# $(date '+%F %T'): Analysis for ${SAMPLENM} started" > "${LOG_FNAME}"
+echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
+echo '#END_MODULES' >> "${LOG_FNAME}"
 
 # Check if we are running in paired or single end mode
 if [ -z "${R2FILE}" ]
