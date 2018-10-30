@@ -145,7 +145,52 @@ echo "ln -sf "'"'"${WORKDIR}/allsamples"'"'" "'"'"${OUTDIR}/allsamples_work_dire
 ln -sf "${WORKDIR}/singlesamples" "${OUTDIR}/singlesamples_work_directory"
 ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
 
+# Prepare to generate HTML report by making unified files for everything. We
+# will have to iterate over every sample
+SNAMES=($(cut -f 1 -d '|' "${SampleSheet}"))
+for sample in "${SNAMES[@]}"
+do
+    # Make the read counts files
+    RAW_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R1*raw_readcount.txt')
+    RAW_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R2*raw_readcount.txt')
+    R1_COUNT=$(cat "${RAW_R1}")
+    if [ -z "${RAW_R2}" ]
+    then
+        R2_COUNT="NA"
+    else
+        R2_COUNT=$(cat "${RAW_R2}" | cut -f 2)
+    fi
+    echo -e "${R1_COUNT}\\t${R2_COUNT}" >> "${WORKDIR}/allsamples/Raw_Read_Counts.txt"
+    TRIMMED_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*1P*_trimmed_readcount.txt')
+    TRIMMED_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*2P*_trimmed_readcount.txt')
+    if [ -z "${TRIMMED_R1}" ]
+    then
+        TR1_COUNT="NA"
+    else
+        TR1_COUNT=$(cat "${TRIMMED_R1}" | cut -f 2)
+    fi
+    if [ -z "${TRIMMED_R2}" ]
+    then
+        TR2_COUNT="NA"
+    else
+        TR2_COUNT=$(cat "${TRIMMED_R2}" | cut -f 2)
+    fi
+    echo -e "${TR1_COUNT}\\t${TR2_COUNT}" >> "${WORKDIR}/allsamples/Trimmed_Read_Counts.txt"
+    # Then, get alignment summary files
+    BAMSTAT="${WORKDIR}/singlesamples/${sample}/${sample}_bamstats.txt"
+    HISATSTAT="${WORKDIR}/singlesamples/${sample}/alignment.summary"
+    NMAPPED=$(grep '^SN' "${BAMSTAT}" | grep 'raw total sequences' | cut -f 3)
+    MQ0=$(grep '^SN' "${BAMSTAT}" | grep 'reads MQ0' | cut -f 3)
+    MAXLEN=$(grep '^SN' "${BAMSTAT}" | grep 'maximum length' | cut -f 3)
+    AVGLEN=$(grep '^SN' "${BAMSTAT}" | grep 'average length' | cut -f 3)
+    AVGQUAL=$(grep '^SN' "${BAMSTAT}" | grep 'average quality' | cut -f 3)
+    ALN_RATE=$(tail -n 1 "${HISATSTAT}" | awk '{print $NF}')
+    echo -e "${sample}\\t${ALN_RATE}\\t${NMAPPED}\\t${MQ0}\\t${MAXLEN}\\t${AVGLEN}\\t${AVGQUAL}" > "${WORKDIR}/allsamples/Mapping_Stats.txt"
+    # Then, get the insert size summaries. These are really simple.
+    echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${SAMPLENM}/IS_Stats.txt)" >> "${WORKDIR}/allsamples/IS_Stats.txt"
+done
+
 # We will generate an HTML report
-# Rscript -e "library(rmarkdown); rmarkdown::render('Test_Rmd_Rscript.Rmd')"
+# Rscript -e "library(rmarkdown); rmarkdown::render('${BULK_RNASEQ_REPORT}', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRPIT}"', samplesheet='"${SampleSheet}"')"
 
 echo "# $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
