@@ -204,17 +204,20 @@ if(!dir.exists(degdir)) {
     if(length(deg_files) == 0) {
         print("There were no groups defined, so there are no differentially expressed genes.")
     } else {
+        gene_names <- read.table(paste(params['outdir'], 'gene_id_gene_name_map.txt', sep='/'), header=FALSE)
+        names(gene_names) <- c("EnsemblID", "GeneName")
         for(i in 1:length(deg_files)) {
             curr_f <- deg_files[i]
             fname <- basename(curr_f)
             gps <- unlist(strsplit(fname, "_"))[2]
             d <- read.table(curr_f, header=TRUE)
-            if(nrow(d) > 10) {
+            d_g <- merge(d, gene_names, by.x="genes", by.y="EnsemblID")
+            if(nrow(d_g) > 10) {
                 lim <- 10
             } else {
-                lim <- nrow(d)
+                lim <- nrow(d_g)
             }
-            print(kable(d[1:lim,], caption=paste("DEGs at the 0.05 FDR for ", gps, sep="")))
+            print(kable(d_g[1:lim,], caption=paste("DEGs at the 0.05 FDR for ", gps, sep="")))
         }
     }
 }

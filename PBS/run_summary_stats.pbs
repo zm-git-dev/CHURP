@@ -53,7 +53,9 @@ mkdir -p "${LOGDIR}" "${COUNTSDIR}" "${PLOTSDIR}" "${DEGDIR}"
 module list -t
 LOG_FNAME="${LOGDIR}/BulkRNASeq_Summary_Log.txt"
 echo "# $(date '+%F %T'): Summary started" > "${LOG_FNAME}"
+echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
+echo '#END_MODULES' >> "${LOG_FNAME}"
 
 if [ -z "${R2FILE}" ]
 then
@@ -142,6 +144,7 @@ awk -F '\\t' '$3 == "gene" { print $9 }' <(gzip -cd "${GTFFILE}" || cat "${GTFFI
 # Link the work directories to the output directory
 echo "ln -sf "'"'"${WORKDIR}/singlesamples"'"'" "'"'"${OUTDIR}/singlesamples_work_directory"'"' >> "${LOG_FNAME}"
 echo "ln -sf "'"'"${WORKDIR}/allsamples"'"'" "'"'"${OUTDIR}/allsamples_work_directory"'"' >> "${LOG_FNAME}"
+rm -f "${OUTDIR}/singlesamples_work_directory" "${OUTDIR}/allsamples_work_directory"
 ln -sf "${WORKDIR}/singlesamples" "${OUTDIR}/singlesamples_work_directory"
 ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
 
