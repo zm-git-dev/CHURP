@@ -158,7 +158,7 @@ do
     # Make the read counts files
     RAW_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R1*.raw_readcount.txt')
     RAW_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R2*.raw_readcount.txt')
-    R1_COUNT=$(cat "${RAW_R1}")
+    R1_COUNT=$(cat "${RAW_R1}" | awk '{print $NF}')
     if [ -z "${RAW_R2}" ]
     then
         R2_COUNT="NA"
