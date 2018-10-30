@@ -269,7 +269,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             ',MINLEN=',
             self.min_gene_len,
             ',RSUMMARY=${DE_SCRIPT}',
-            ',PIPE_SCRIPT=${PIPE_SCRIPT}'])
+            ',PIPE_SCRIPT=${PIPE_SCRIPT}',
+            ',BULK_RNASEQ_REPORT=${REPORT_SCRIPT}'])
         summary_cmd = [
             'qsub',
             '-q', 'mesabi',
