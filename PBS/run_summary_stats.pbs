@@ -148,7 +148,7 @@ ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
 # Prepare to generate HTML report by making unified files for everything. We
 # will have to iterate over every sample
 # Remove old summary files
-rm -f "${WORKDIR}/allsamples/Raw_Read_Counts.txt" "${WORKDIR}/allsamples/Trimmed_Read_Counts.txt" "${WORKDIR}/allsamples/Mapping_Stats.txt" "${WORKDIR}/allsamples/IS_Stats.txt"
+rm -f "${WORKDIR}/allsamples/Read_Counts.txt" "${WORKDIR}/allsamples/Mapping_Stats.txt" "${WORKDIR}/allsamples/IS_Stats.txt"
 # Remove from the instance of the first blank line to the end of the file
 OFFSET=$(cut -f 1 -d '|' "${SampleSheet}" | grep -nE '^$' | head -n 1 | sed -e 's/://g')
 SNAMES=($(cut -f 1 -d '|' "${SampleSheet}" | sed -e "${OFFSET},\\$d"))
@@ -165,7 +165,6 @@ do
     else
         R2_COUNT=$(cat "${RAW_R2}" | awk '{print $NF}')
     fi
-    echo -e "${R1_COUNT}\\t${R2_COUNT}" >> "${WORKDIR}/allsamples/Raw_Read_Counts.txt"
     TRIMMED_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*1P.trimmed_readcount.txt')
     TRIMMED_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*2P.trimmed_readcount.txt')
     if [ -z "${TRIMMED_R1}" ]
@@ -180,7 +179,7 @@ do
     else
         TR2_COUNT=$(cat "${TRIMMED_R2}" | awk '{print $NF}')
     fi
-    echo -e "${TR1_COUNT}\\t${TR2_COUNT}" >> "${WORKDIR}/allsamples/Trimmed_Read_Counts.txt"
+    echo -e "${sample}\\t${R1_COUNT}\\t${R2_COUNT}\\t${TR1_COUNT}\\t${TR2_COUNT}" >> "${WORKDIR}/allsamples/Read_Counts.txt"
     # Then, get alignment summary files
     BAMSTAT="${WORKDIR}/singlesamples/${sample}/${sample}_bamstats.txt"
     HISATSTAT="${WORKDIR}/singlesamples/${sample}/alignment.summary"
