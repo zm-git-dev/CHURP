@@ -149,9 +149,12 @@ ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
 # will have to iterate over every sample
 # Remove old summary files
 rm -f "${WORKDIR}/allsamples/Raw_Read_Counts.txt" "${WORKDIR}/allsamples/Trimmed_Read_Counts.txt" "${WORKDIR}/allsamples/Mapping_Stats.txt" "${WORKDIR}/allsamples/IS_Stats.txt"
-SNAMES=($(cut -f 1 -d '|' "${SampleSheet}"))
+# Remove from the instance of the first blank line to the end of the file
+OFFSET=$(cut -f 1 -d '|' "${SampleSheet}" | grep -nE '^$' | head -n 1 | sed -e 's/://g')
+SNAMES=($(cut -f 1 -d '|' "${SampleSheet}" | sed -e "${OFFSET},\\$d"))
 for sample in "${SNAMES[@]}"
 do
+    echo "# $(date '+%F %T'): Collecting summaries for ${sample}" >> "${LOG_FNAME}"
     # Make the read counts files
     RAW_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R1.raw_readcount.txt')
     RAW_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R2.raw_readcount.txt')
