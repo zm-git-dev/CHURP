@@ -169,7 +169,7 @@ include_graphics(mds_plot)
 
 These plots are available as PDF vector images at the following path:
 
-`r paste(params['outdir'], 'Plots', sep='/')`
+``r paste(params['outdir'], 'Plots', sep='/')``
 
 # DEG Testing
 If experimental groups were supplied, we test for differential expression
@@ -212,6 +212,7 @@ if(!dir.exists(degdir)) {
             gps <- unlist(strsplit(fname, "_"))[2]
             d <- read.table(curr_f, header=TRUE)
             d_g <- merge(d, gene_names, by.x="genes", by.y="EnsemblID")
+            d_g <- d_g[order(-d_g$FDR),]
             if(nrow(d_g) > 10) {
                 lim <- 10
             } else {
