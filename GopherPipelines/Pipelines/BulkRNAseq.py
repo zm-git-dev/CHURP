@@ -245,6 +245,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         handle.write('REPORT_SCRIPT=' + '"' + self.report_script + '"\n')
         handle.write('SAMPLESHEET=' + '"' + ss + '"\n')
         handle.write('PURGE=' + '"' + self.purge + '"\n')
+        handle.write('PIPE_SCRIPT=' + '"' + '$(pwd -P)/$0' + '"\n')
         aln_cmd = [
             'qsub',
             '-q', 'mesabi',
@@ -267,7 +268,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'SampleSheet=${SAMPLESHEET}',
             ',MINLEN=',
             self.min_gene_len,
-            ',RSUMMARY=${DE_SCRIPT}'])
+            ',RSUMMARY=${DE_SCRIPT}',
+            ',PIPE_SCRIPT=${PIPE_SCRIPT}'])
         summary_cmd = [
             'qsub',
             '-q', 'mesabi',
