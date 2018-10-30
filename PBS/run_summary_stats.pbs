@@ -158,12 +158,12 @@ do
     # Make the read counts files
     RAW_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R1*.raw_readcount.txt')
     RAW_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R2*.raw_readcount.txt')
-    R1_COUNT=$(cat "${RAW_R1}" | awk '{print $NF}')
+    R1_COUNT=$(awk '{print $NF}' "${RAW_R1}")
     if [ -z "${RAW_R2}" ]
     then
         R2_COUNT="NA"
     else
-        R2_COUNT=$(cat "${RAW_R2}" | awk '{print $NF}')
+        R2_COUNT=$(awk '{print $NF}' "${RAW_R2}")
     fi
     TRIMMED_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*1P.trimmed_readcount.txt')
     TRIMMED_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*2P.trimmed_readcount.txt')
@@ -171,13 +171,13 @@ do
     then
         TR1_COUNT="NA"
     else
-        TR1_COUNT=$(cat "${TRIMMED_R1}" | awk '{print $NF}')
+        TR1_COUNT=$(awk '{print $NF}' "${TRIMMED_R1}")
     fi
     if [ -z "${TRIMMED_R2}" ]
     then
         TR2_COUNT="NA"
     else
-        TR2_COUNT=$(cat "${TRIMMED_R2}" | awk '{print $NF}')
+        TR2_COUNT=$(awk '{print $NF}' "${TRIMMED_R2}")
     fi
     echo -e "${sample}\\t${R1_COUNT}\\t${R2_COUNT}\\t${TR1_COUNT}\\t${TR2_COUNT}" >> "${WORKDIR}/allsamples/Read_Counts.txt"
     # Then, get alignment summary files
