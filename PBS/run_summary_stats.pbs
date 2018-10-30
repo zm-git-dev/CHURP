@@ -195,6 +195,6 @@ do
 done
 
 # We will generate an HTML report
-PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/gopher-pipelines/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('${BULK_RNASEQ_REPORT}', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRPIT}"', samplesheet='"${SampleSheet}"'))"
+PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/gopher-pipelines/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('${BULK_RNASEQ_REPORT}', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRIPT}"', samplesheet='"${SampleSheet}"'))"
 
 echo "# $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
