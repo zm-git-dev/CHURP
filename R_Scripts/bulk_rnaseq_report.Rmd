@@ -292,7 +292,12 @@ kable(sheet_sub, caption="Experimental groups.")
 ```
 
 ## DEG List
-The top differentially expressed genes are given below.
+The top differentially expressed genes (DEGs) are given below. Comparisons are
+reported as `Group2-Group1`, with `Group2` serving as the numerator for the fold
+change calculations. That is, if `logFC` is positive, then the gene has higher
+expression in `Group2` than in `Group1`. The files in the `DEGs/` directory
+under the output directory follow this naming convention:
+`DE_Group2-Group1_list.txt`.
 
 ```{r degs, echo=FALSE, message=FALSE, results="asis"}
 library(knitr)
@@ -318,7 +323,7 @@ if(!dir.exists(degdir)) {
             } else {
                 lim <- nrow(d_g)
             }
-            print(kable(d_g[1:lim,], caption=paste("DEGs at the 0.05 FDR for ", gps, sep="")))
+            print(kable(d_g[1:lim,], caption=paste("Top DEGs at the 0.05 FDR for ", gps, sep="")))
         }
     }
 }
