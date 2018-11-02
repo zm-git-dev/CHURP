@@ -213,7 +213,7 @@ range.
 ### Raw Read Qualities
 These plots show the read qualities as they came off the sequencing instrument.
 
-```{r raw_read_quals, echo=FALSE, message=FALSE, fig.height=3, fig.width=8}
+```{r raw_read_quals, echo=FALSE, message=FALSE}
 # Use the samplesheet to get the sample names
 sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
 samplenames <- sheet$V1
@@ -259,7 +259,7 @@ sapply(samplenames, plotqual)
 ### Trimmed Read Qualities
 These plots show read qualities post-trimming, if it was performed
 
-```{r trim_read_quals, echo=FALSE, message=FALSE, fig.height=3, fig.width=8}
+```{r trim_read_quals, echo=FALSE, message=FALSE}
 # Use the samplesheet to get the sample names
 sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
 samplenames <- sheet$V1[sheet$V7 == "yes"]
