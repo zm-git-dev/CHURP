@@ -252,7 +252,7 @@ plotqual <- function(sn) {
         title(paste(sn, "R2", sep=" "))
     }
 }
-par(mfrow=c(4, 2))
+par(mfrow=c(2, 2))
 sapply(samplenames, plotqual)
 ```
 
@@ -299,7 +299,7 @@ if(length(samplenames) > 0) {
             title(paste(sn, "R2", sep=" "))
         }
     }
-    par(mfrow=c(4, 2))
+    par(mfrow=c(2, 2))
     sapply(samplenames, plotqual)
 } else {
     print("No trimming performed.")
