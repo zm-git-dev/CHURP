@@ -219,12 +219,12 @@ sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, 
 samplenames <- sheet$V1
 plotqual <- function(sn) {
     qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
-    qdat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
-    names(qdat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+    dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+    names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a dummy variable for position because some of the classes are binned
-    qdat$X <- 1:nrow(qdat)
+    dat$X <- 1:nrow(dat)
     # Make a plot
-    plot(qdat$QMean ~ qdat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
+    plot(dat$QMean ~ dat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
     segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
     segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=15, col="grey")
     points(dat$QMean ~ dat$X, pch=19, col="black", cex=1)
@@ -237,12 +237,12 @@ plotqual <- function(sn) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
     } else{
-        qdat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
-        names(qdat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a dummy variable for position because some of the classes are binned
-        qdat$X <- 1:nrow(qdat)
+        dat$X <- 1:nrow(dat)
         # Make a plot
-        plot(qdat$QMean ~ qdat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
+        plot(dat$QMean ~ dat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
         segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
         segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=15, col="grey")
         points(dat$QMean ~ dat$X, pch=19, col="black", cex=1)
@@ -268,12 +268,12 @@ if(length(samplenames) > 0) {
         samplenames <- sheet$V1
         plotqual <- function(sn) {
             qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
-            qdat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
-            names(qdat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+            dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+            names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
             # Make a dummy variable for position because some of the classes are binned
-            qdat$X <- 1:nrow(qdat)
+            dat$X <- 1:nrow(dat)
             # Make a plot
-            plot(qdat$QMean ~ qdat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
+            plot(dat$QMean ~ dat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
             segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
             segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=15, col="grey")
             points(dat$QMean ~ dat$X, pch=19, col="black", cex=1)
@@ -286,12 +286,12 @@ if(length(samplenames) > 0) {
                 plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
                 text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
             } else{
-                qdat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
-                names(qdat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+                dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+                names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
                 # Make a dummy variable for position because some of the classes are binned
-                qdat$X <- 1:nrow(qdat)
+                dat$X <- 1:nrow(dat)
                 # Make a plot
-                plot(qdat$QMean ~ qdat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
+                plot(dat$QMean ~ dat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
                 segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
                 segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=15, col="grey")
                 points(dat$QMean ~ dat$X, pch=19, col="black", cex=1)
