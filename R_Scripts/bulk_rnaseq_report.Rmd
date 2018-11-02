@@ -6,7 +6,7 @@ output:
         toc_depth: 3
         toc_float: true
         number_sections: true
-date: "`r format(Sys.time(), "%Y-%m-%d, %T")`"
+date: "`r format(Sys.time(), '%Y-%m-%d, %T')`"
 params:
     pipeline: NA
     samplesheet: NA
