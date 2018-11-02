@@ -175,7 +175,7 @@ Here are the software modules that were loaded for the single-sample analysis:
 ```{bash single_sample_modules, echo=FALSE, comment=NA}
 first_sample=$(head -n 1 $samplesheet | cut -f 1 -d '|')
 log_name="${outdir}/Logs/${first_sample}_Log.txt"
-log_start=$(($(grep -n '^#BEGIN_MODULE'" "${log_name}" | cut -f 1 -d ':') + 2))
+log_start=$(($(grep -n '^#BEGIN_MODULE' "${log_name}" | cut -f 1 -d ':') + 2))
 log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
 head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
 ```
