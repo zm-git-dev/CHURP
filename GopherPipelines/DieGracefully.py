@@ -29,10 +29,10 @@ BRNASEQ_GROUP_SUCCESS = 52
 # We will prepend a little message to the end that says the pipelines were
 # developed by RIS and funded by UMII
 CREDITS = """----------
-Thank you for using the refactor of gopher-pipelines. This software was
-developed by the Research Informatics Solutions (RIS) group at MSI with funding
-from the University of Minnesota Informatics Institute (UMII). For help, please
-contact help@msi.umn.edu.
+Thank you for using CHURP. This software was developed by the Research
+Informatics Solutions (RIS) group at MSI with funding from the University of
+Minnesota Informatics Institute (UMII). For help, please contact
+help@msi.umn.edu.
 
 https://www.msi.umn.edu/
 https://research.umn.edu/units/umii\n
