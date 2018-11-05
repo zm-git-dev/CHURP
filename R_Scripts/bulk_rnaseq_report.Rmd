@@ -2,10 +2,14 @@
 title: "Bulk RNAseq Pipeline Summary"
 output:
     html_document:
+        smart: false
+        theme: cerulean
         toc: true
         toc_depth: 3
-        toc_float: true
+        toc_float:
+            collapsed: false
         number_sections: true
+        df_print: paged
 date: "`r format(Sys.time(), '%Y-%m-%d, %T')`"
 params:
     pipeline: NA
@@ -29,6 +33,46 @@ Institute (UMII).
 <https://research.umn.edu/units/umii>
 
 # Key Figures and Summaries
+## Expression Summary
+
+```{r key_figs, echo=FALSE, message=FALSE, out.width="45%", out.height="350"}
+library(knitr)
+cpm_plot <- paste(params["outdir"], "Plots", "cpm_plot.pdf", sep="/")
+heatmap_plot <- paste(params["outdir"], "Plots", "high_variance_heatmap.pdf", sep="/")
+mds_plot <- paste(params["outdir"], "Plots", "mds_plot.pdf", sep="/")
+include_graphics(c(cpm_plot, heatmap_plot, mds_plot))
+```
+
+## DEG Summary
+```{r deg_overview, echo=FALSE, message=FALSE, results="asis"}
+library(knitr)
+degdir <- paste(params["outdir"], "DEGs", sep="/")
+if(!dir.exists(degdir)) {
+    print("There were no groups defined, so there are no differentially expressed genes.")
+} else {
+    deg_files <- list.files(degdir, full.names=TRUE)
+    if(length(deg_files) == 0) {
+        print("There were no groups defined, so there are no differentially expressed genes.")
+    } else {
+        gene_names <- read.table(paste(params["outdir"], "gene_id_gene_name_map.txt", sep="/"), header=FALSE)
+        names(gene_names) <- c("EnsemblID", "GeneName")
+        for(i in 1:length(deg_files)) {
+            curr_f <- deg_files[i]
+            fname <- basename(curr_f)
+            gps <- unlist(strsplit(fname, "_"))[2]
+            d <- read.table(curr_f, header=TRUE)
+            d_g <- merge(d, gene_names, by.x="genes", by.y="EnsemblID")
+            d_g <- d_g[order(d_g$FDR),]
+            if(nrow(d_g) < 10) {
+                lim <- nrow(d_g)
+            } else {
+                lim <- 10
+            }
+            print(kable(d_g[1:lim,], caption=paste("Top DEGs at the 0.05 FDR for ", gps, sep="")))
+        }
+    }
+}
+```
 
 # Run Summary
 ## General Workflow
@@ -166,7 +210,7 @@ names(sheet) <- c(
     "HISAT2 Options",
     "Untranded Library?",
     "GTF Name")
-kable(sheet, caption="Summary of samplesheet.")
+sheet
 ```
 
 ## Software Environment
@@ -207,13 +251,13 @@ kable(read_summary, caption="Read count summary.")
 ## Read Qualities
 The plots below summarize read quality for each sample. The black dot shows the
 mean quality, the red dot shows the median quality, the grey shaded region shows
-the inter-quartile range, and the black line shows the 10th-90th percentile
-range.
+the inter-quartile range, and the vertical black lines show the 10th-90th
+percentile range.
 
 ### Raw Read Qualities
 These plots show the read qualities as they came off the sequencing instrument.
 
-```{r raw_read_quals, echo=FALSE, message=FALSE, out.width="750", out.height="750"}
+```{r raw_read_quals, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
 # Use the samplesheet to get the sample names
 sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
 samplenames <- sheet$V1
@@ -224,13 +268,13 @@ plotqual <- function(sn) {
     # Make a dummy variable for position because some of the classes are binned
     dat$X <- 1:nrow(dat)
     # Make a plot
-    plot(dat$QMean ~ dat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
+    plot(dat$QMean ~ dat$X, type="n", xlab="Position in Read", ylab="Quality", axes=F, ylim=c(0, 45))
     segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
-    segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=15, col="grey")
-    points(dat$QMean ~ dat$X, pch=19, col="black", cex=1)
-    points(dat$QMedian ~ dat$X, pch=19, col="red", cex=1)
+    segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=8, col="grey")
+    points(dat$QMean ~ dat$X, pch=19, col="black", cex=0.75)
+    points(dat$QMedian ~ dat$X, pch=19, col="red", cex=0.75)
     axis(side=2)
-    axis(side=1, at=dat$X, labels=dat$Base, las=2, cex.axis=0.75)
+    axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
     title(paste(sn, "R1", sep=" "))
     qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
@@ -242,24 +286,24 @@ plotqual <- function(sn) {
         # Make a dummy variable for position because some of the classes are binned
         dat$X <- 1:nrow(dat)
         # Make a plot
-        plot(dat$QMean ~ dat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
+        plot(dat$QMean ~ dat$X, type="n", xlab="Position in Read", ylab="Quality", axes=F, ylim=c(0, 45))
         segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
-        segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=15, col="grey")
-        points(dat$QMean ~ dat$X, pch=19, col="black", cex=1)
-        points(dat$QMedian ~ dat$X, pch=19, col="red", cex=1)
+        segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=8, col="grey")
+        points(dat$QMean ~ dat$X, pch=19, col="black", cex=0.75)
+        points(dat$QMedian ~ dat$X, pch=19, col="red", cex=0.75)
         axis(side=2)
-        axis(side=1, at=dat$X, labels=dat$Base, las=2, cex.axis=0.75)
+        axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
         title(paste(sn, "R2", sep=" "))
     }
 }
-par(mfrow=c(2, 2))
-sapply(samplenames, plotqual)
+par(mfrow=c(2, 2), mar=c(4, 4, 1, 0))
+plt_out <- sapply(samplenames, plotqual)
 ```
 
 ### Trimmed Read Qualities
 These plots show read qualities post-trimming, if it was performed
 
-```{r trim_read_quals, echo=FALSE, message=FALSE, out.width="750", out.height="750"}
+```{r trim_read_quals, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
 # Use the samplesheet to get the sample names
 sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
 samplenames <- sheet$V1[sheet$V7 == "yes"]
@@ -271,13 +315,13 @@ if(length(samplenames) > 0) {
         # Make a dummy variable for position because some of the classes are binned
         dat$X <- 1:nrow(dat)
         # Make a plot
-        plot(dat$QMean ~ dat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
+        plot(dat$QMean ~ dat$X, type="n", xlab="Position in Read", ylab="Quality", axes=F, ylim=c(0, 45))
         segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
-        segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=15, col="grey")
-        points(dat$QMean ~ dat$X, pch=19, col="black", cex=1)
-        points(dat$QMedian ~ dat$X, pch=19, col="red", cex=1)
+        segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=8, col="grey")
+        points(dat$QMean ~ dat$X, pch=19, col="black", cex=0.75)
+        points(dat$QMedian ~ dat$X, pch=19, col="red", cex=0.75)
         axis(side=2)
-        axis(side=1, at=dat$X, labels=dat$Base, las=2, cex.axis=0.75)
+        axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
         title(paste(sn, "R1", sep=" "))
         qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
@@ -289,18 +333,18 @@ if(length(samplenames) > 0) {
             # Make a dummy variable for position because some of the classes are binned
             dat$X <- 1:nrow(dat)
             # Make a plot
-            plot(dat$QMean ~ dat$X, type="n", xlab="Base", ylab="Quality", axes=F, ylim=c(0, 45))
+            plot(dat$QMean ~ dat$X, type="n", xlab="Position in Read", ylab="Quality", axes=F, ylim=c(0, 45))
             segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
-            segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=15, col="grey")
-            points(dat$QMean ~ dat$X, pch=19, col="black", cex=1)
-            points(dat$QMedian ~ dat$X, pch=19, col="red", cex=1)
+            segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=8, col="grey")
+            points(dat$QMean ~ dat$X, pch=19, col="black", cex=0.75)
+            points(dat$QMedian ~ dat$X, pch=19, col="red", cex=0.75)
             axis(side=2)
-            axis(side=1, at=dat$X, labels=dat$Base, las=2, cex.axis=0.75)
+            axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
             title(paste(sn, "R2", sep=" "))
         }
     }
-    par(mfrow=c(2, 2))
-    sapply(samplenames, plotqual)
+    par(mfrow=c(2, 2), mar=c(4, 4, 1, 0))
+    plt_out <- sapply(samplenames, plotqual)
 } else {
     print("No trimming performed.")
 }
@@ -420,10 +464,10 @@ if(!dir.exists(degdir)) {
             d <- read.table(curr_f, header=TRUE)
             d_g <- merge(d, gene_names, by.x="genes", by.y="EnsemblID")
             d_g <- d_g[order(d_g$FDR),]
-            if(nrow(d_g) > 10) {
-                lim <- 10
-            } else {
+            if(nrow(d_g) < 25) {
                 lim <- nrow(d_g)
+            } else {
+                lim <- 25
             }
             print(kable(d_g[1:lim,], caption=paste("Top DEGs at the 0.05 FDR for ", gps, sep="")))
         }
