@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Gopher-pipelines control script, for running standard analyses of various
-types of high-throughput sequencing data analyses. This script is written to
-work on the University of Minnesota Supercomputing Institute clusters with
-data from the University of Minnesota Genomics Centre. The following analysis
-pipelines are supported:
+"""CHURP control script, for running standard analyses of various types of
+high-throughput sequencing data analyses. This script is written to work on the
+University of Minnesota Supercomputing Institute clusters with data from the
+University of Minnesota Genomics Centre. The following analysis pipelines are
+supported:
     - group_template
     - bulk_rnaseq
 Questions should be directed to help@msi.umn.edu.
-Version: 0.0.0
-2018-09-13
+Version: 0.0.1
+2018-11-04
 """
 
 # Check the Python version
