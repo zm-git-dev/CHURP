@@ -10,7 +10,7 @@ from GopherPipelines.ArgHandling import sc_rnaseq_args
 
 
 # Longer help messages as constants
-PIPE_HELP = 'Gopher-pipelines for high-throughput sequencing data analysis.'
+PIPE_HELP = 'CHURP pipelines for high-throughput sequencing data analysis.'
 LIST_HELP = ('List species shorthands for automatically setting alignment '
              'targets and annotation databases.')
 GROUP_HELP = ('Make sample metadata CSV templates for statistical tests. These'
@@ -26,7 +26,7 @@ SCRNASEQ_HELP = 'Single-cell RNAseq analysis.'
 def usage():
     """Print a usage message for the pipeline. This is invoked when there are no
     arguments supplied to the script."""
-    msg = """Usage: gopher-pipelines.py <subcommand> <options>
+    msg = """Usage: churp.py <subcommand> <options>
 
 where <subcommand> is the name of the pipeline that is to be run. The specified
 <options> will be applied to the operations in the pipeline. Each pipeline has
@@ -35,11 +35,12 @@ available option for a given pipeline, pass the '--help' option. Alternately,
 online help is maintained at the GitHub repository.
 
 Currently, the following subcommands are supported:
+    - group_template
     - bulk_rnaseq
 
 For issues, contact help@msi.umn.edu.
-Version: 0.0
-2018-07-24"""
+Version: 0.0.1
+2018-11-04"""
     print(msg)
     return
 
