@@ -66,6 +66,10 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             os.path.realpath(__file__).rsplit(os.path.sep, 3)[0],
             'R_Scripts',
             'summarize_bulk_rnaseq.R')
+        self.report_script = os.path.join(
+            os.path.realpath(__file__).rsplit(os.path.sep, 3)[0],
+            'R_Scripts',
+            'bulk_rnaseq_report.Rmd')
         return
 
     def _validate_args(self, a):
@@ -238,8 +242,10 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         handle.write('OUTDIR=' + '"' + str(self.outdir) + '"\n')
         handle.write('WORKDIR=' + '"' + str(self.workdir) + '"\n')
         handle.write('DE_SCRIPT=' + '"' + self.de_script + '"\n')
+        handle.write('REPORT_SCRIPT=' + '"' + self.report_script + '"\n')
         handle.write('SAMPLESHEET=' + '"' + ss + '"\n')
         handle.write('PURGE=' + '"' + self.purge + '"\n')
+        handle.write('PIPE_SCRIPT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )/$(basename $0)"\n')
         aln_cmd = [
             'qsub',
             '-q', 'mesabi',
@@ -262,7 +268,9 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'SampleSheet=${SAMPLESHEET}',
             ',MINLEN=',
             self.min_gene_len,
-            ',RSUMMARY=${DE_SCRIPT}'])
+            ',RSUMMARY=${DE_SCRIPT}',
+            ',PIPE_SCRIPT=${PIPE_SCRIPT}',
+            ',BULK_RNASEQ_REPORT=${REPORT_SCRIPT}'])
         summary_cmd = [
             'qsub',
             '-q', 'mesabi',

@@ -36,19 +36,20 @@ setwd(work_dir)
 ############################
 
 # Grab information about sample group membership 
-sheet = read.table(samp_sheet, sep = "|", header = F, comment.char = "#")
-groups = as.vector(sheet$V2)
-uniq_groups = unique(groups)
-n_groups = length(uniq_groups)
+sheet <- read.table(samp_sheet, sep = "|", header = F, comment.char = "#")
+groups <- as.vector(sheet$V2)
+uniq_groups <- unique(groups)
+true_groups <- groups[which(groups != 'NULL')]
+n_true_groups <- length(uniq_groups[which(uniq_groups != 'NULL')])
 
 # Check if the number of groups meets our analysis criteria
-if (n_groups >= 5){
+if (n_true_groups >= 5){
 write("Maximum number of groups exceeded: This experimental design appears to be too complex for this pipeline. If you'd like analysis help, please e-mail help@msi.umn.edu.", stderr())
 quit(status = 0, save = "no")
 }
 
 # Then check if the number of replicates meets our criteria.
-if (length(groups[which(table(groups) < 3)]) > 0){
+if (length(true_groups[which(table(true_groups) < 3)]) > 0){
 write("At least one of the groups has fewer than three replicates, which makes reliable statistical interpretation difficult", stderr())
 writeLines(text = paste("This group has fewer than three replicates", unique(groups)[which(table(groups) < 3)], sep=" : "), con = stderr())
 quit(status = 0, save = "no")
@@ -85,7 +86,7 @@ pdf(mds_plot)
 opar <- par(no.readonly = TRUE)
 par(xpd = TRUE, mar = par()$mar + c(0, 0, 0, 5))
 plotMDS(edge_mat, cex = 0.75, col = col_vec)
-legend(par("usr")[2], mean(par("usr")[3:4]), legend = uniq_groups, text.col = unique(col_vec), bty = "n")
+legend(par("usr")[2], mean(par("usr")[3:4]), legend = c('Group', uniq_groups), text.col = c('black', unique(col_vec)), bty = "n")
 par(opar)
 dev.off()
 
@@ -101,12 +102,12 @@ write.table(cdf, file = counts_list, sep = '\t', quote = FALSE, row.names = FALS
 tidy_cdf <- melt(cdf, id.vars = "genes", variable.name = "sample_id", value.name = "per_feature_count")
 
 # manually add group information to tidy_cdf
-tidy_cdf$group <- factor(rep(match(groups,uniq_groups), each = nrow(edge_mat$genes)))
+tidy_cdf$group <- factor(rep(uniq_groups[match(groups,uniq_groups)], each = nrow(edge_mat$genes)))
 
 # Set the counts plot pdf and write the violin plot of normalized counts per sample
 pdf(counts_plot)
 p <- ggplot(tidy_cdf, aes(x = sample_id, y = per_feature_count, fill = group)) + geom_violin(trim = F) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1, size = 7))
-p + labs(x = "Sample ID", y = "Feature count -- log(1+cpm)")
+p + labs(x = "Sample ID", y = "Feature count -- log(1+cpm)", fill = "Group")
 dev.off()
 
 
@@ -119,12 +120,13 @@ high_var <- cpm_counts[select_var,]
 # Set the heatmap pdf and plot the normalized counts heatmap
 pdf(hmap)
 heatmap.2(high_var,trace="none", main = "Top 500 variance genes", cexCol = 0.75, dendrogram = "column", labRow = "", ColSideColors = col_vec, srtCol = 45, margins = c(8,8))
-legend('left', title = 'Groups', legend = uniq_groups, fill = unique(col_vec), cex = 0.8, box.lty = 0 )
+legend('left', title = 'Group', legend = uniq_groups, fill = unique(col_vec), cex = 0.8, box.lty = 0 )
 dev.off()
 
 ############################
 # Differential expression testing and summaries
 ############################
+n_groups <- length(uniq_groups)
 
 # If there is only one grouping in the data, we don't need to run the subsequent tests.
 if (n_groups == 1){
@@ -138,6 +140,13 @@ write("Group IDs are numeric, prepending 'group' to group ID for compatibility w
 uniq_groups <- sub('^', 'group', uniq_groups)
 }
 
+#Subset the data object to get rid of samples with a 'NULL' group
+edge_mat <- edge_mat[,which(edge_mat$samples$group != 'NULL')]
+
+#Redefine these variables
+uniq_groups <- as.vector(unique(edge_mat$samples$group))
+#n_groups = length(uniq_groups)
+
 # Generate the design matrix for GLM fitting and estimate common and tag-wise dispersion in one go.
 design <- model.matrix(~0+group, data = edge_mat$samples)
 colnames(design) <- uniq_groups
@@ -147,7 +156,7 @@ edge_mat <- estimateDisp(edge_mat, design = design)
 fit <- glmQLFit(edge_mat, design)
 
 # Generate the matrix of pairwise combinations
-combos <- combinations(n = n_groups, r = 2, v = uniq_groups, repeats.allowed = F)
+combos <- combinations(n = n_true_groups, r = 2, v = uniq_groups, repeats.allowed = F)
 
 # Now we loop over all unique (non-self) comparisons, performing the DE test via quasi-likelihood F-test (edgeR recommended), and write the significant (at 0.05) DE genes to file.  
 for (row in 1:nrow(combos)){

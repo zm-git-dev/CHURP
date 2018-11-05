@@ -1,0 +1,476 @@
+---
+title: "Bulk RNAseq Pipeline Summary"
+output:
+    html_document:
+        smart: false
+        theme: cerulean
+        toc: true
+        toc_depth: 3
+        toc_float:
+            collapsed: false
+        number_sections: true
+        df_print: paged
+date: "`r format(Sys.time(), '%Y-%m-%d, %T')`"
+params:
+    pipeline: NA
+    samplesheet: NA
+    outdir: NA
+    workdir: NA
+---
+
+```{r exportvars, echo=FALSE, message=FALSE}
+for(key in names(params)) {
+    do.call("Sys.setenv", params[key])
+}
+```
+
+These pipelines were developed by the Research Informatics Solutions (RIS) group
+at MSI with funding provided by the University of Minnesota Informatics
+Institute (UMII).
+
+<https://www.msi.umn.edu/>
+
+<https://research.umn.edu/units/umii>
+
+# Key Figures and Summaries
+## Expression Summary
+
+```{r key_figs, echo=FALSE, message=FALSE, out.width="45%", out.height="350"}
+library(knitr)
+cpm_plot <- paste(params["outdir"], "Plots", "cpm_plot.pdf", sep="/")
+heatmap_plot <- paste(params["outdir"], "Plots", "high_variance_heatmap.pdf", sep="/")
+mds_plot <- paste(params["outdir"], "Plots", "mds_plot.pdf", sep="/")
+include_graphics(c(cpm_plot, heatmap_plot, mds_plot))
+```
+
+## DEG Summary
+```{r deg_overview, echo=FALSE, message=FALSE, results="asis"}
+library(knitr)
+degdir <- paste(params["outdir"], "DEGs", sep="/")
+if(!dir.exists(degdir)) {
+    print("There were no groups defined, so there are no differentially expressed genes.")
+} else {
+    deg_files <- list.files(degdir, full.names=TRUE)
+    if(length(deg_files) == 0) {
+        print("There were no groups defined, so there are no differentially expressed genes.")
+    } else {
+        gene_names <- read.table(paste(params["outdir"], "gene_id_gene_name_map.txt", sep="/"), header=FALSE)
+        names(gene_names) <- c("EnsemblID", "GeneName")
+        for(i in 1:length(deg_files)) {
+            curr_f <- deg_files[i]
+            fname <- basename(curr_f)
+            gps <- unlist(strsplit(fname, "_"))[2]
+            d <- read.table(curr_f, header=TRUE)
+            d_g <- merge(d, gene_names, by.x="genes", by.y="EnsemblID")
+            d_g <- d_g[order(d_g$FDR),]
+            if(nrow(d_g) < 10) {
+                lim <- nrow(d_g)
+            } else {
+                lim <- 10
+            }
+            print(kable(d_g[1:lim,], caption=paste("Top DEGs at the 0.05 FDR for ", gps, sep="")))
+        }
+    }
+}
+```
+
+# Run Summary
+## General Workflow
+Raw reads from individual samples are summarized with FastQC. If the `--no-trim`
+option was specified (see samplesheet, below), then raw reads are aligned to the
+reference genome with HISAT2. If `--no-trim` was not specified, then the reads
+are cleaned with Trimmomatic and re-assessed with FastQC, and trimmed reads are
+aligned to the reference genome with HISAT2. Reads aligning to genes are counted
+with featureCounts, from the subread package. Raw counts are transformed into
+counts-per-million with the edgeR package. Genes that are shorter than the
+specified minimum length (`--min-len` argument, default 200bp) are pruned from
+the counts matrix before any differential expression analysis. If experimental
+groups were supplied, then differential expression analysis is performed with a
+quasi-likelihood test in edgeR, with a 0.05 false discovery rate correction
+applied.
+
+## Results and Intermediate Files
+### Output Directory
+The output directory is located at
+
+``r params["outdir"]``
+
+This directory contains final results files and log files for the pipeline. Be
+sure to save these files if you would like to keep them. However, the pipeline
+script and samplesheet (reproduced below) are sufficient to recreate all output
+files. It will just require additional compute time and service units. The
+following directories are of interest:
+
+- ``r paste(params["outdir"], "Counts", sep="/")``
+
+    Contains raw and CPM-transformed counts for each gene in the supplied GTF
+    annotation.
+
+- ``r paste(params["outdir"], "DEGs", sep="/")``
+
+    Contains a list of significantly differentially expressed genes, if
+    experimental groups were supplied. If differential expression analysis was
+    conducted, but no genes passed thresholds for significance, then the files
+    will only have a header. Pairwise combinations of groups are tested for
+    significance, so this directory may contain multiple files.
+
+- ``r paste(params["outdir"], "InsertSizeMetrics", sep="/")``
+
+    Contains per-sample insert size summaries from Picard tools. The mean,
+    median, and standard deviation are summarized in a table below.
+
+- ``r paste(params["outdir"], "Logs", sep="/")``
+
+    Contains per-sample run logs for read QC, trimming, and alignment. Also
+    contains a log file for counting reads and performing differential
+    expression testing.
+
+- ``r paste(params["outdir"], "Plots", sep="/")``
+
+    Contains PDF vector images of expression summary plots. The plots are also
+    embedded into this report.
+
+### Work Directory
+The work directory is located at
+
+``r params["workdir"]``
+
+This directory contains intermediate files for the pipeline. Be sure to save
+these files if you would like to refer to them in the future. However, the
+pipeline script and samplesheet (reproduced below) are sufficient to recreate
+all intermediate files for the pipeline. The work directory contains the
+following:
+
+- ``r paste(params["workdir"], "allsamples", sep="/")``
+
+    Summary files used to generate this report and final BAM files used for
+    generating raw counts.
+
+- ``r paste(params["workdir"], "singlesamples", sep="/")``
+
+    Sub-directories, one for each sample, with FastQC reports, trimmed reads,
+    intermediate SAM and BAM files, and alignment summary files. Refer to these
+    if you would like to see the details of one particular sample. For example,
+    if one sample has unexpected expression values, it may be because the
+    sample is of low quality; this would be apparent in the read quality reports
+    and the alignment summaries that are found in its work directory.
+
+## Pipeline Script
+The path to the pipeline script is ``r params["pipeline"]``
+
+The pipeline script is printed below. You may copy and paste the following
+script into a new plain text document to recreate the analyses run here. Be sure
+to save it with UNIX line endings (`LF` rather than `CR` [Mac] or `CRLF`
+[Windows] line endings), or else it will cause errors on Mesabi. Also be sure to
+turn off "smart quotes" and "smart dashes" on any text editors that you use to
+paste the following script. Smart quotes and smart dashes are not interpreted
+correctly by the shell on Mesabi and will also cause errors.
+
+```{bash pipeline_script, echo=FALSE, comment=NA}
+cat $pipeline
+```
+
+## Samplesheet
+The path to the samplesheet is ``r params["samplesheet"]``
+
+The samplesheet is printed below, verbatim. It is cumbersome to read, but you
+may copy and paste it into a plain text document to recreate the analyses run
+here. Like the pipeline script, be sure to save it with UNIX line endings
+(`LF` rather than `CR` [Mac] or `CRLF` [Windows]). Be sure to disable "smart
+quotes" and "smart dashes" on the text editor.
+
+```{bash samplesheet, echo=FALSE, comment=NA}
+cat $samplesheet
+```
+
+The raw samplesheet is difficult to read, so we will print out a readable
+summary below:
+
+```{r samplesheet_readable, echo=FALSE, message=FALSE}
+library(knitr)
+sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+# Change the full R1/R2 paths into basenames
+sheet$V3 <- as.character(sapply(sheet$V3, basename))
+sheet$V4 <- as.character(sapply(sheet$V4, basename))
+# And the reference, too
+sheet$V10 <- as.character(sapply(sheet$V10, basename))
+sheet$V13 <- as.character(sapply(sheet$V13, basename))
+# Drop the output and work directories, columns 5 and 6
+sheet <- sheet[,-c(5, 6)]
+# Make the names nice
+names(sheet) <- c(
+    "Sample Name",
+    "Group",
+    "R1",
+    "R2",
+    "Trim?",
+    "Remove Dups?",
+    "Trimmomatic Options",
+    "Reference Genome",
+    "HISAT2 Options",
+    "Untranded Library?",
+    "GTF Name")
+sheet
+```
+
+## Software Environment
+Here are the software modules that were loaded for the single-sample analysis:
+
+```{bash single_sample_modules, echo=FALSE, comment=NA}
+first_sample=$(head -n 1 $samplesheet | cut -f 1 -d '|')
+log_name="${outdir}/Logs/${first_sample}_Log.txt"
+log_start=$(($(grep -n '^#BEGIN_MODULE' "${log_name}" | cut -f 1 -d ':') + 2))
+log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
+head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
+```
+
+Here are the software modules that were loaded for the summary and differential
+expression analysis:
+
+```{bash summary_modules, echo=FALSE, comment=NA}
+log_name="${outdir}/Logs/BulkRNASeq_Summary_Log.txt"
+log_start=$(($(grep -n '^#BEGIN_MODULES' "${log_name}" | cut -f 1 -d ':') + 2))
+log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
+head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
+```
+
+# Read Summaries
+## Read Counts
+```{r read_counts, echo=FALSE, message=FALSE}
+library(knitr)
+read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
+names(read_summary) <- c(
+    "Sample Name",
+    "Raw R1 Count",
+    "Raw R2 Count",
+    "Trimmed R1 Count",
+    "Trimmed R2 Count")
+kable(read_summary, caption="Read count summary.")
+```
+
+## Read Qualities
+The plots below summarize read quality for each sample. The black dot shows the
+mean quality, the red dot shows the median quality, the grey shaded region shows
+the inter-quartile range, and the vertical black lines show the 10th-90th
+percentile range.
+
+### Raw Read Qualities
+These plots show the read qualities as they came off the sequencing instrument.
+
+```{r raw_read_quals, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
+# Use the samplesheet to get the sample names
+sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+samplenames <- sheet$V1
+plotqual <- function(sn) {
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+    names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+    # Make a dummy variable for position because some of the classes are binned
+    dat$X <- 1:nrow(dat)
+    # Make a plot
+    plot(dat$QMean ~ dat$X, type="n", xlab="Position in Read", ylab="Quality", axes=F, ylim=c(0, 45))
+    segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
+    segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=8, col="grey")
+    points(dat$QMean ~ dat$X, pch=19, col="black", cex=0.75)
+    points(dat$QMedian ~ dat$X, pch=19, col="red", cex=0.75)
+    axis(side=2)
+    axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
+    title(paste(sn, "R1", sep=" "))
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    if(!file.exists(qr2_file)) {
+        plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+        text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
+    } else{
+        dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        # Make a dummy variable for position because some of the classes are binned
+        dat$X <- 1:nrow(dat)
+        # Make a plot
+        plot(dat$QMean ~ dat$X, type="n", xlab="Position in Read", ylab="Quality", axes=F, ylim=c(0, 45))
+        segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
+        segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=8, col="grey")
+        points(dat$QMean ~ dat$X, pch=19, col="black", cex=0.75)
+        points(dat$QMedian ~ dat$X, pch=19, col="red", cex=0.75)
+        axis(side=2)
+        axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
+        title(paste(sn, "R2", sep=" "))
+    }
+}
+par(mfrow=c(2, 2), mar=c(4, 4, 1, 0))
+plt_out <- sapply(samplenames, plotqual)
+```
+
+### Trimmed Read Qualities
+These plots show read qualities post-trimming, if it was performed
+
+```{r trim_read_quals, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
+# Use the samplesheet to get the sample names
+sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+samplenames <- sheet$V1[sheet$V7 == "yes"]
+if(length(samplenames) > 0) {
+    plotqual <- function(sn) {
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        # Make a dummy variable for position because some of the classes are binned
+        dat$X <- 1:nrow(dat)
+        # Make a plot
+        plot(dat$QMean ~ dat$X, type="n", xlab="Position in Read", ylab="Quality", axes=F, ylim=c(0, 45))
+        segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
+        segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=8, col="grey")
+        points(dat$QMean ~ dat$X, pch=19, col="black", cex=0.75)
+        points(dat$QMedian ~ dat$X, pch=19, col="red", cex=0.75)
+        axis(side=2)
+        axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
+        title(paste(sn, "R1", sep=" "))
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        if(!file.exists(qr2_file)) {
+            plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+            text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
+        } else{
+            dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+            names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+            # Make a dummy variable for position because some of the classes are binned
+            dat$X <- 1:nrow(dat)
+            # Make a plot
+            plot(dat$QMean ~ dat$X, type="n", xlab="Position in Read", ylab="Quality", axes=F, ylim=c(0, 45))
+            segments(x0=dat$X, y1=dat$Q10, y0=dat$Q90, lwd=1, col="black")
+            segments(x0=dat$X, y1=dat$Q25, y0=dat$Q75, lwd=8, col="grey")
+            points(dat$QMean ~ dat$X, pch=19, col="black", cex=0.75)
+            points(dat$QMedian ~ dat$X, pch=19, col="red", cex=0.75)
+            axis(side=2)
+            axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
+            title(paste(sn, "R2", sep=" "))
+        }
+    }
+    par(mfrow=c(2, 2), mar=c(4, 4, 1, 0))
+    plt_out <- sapply(samplenames, plotqual)
+} else {
+    print("No trimming performed.")
+}
+```
+
+# Alignment Summaries
+## Mapping Statistics
+```{r map_stats, echo=FALSE, message=FALSE}
+library(knitr)
+mapping_summary <- read.table(paste(params["workdir"], "allsamples", "Mapping_Stats.txt", sep="/"), header=F)
+names(mapping_summary) <- c(
+    "Sample Name",
+    "Mapping Rate",
+    "Reads Mapped*",
+    "MAPQ = 0",
+    "Max Read Length",
+    "Average Read Length",
+    "Average Read Quality")
+kable(mapping_summary, caption="Summary of read mapping. *:counts both R1 and R2. Divide by 2 to get the number of fragments mapped.")
+```
+
+## Insert Size Metrics
+```{r is_stats, echo=FALSE, message=FALSE}
+library(knitr)
+is_summary <- read.table(paste(params["workdir"], "allsamples", "IS_Stats.txt", sep="/"), header=F)
+is_summary$V3 <- round(is_summary$V3, 3)
+is_summary$V4 <- round(is_summary$V4, 3)
+names(is_summary) <- c(
+    "Sample Name",
+    "Median Insert Size",
+    "Mean Insert Size",
+    "Insert Size StdDev")
+kable(is_summary, caption="Insert size summary.")
+```
+
+## Counts Summaries
+Shown below is a distribution of expression values as log2(1+CPM). CPM (counts-per-million)
+is a transformation of raw counts that accounts for the number of fragments
+sequenced in the library, like FPKM. It does not account for gene length like
+FPKM, however. You can compare CPM values for the same gene across samples,
+but do not compare CPM values for different genes in the same sample.
+
+```{r cpm_summary, echo=FALSE, message=FALSE, out.width="750", out.height="750"}
+library(knitr)
+cpm_plot <- paste(params["outdir"], "Plots", "cpm_plot.pdf", sep="/")
+# Include as graphics
+include_graphics(cpm_plot)
+```
+
+We then calculated the variance in CPM values for each gene across the sequenced
+samples. The 500 genes with the highest variance in expression were used to
+generate the following heatmap:
+
+```{r var_hmp, echo=FALSE, message=FALSE, out.width="750", out.height="750"}
+library(knitr)
+heatmap_plot <- paste(params["outdir"], "Plots", "high_variance_heatmap.pdf", sep="/")
+include_graphics(heatmap_plot)
+```
+
+CPM values were then used to generate a multidimensional scaling (MDS) plot,
+which functions similarly to a principal components plot:
+
+```{r mds_plot, echo=FALSE, message=FALSE, out.width="750", out.height="750"}
+library(knitr)
+mds_plot <- paste(params["outdir"], "Plots", "mds_plot.pdf", sep="/")
+include_graphics(mds_plot)
+```
+
+These plots are available as PDF vector images at the following path:
+
+``r paste(params["outdir"], "Plots", sep="/")``
+
+# DEG Testing
+If experimental groups were supplied, we test for differential expression
+among them with a quasi-likelihood test (using `glmQLFit` in `edgeR`). We apply
+a `0.05` false discovery rate correction to the differential expression tests.
+If you did not supply experimental groups, then this section will mostly be
+empty.
+
+## Experimental Groups
+The following experimental groups were supplied to the pipeline. These are read
+out of the samplesheet:
+
+```{r expr_groups, echo=FALSE, message=FALSE}
+library(knitr)
+sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+# Keep only the sample name and the group
+sheet_sub <- sheet[,c(1, 2)]
+names(sheet_sub) <- c("Sample Name", "Group")
+kable(sheet_sub, caption="Experimental groups.")
+```
+
+## DEG List
+The top differentially expressed genes (DEGs) are given below. Comparisons are
+reported as `Group2-Group1`, with `Group2` serving as the numerator for the fold
+change calculations. That is, if `logFC` is positive, then the gene has higher
+expression in `Group2` than in `Group1`. The files in the `DEGs/` directory
+under the output directory follow this naming convention:
+`DE_Group2-Group1_list.txt`.
+
+```{r degs, echo=FALSE, message=FALSE, results="asis"}
+library(knitr)
+degdir <- paste(params["outdir"], "DEGs", sep="/")
+if(!dir.exists(degdir)) {
+    print("There were no groups defined, so there are no differentially expressed genes.")
+} else {
+    deg_files <- list.files(degdir, full.names=TRUE)
+    if(length(deg_files) == 0) {
+        print("There were no groups defined, so there are no differentially expressed genes.")
+    } else {
+        gene_names <- read.table(paste(params["outdir"], "gene_id_gene_name_map.txt", sep="/"), header=FALSE)
+        names(gene_names) <- c("EnsemblID", "GeneName")
+        for(i in 1:length(deg_files)) {
+            curr_f <- deg_files[i]
+            fname <- basename(curr_f)
+            gps <- unlist(strsplit(fname, "_"))[2]
+            d <- read.table(curr_f, header=TRUE)
+            d_g <- merge(d, gene_names, by.x="genes", by.y="EnsemblID")
+            d_g <- d_g[order(d_g$FDR),]
+            if(nrow(d_g) < 25) {
+                lim <- nrow(d_g)
+            } else {
+                lim <- 25
+            }
+            print(kable(d_g[1:lim,], caption=paste("Top DEGs at the 0.05 FDR for ", gps, sep="")))
+        }
+    }
+}
+```

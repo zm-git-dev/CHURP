@@ -53,7 +53,9 @@ mkdir -p "${LOGDIR}" "${COUNTSDIR}" "${PLOTSDIR}" "${DEGDIR}"
 module list -t
 LOG_FNAME="${LOGDIR}/BulkRNASeq_Summary_Log.txt"
 echo "# $(date '+%F %T'): Summary started" > "${LOG_FNAME}"
+echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
+echo '#END_MODULES' >> "${LOG_FNAME}"
 
 if [ -z "${R2FILE}" ]
 then
@@ -130,14 +132,72 @@ cp -u subread_counts.txt.summary "${COUNTSDIR}/subread_counts.txt.summary"
 
 # We also want to keep the sorted BAM files and the GTF used for counts, in
 # case the user wants to go back to it
-echo "# $(date '+%F %T'): Copying BAM files and GTF into ${OUTDIR}." >> "${LOG_FNAME}"
+echo "# $(date '+%F %T'): Copying GTF into ${OUTDIR}." >> "${LOG_FNAME}"
 echo "cp -u "'"'"${GTFFILE}"'"'" "'"'"${OUTDIR}"'"' >> "${LOG_FNAME}"
 cp -u "${GTFFILE}" "${OUTDIR}"
+
+# AWK command from S. Munro to make a translation table fo Ensembl IDs and
+# gene names
+echo "# $(date '+%F %T'): Generating translation table of gene name and Ensembl ID." >> "${LOG_FNAME}"
+awk -F '\\t' '$3 == "gene" { print $9 }' <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") | tr -d ';"' | awk -F ' ' -v OFS='\\t' '{print $2,$6}' > "${OUTDIR}/gene_id_gene_name_map.txt"
 
 # Link the work directories to the output directory
 echo "ln -sf "'"'"${WORKDIR}/singlesamples"'"'" "'"'"${OUTDIR}/singlesamples_work_directory"'"' >> "${LOG_FNAME}"
 echo "ln -sf "'"'"${WORKDIR}/allsamples"'"'" "'"'"${OUTDIR}/allsamples_work_directory"'"' >> "${LOG_FNAME}"
+rm -f "${OUTDIR}/singlesamples_work_directory" "${OUTDIR}/allsamples_work_directory"
 ln -sf "${WORKDIR}/singlesamples" "${OUTDIR}/singlesamples_work_directory"
 ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
+
+# Prepare to generate HTML report by making unified files for everything. We
+# will have to iterate over every sample
+# Remove old summary files
+rm -f "${WORKDIR}/allsamples/Read_Counts.txt" "${WORKDIR}/allsamples/Mapping_Stats.txt" "${WORKDIR}/allsamples/IS_Stats.txt"
+# Remove from the instance of the first blank line to the end of the file
+OFFSET=$(cut -f 1 -d '|' "${SampleSheet}" | grep -nE '^$' | head -n 1 | sed -e 's/://g')
+SNAMES=($(cut -f 1 -d '|' "${SampleSheet}" | sed -e "${OFFSET},\\$d"))
+for sample in "${SNAMES[@]}"
+do
+    echo "# $(date '+%F %T'): Collecting summaries for ${sample}" >> "${LOG_FNAME}"
+    # Make the read counts files
+    RAW_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R1*.raw_readcount.txt')
+    RAW_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R2*.raw_readcount.txt')
+    R1_COUNT=$(awk '{print $NF}' "${RAW_R1}")
+    if [ -z "${RAW_R2}" ]
+    then
+        R2_COUNT="NA"
+    else
+        R2_COUNT=$(awk '{print $NF}' "${RAW_R2}")
+    fi
+    TRIMMED_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*1P.trimmed_readcount.txt')
+    TRIMMED_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*2P.trimmed_readcount.txt')
+    if [ -z "${TRIMMED_R1}" ]
+    then
+        TR1_COUNT="NA"
+    else
+        TR1_COUNT=$(awk '{print $NF}' "${TRIMMED_R1}")
+    fi
+    if [ -z "${TRIMMED_R2}" ]
+    then
+        TR2_COUNT="NA"
+    else
+        TR2_COUNT=$(awk '{print $NF}' "${TRIMMED_R2}")
+    fi
+    echo -e "${sample}\\t${R1_COUNT}\\t${R2_COUNT}\\t${TR1_COUNT}\\t${TR2_COUNT}" >> "${WORKDIR}/allsamples/Read_Counts.txt"
+    # Then, get alignment summary files
+    BAMSTAT="${WORKDIR}/singlesamples/${sample}/${sample}_bamstats.txt"
+    HISATSTAT="${WORKDIR}/singlesamples/${sample}/alignment.summary"
+    NMAPPED=$(grep '^SN' "${BAMSTAT}" | grep 'raw total sequences' | cut -f 3)
+    MQ0=$(grep '^SN' "${BAMSTAT}" | grep 'reads MQ0' | cut -f 3)
+    MAXLEN=$(grep '^SN' "${BAMSTAT}" | grep 'maximum length' | cut -f 3)
+    AVGLEN=$(grep '^SN' "${BAMSTAT}" | grep 'average length' | cut -f 3)
+    AVGQUAL=$(grep '^SN' "${BAMSTAT}" | grep 'average quality' | cut -f 3)
+    ALN_RATE=$(tail -n 1 "${HISATSTAT}" | awk '{print $NF}')
+    echo -e "${sample}\\t${ALN_RATE}\\t${NMAPPED}\\t${MQ0}\\t${MAXLEN}\\t${AVGLEN}\\t${AVGQUAL}" >> "${WORKDIR}/allsamples/Mapping_Stats.txt"
+    # Then, get the insert size summaries. These are really simple.
+    echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/IS_Stats.txt)" >> "${WORKDIR}/allsamples/IS_Stats.txt"
+done
+
+# We will generate an HTML report
+PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/gopher-pipelines/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('${BULK_RNASEQ_REPORT}', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRIPT}"', samplesheet='"${SampleSheet}"'))"
 
 echo "# $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"

@@ -55,7 +55,9 @@ LOGDIR="${OUTDIR}/Logs"
 mkdir -p "${LOGDIR}"
 LOG_FNAME="${LOGDIR}/${SAMPLENM}_Log.txt"
 echo "# $(date '+%F %T'): Analysis for ${SAMPLENM} started" > "${LOG_FNAME}"
+echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
+echo '#END_MODULES' >> "${LOG_FNAME}"
 
 # Check if we are running in paired or single end mode
 if [ -z "${R2FILE}" ]
@@ -87,13 +89,26 @@ if [ ! -f fastqc.done ]; then
     then
         echo "# $(date '+%F %T'): Running fastqc on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
         echo "fastqc -t 2 --outdir="'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" "'"'"${R1FILE}"'"'" "'"'"${R2FILE}"'"' >> "${LOG_FNAME}"
-        fastqc -t 2 --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" "${R2FILE}" && touch fastqc.done
+        fastqc -t 2 --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" "${R2FILE}" && touch fastqc.done
+
     else
         echo "# $(date '+%F %T'): Running fastqc on ${R1FILE}." >> "${LOG_FNAME}"
         echo "fastqc -t 2 --outdir="'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" "'"'"${R1FILE}"'"' >> "${LOG_FNAME}"
-        fastqc --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" && touch fastqc.done
+        fastqc --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" && touch fastqc.done
     fi
 fi
+
+# The fastqc files are auto-extracted, so we search for the directories that
+# end in '_fastqc', pull out the total number of reads, then throw away the
+# directory
+for fastqc_out_dir in $(find "${WORKDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '*_fastqc')
+do
+    out_pref=${fastqc_out_dir/_fastqc/.raw_readcount.txt}
+    read_no=$(basename "${fastqc_out_dir}" | sed -nr 's/.*(R[1|2])_001_fastqc*/\\1/p')
+    echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
+    awk '/>>Per base sequence quality/{flag=1; next} />>END_MODULE/{flag=0} flag' "${fastqc_out_dir}/fastqc_data.txt" | sed -e 's/ /./g' >> "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_${read_no}_raw_quals.txt"
+    mv "${fastqc_out_dir}" "${fastqc_out_dir}.processed"
+done
 
 # To use -basein option, fastq file must be in format *_R1_*.fastq and *_R2_*.fastq
 # trimmomatic can handle the -basein and -baseout options if there is only one
@@ -116,14 +131,24 @@ if [ "${TRIM}" = "yes" ]; then
         then
             echo "# $(date '+%F %T'): Running fastqc on trimmed fastq files." >> "${LOG_FNAME}"
             echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"'" "'"'"${SAMPLENM}_2P"'"' >> "${LOG_FNAME}"
-            fastqc -t 2 --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_1P" "${SAMPLENM}_2P" && touch fastqc.trim.done
+            fastqc -t 2 --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_1P" "${SAMPLENM}_2P" && touch fastqc.trim.done
         else
             echo "# $(date '+%F %T'): Running fastqc on trimmed fastq file." >> "${LOG_FNAME}"
             echo "fastqc --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"' >> "${LOG_FNAME}"
-            fastqc --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_trimmed" && touch fastqc.trim.done
+            fastqc --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_trimmed" && touch fastqc.trim.done
         fi
     fi
 fi
+
+for fastqc_out_dir in $(find "${WORKDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '*_fastqc')
+do
+    out_pref=${fastqc_out_dir/_fastqc/.trimmed_readcount.txt}
+    read_no=$(basename "${fastqc_out_dir}" | sed -nr 's/.*([1|2])P_fastqc/\\1/p')
+    echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
+    echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
+    awk '/>>Per base sequence quality/{flag=1; next} />>END_MODULE/{flag=0} flag' "${fastqc_out_dir}/fastqc_data.txt" | sed -e 's/ /./g' >> "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_R${read_no}_trim_quals.txt"
+    mv "${fastqc_out_dir}" "${fastqc_out_dir}.processed"
+done
 
 if [ ! -f hisat2.done ]; then
     if [ "${TRIM}" = "yes" ]; then
@@ -165,20 +190,25 @@ if [ ! -f samtools.done ]; then
         samtools rmdup "${SAMPLENM}.sorted.bam" "${SAMPLENM}.sorted.rmdup.bam"
         # Sort the bam by coordinate, too
         samtools sort -o "${SAMPLENM}_Coord.sorted.rmdup.bam" -@ ${PBS_NUM_PPN} -O bam -T temp "${SAMPLENM}.sorted.rmdup.bam"
-        samtools index "${SAMPLENM}_Coord.sorted.rmdup.bam" && touch samtools.done
+        samtools index "${SAMPLENM}_Coord.sorted.rmdup.bam"
+        # Generate some summaries of the bam here
+        samtools stats "${SAMPLENM}_Coord.sorted.rmdup.bam" > "${SAMPLENM}_bamstats.txt"
         FINAL_BAM="${SAMPLENM}.sorted.rmdup.bam"
         COORD_BAM="${SAMPLENM}_Coord.sorted.rmdup.bam"
         COORD_BAI="${SAMPLENM}_Coord.sorted.rmdup.bam.bai"
+        touch samtools.done
     else
         echo "# $(date '+%F %T'): Sorting by read name" >> "${LOG_FNAME}"
         echo "samtools view -bh -F 4 -@ ${PBS_NUM_PPN} "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
         samtools view -bh -F 4 -@ ${PBS_NUM_PPN} "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
         # Sort the bam by coordinate, too
         samtools sort -o "${SAMPLENM}_Coord.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp "${SAMPLENM}.sorted.bam"
-        samtools index "${SAMPLENM}_Coord.sorted.bam" && touch samtools.done
+        samtools index "${SAMPLENM}_Coord.sorted.bam"
+        samtools stats "${SAMPLENM}_Coord.sorted.bam" > "${SAMPLENM}_bamstats.txt"
         FINAL_BAM="${SAMPLENM}.sorted.bam"
         COORD_BAM="${SAMPLENM}_Coord.sorted.bam"
         COORD_BAI="${SAMPLENM}_Coord.sorted.bam.bai"
+        touch samtools.done
     fi
 fi
 
@@ -191,6 +221,8 @@ then
     mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"
     echo "_JAVA_OPTIONS="'"'"-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"'"'" ${PTOOL}/picard.jar CollectInsertSizeMetrics I="'"'"${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}"'"'" O="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt"'"'" H="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"'"' >> "${LOG_FNAME}"
     _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar CollectInsertSizeMetrics I="${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}" O="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" H="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"
+    # Extract the mean, median, standard deviation from the metrics file
+    grep -A 1 '^MEDIAN_INSERT_SIZE' "${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" | tail -n 1 | cut -f 1,5,6 > "${WORKDIR}/singlesamples/${SAMPLENM}/IS_Stats.txt"
 fi
 
 # the final step is to link the sorted.rmdup.bam file to the allsamples/

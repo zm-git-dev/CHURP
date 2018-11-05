@@ -26,6 +26,18 @@ GROUP_NO_PIPE = 50
 GROUP_BAD_COL = 51
 BRNASEQ_GROUP_SUCCESS = 52
 
+# We will prepend a little message to the end that says the pipelines were
+# developed by RIS and funded by UMII
+CREDITS = """----------
+Thank you for using CHURP. This software was developed by the Research
+Informatics Solutions (RIS) group at MSI with funding from the University of
+Minnesota Informatics Institute (UMII). For help, please contact
+help@msi.umn.edu.
+
+https://www.msi.umn.edu/
+https://research.umn.edu/units/umii\n
+"""
+
 # Define a series of functions that just write messages to the terminal. We
 # will call these with a main error handling function at the end.
 
@@ -33,7 +45,7 @@ BRNASEQ_GROUP_SUCCESS = 52
 def general_error():
     """This will be a generic error message for when something goes wrong that
     we can't identify."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 gopher-pipelines has caught an unidentified error. Please send this error
@@ -45,7 +57,7 @@ message, the command you typed, and debugging output to the MSI help desk
 
 def bad_outdir():
     """Call this function when the user supplies a bad output directory."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 The output directory you have supplied is not suitable. Either you do not have
@@ -58,7 +70,7 @@ with this error and the debugging output.\n"""
 
 def bad_workdir():
     """Call this function when the user supplies a bad working directory."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 The working directory you have supplied is not suitable. Either you do not have
@@ -71,7 +83,7 @@ with this error and the debugging output.\n"""
 
 def bad_resources():
     """Call this function when the user supplies illegal PBS resources."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 The resouces you have specified are out of allowable bounds for our system. The
@@ -87,7 +99,7 @@ def brnaseq_success(pipe_script, samplesheet):
     """Call this function when the bulk RNAseq pipeline finishes successfully.
     It will include the pipeline script and the samplesheet paths in the
     output message."""
-    msg = """----------
+    msg = CREDITS + """----------
 SUCCESS
 
 Samplesheet and pipeline script generation complete! Their paths are given
@@ -108,7 +120,7 @@ samplesheet, pipeline script, and the error message with your report.\n"""
 def brnaseq_inc():
     """Call this function when the bulk_rnaseq arguments dictionary is
     incomplete."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 
@@ -124,7 +136,7 @@ FASTQ directory. Please fix your command line and re-run.\n"""
 def brnaseq_conflict():
     """Call this function when there are conflicting arguments passed to the
     bulk_rnaseq pipeline."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 
@@ -138,7 +150,7 @@ re-run.\n"""
 
 def bad_hisat2():
     """Call this function when the user supplies a bad HISAT2 index."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 The HISAT2 index that you have supplied is not valid. Please give the path to
@@ -151,7 +163,7 @@ information on building an index from a FASTA file.\n"""
 
 def bad_fastq():
     """Call this fucntion when the user supplies a bad FASTQ folder."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 The FASTQ directory that you have supplied either does not exist or cannot be
@@ -164,7 +176,7 @@ debugging output.\n"""
 
 def empty_fastq():
     """Call this fucntion when the user supplies an empty FASTQ folder."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 The FASTQ directory that you have supplied does not appear to contain any FASTQ
@@ -178,7 +190,7 @@ that end in one of the following: .fastq, .fastq.gz, .fq., .fq.gz
 def bad_gtf():
     """Call this function when the user supplies a GTF that does not exist or
     cannot be read."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 The GTF you have supplied does not exist, or cannot be read. Please check your
@@ -191,7 +203,7 @@ escaped and try again.\n"""
 def bad_adapter():
     """Call thsi function when the user supplies an adapters file that does not
     exist or cannot be read."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 The adapters file that you have supplied either does not exist or cannot be
@@ -204,7 +216,7 @@ properly quoted or escaped, and try again.\n"""
 def brnaseq_bad_groups():
     """Call this function when a user does passes an experimental groups file
     that does not exist, or is not readable."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 The groups template CSV file that you have provided does not exist, or cannot
@@ -217,7 +229,7 @@ characters are properly quoted or escaped.\n"""
 def brnaseq_no_sample_groups():
     """Call this function when a user supplies a groups CSV that does not have
     any information for the samples in the FASTQ directory."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 The groups CSV file that you supplied does not contain any information about
@@ -233,7 +245,8 @@ groups.\n"""
 def group_no_pipe():
     """Call this function when a user runs the group_template pipeline, but
     does not supply a pipeline for which to build a group template."""
-    msg = """Usage: gopher-pipelines.py group_template <pipeline> <options>
+    msg = CREDITS + """----------
+Usage: gopher-pipelines.py group_template <pipeline> <options>
 
 This subcommand allows you to build templates for experimental metadata files.
 These files specify experimental conditions or treatment groups for comparisons
@@ -251,7 +264,7 @@ Currently available pipelines:
 def group_bad_col():
     """Call this function when a user supplies an invalid column name (contains
     a comma) to the group_template subcommand."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 You have specified an invalid column name. Column names cannot contain commas,
@@ -264,7 +277,7 @@ def brnaseq_group_success(fname):
     """Call this function when the group_template command finishes properly.
     It will tell the user where to file has been written, and what they need
     to do next."""
-    msg = """----------
+    msg = CREDITS + """----------
 SUCCESS
 
 Template file: {path}
@@ -283,7 +296,7 @@ option to enable group testing.\n"""
 def brnaseq_auto_submit_ok(pipe_script, samplesheet, qsub_msg):
     """Call this function when the user gives the --submit flag to the
     bulk_rnaseq pipeline."""
-    msg = """----------
+    msg = CREDITS + """----------
 SUCCESS
 
 Your pipeline has been submitted. For reference, the pipeline script and the
@@ -309,7 +322,7 @@ Qsub stdout:\n"""
 def brnaseq_auto_submit_fail(qsub_msg):
     """Call this function when auto-submitting and qsub returns an exit status
     that is not 0."""
-    msg = """----------
+    msg = CREDITS + """----------
 ERROR
 
 Auto-submission of your pipeline jobs failed! There may be an error with the
