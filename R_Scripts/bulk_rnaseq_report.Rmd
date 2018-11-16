@@ -33,6 +33,28 @@ with funding provided by the University of Minnesota Informatics Institute
 <https://research.umn.edu/units/umii>
 
 # Key Figures and Summaries
+## Read Counts Summary
+```{r counts_sum, echo=FALSE, message=FALSE}
+read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
+read_dat <- matrix(
+    c(read_summary$V2, read_summary$V4)/1000000,
+    byrow=FALSE,
+    nrow=nrow(read_summary)
+    )
+max_reads <- max(read_dat)
+at <- barplot(
+    t(read_dat),
+    beside=TRUE,
+    ylim=c(0, max_reads*1.15),
+    axes=FALSE,
+    col=c("#d95f02", "#1b9e77"),
+    ylab="Read Count (Millions)",
+    main="Read Counts")
+legend("top", c("Raw", "Trimmed"), fill=c("#d95f02", "#1b9e77"), ncol=2)
+axis(side=2)
+axis(side=1, at=apply(at, 2, mean), labels=as.character(read_summary$V1), cex.axis=0.6, las=2)
+```
+
 ## Read Quality Summary {.tabset}
 ### Raw Reads
 
@@ -254,6 +276,56 @@ if(length(samplenames) > 0) {
     } else {
         print("No trimming performed.")
     }
+```
+
+## HISAT2 Plots {.tabset}
+### Counts Plots
+```{r hisat2_counts_sum, echo=FALSE, message=FALSE}
+hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
+names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
+count_dat <- as.matrix(hisat_summary[,c("UniqueMapped", "MultiMapped", "DiscoMapped", "Unmapped")])
+max_reads <- max(hisat_summary$Total)/1000000
+at <- barplot(
+    t(count_dat)/1000000,
+    beside=FALSE,
+    col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
+    ylim=c(0, max_reads*1.15),
+    ylab="Read Count (Millions)",
+    main="HISAT2 Count Plot",
+    axes=FALSE)
+axis(side=2)
+axis(side=1, at=at, labels=as.character(hisat_summary$SampleName), cex.axis=0.6, las=2)
+legend(
+    "top",
+    c("Uniquely Mapped", "Multiply Mapped", "Discordantly Mapped", "Unmapped"),
+    fill=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
+    ncol=4,
+    cex=0.7)
+```
+
+### Proportion Plots
+```{r hisat2_prop_sum, echo=FALSE, message=FALSE}
+hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
+names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
+count_dat <- as.matrix(hisat_summary[,c("UniqueMapped", "MultiMapped", "DiscoMapped", "Unmapped")])
+# Then make a proportion plot
+prop_dat <- count_dat / hisat_summary$Total
+barplot(
+    t(prop_dat),
+    beside=FALSE,
+    col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
+    ylim=c(0, 1.15),
+    ylab="Read Fraction",
+    main="HISAT2 Proportion Plot",
+    axes=FALSE)
+legend(
+    "top",
+    c("Uniquely Mapped", "Multiply Mapped", "Discordantly Mapped", "Unmapped"),
+    fill=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
+    ncol=4,
+    cex=0.7)
+axis(side=2)
+axis(side=1, at=at, labels=as.character(hisat_summary$SampleName), cex.axis=0.6, las=2)
 ```
 
 ## Expression Summary {.tabset}
@@ -834,41 +906,74 @@ if(length(samplenames) > 0) {
 ```
 
 # Alignment Summaries
-## HISAT2 Statistics
-The following plots summarize the mapping from HISAT2.
-
-```{r hisat2_stats, echo=FALSE, message=FALSE}
+## HISAT2 Summaries {.tabset}
+### Counts-Based
+```{r hisat2_counts, echo=FALSE, message=FALSE}
+library(knitr)
 hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
 names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
 count_dat <- as.matrix(hisat_summary[,c("UniqueMapped", "MultiMapped", "DiscoMapped", "Unmapped")])
-rownames(count_dat) <- as.character(hisat_summary$SampleName)
-barplot(
-    t(count_dat),
+max_reads <- max(hisat_summary$Total)/1000000
+at <- barplot(
+    t(count_dat)/1000000,
     beside=FALSE,
     col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
-    ylab="Read Count",
-    main="HISAT2 Count Plot")
+    ylim=c(0, max_reads*1.15),
+    ylab="Read Count (Millions)",
+    main="HISAT2 Count Plot",
+    axes=FALSE)
+axis(side=2)
+axis(side=1, at=at, labels=as.character(hisat_summary$SampleName), cex.axis=0.6, las=2)
 legend(
     "top",
     c("Uniquely Mapped", "Multiply Mapped", "Discordantly Mapped", "Unmapped"),
-    col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
-    ncol=2)
+    fill=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
+    ncol=4,
+    cex=0.7)
 
+names(hisat_summary) <- c("Sample Name", "Total Fragments", "Unmapped", "Uniquely Mapped", "Multiply Mapped", "Discordantly Mapped")
+kable(hisat_summary, caption="Summary of alignment from HISAT2 based on read counts. Note that if the samples are paired-end, then each fragment is represented by 2 reads.")
+```
+
+### Proportion-Based
+```{r hisat2_prop, echo=FALSE, message=FALSE}
+library(knitr)
+hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
+count_dat <- as.matrix(hisat_summary[,c(4, 5, 6, 3)])
 # Then make a proportion plot
-prop_dat <- count_dat / hisat_summary$Total
-rownames(prop_dat) <- as.character(hisat_summary$SampleName)
+prop_dat <- count_dat / hisat_summary$V2
 barplot(
     t(prop_dat),
     beside=FALSE,
     col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
-    ylim=c(0, 1.25),
+    ylim=c(0, 1.15),
     ylab="Read Fraction",
-    main="HISAT2 Count Plot")
+    main="HISAT2 Proportion Plot",
+    axes=FALSE)
 legend(
     "top",
     c("Uniquely Mapped", "Multiply Mapped", "Discordantly Mapped", "Unmapped"),
-    col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
-    ncol=2)
+    fill=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
+    ncol=4,
+    cex=0.7)
+axis(side=2)
+axis(side=1, at=at, labels=as.character(hisat_summary$V1), cex.axis=0.6, las=2)
+
+hisat_prop <- data.frame(
+    SN=as.character(hisat_summary$V1),
+    TO=rep("100%", nrow(hisat_summary)),
+    UNM=paste(as.character(round((hisat_summary$V3/hisat_summary$V2)*100, digits=2)), "%", sep=""),
+    SM=paste(as.character(round((hisat_summary$V4/hisat_summary$V2)*100, digits=2)), "%", sep=""),
+    MM=paste(as.character(round((hisat_summary$V5/hisat_summary$V2)*100, digits=2)), "%", sep=""),
+    DM=paste(as.character(round((hisat_summary$V6/hisat_summary$V2)*100, digits=2)), "%", sep=""))
+names(hisat_prop) <- c(
+    "Sample Name",
+    "Total Fragments",
+    "Unmapped",
+    "Uniquely Mapped",
+    "Multiply Mapped",
+    "Discordantly Mapped")
+kable(hisat_prop, caption="Summary of alignment from HISAT2 based on percentage of total reads. Note that if the samples are paired-end, then each fragment is represented by 2 reads.")
 ```
 
 ## Mapping Statistics
@@ -892,13 +997,31 @@ kable(mapping_summary, caption="Summary of read mapping from SAMTools. *:counts 
 ```{r is_stats, echo=FALSE, message=FALSE}
 library(knitr)
 is_summary <- read.table(paste(params["workdir"], "allsamples", "IS_Stats.txt", sep="/"), header=F)
+
+plot(
+    is_summary$V3 ~ seq_along(is_summary$V1),
+    type="n",
+    xlab="",
+    ylab="Insert Size (bp)",
+    axes=FALSE)
+segments(x0=seq_along(is_summary$V1), y1=is_summary$V5, y0=is_summary$V5, lwd=1, col="black")
+segments(x0=seq_along(is_summary$V1), y1=is_summary$V6, y0=is_summary$V7, lwd=8, col="grey")
+points(is_summary$V3 ~ seq_along(is_summary$V1), pch=19, col="black", cex=0.75)
+points(is_summary$V2 ~ seq_along(is_summary$V1), pch=19, col="red", cex=0.75)
+axis(side=2)
+axis(side=1, at=seq_along(is_summary$V1), labels=is_summary$V1, las=2, cex.axis=0.75)
+
 is_summary$V3 <- round(is_summary$V3, 3)
 is_summary$V4 <- round(is_summary$V4, 3)
 names(is_summary) <- c(
     "Sample Name",
     "Median Insert Size",
     "Mean Insert Size",
-    "Insert Size StdDev")
+    "Insert Size StdDev",
+    "10th Percentile",
+    "30th Percentile",
+    "70th Percentile",
+    "90th Percentile")
 kable(is_summary, caption="Insert size summary.")
 ```
 
