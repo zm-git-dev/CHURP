@@ -183,7 +183,7 @@ do
         TR2_COUNT=$(awk '{print $NF}' "${TRIMMED_R2}")
     fi
     echo -e "${sample}\\t${R1_COUNT}\\t${R2_COUNT}\\t${TR1_COUNT}\\t${TR2_COUNT}" >> "${WORKDIR}/allsamples/Read_Counts.txt"
-    cat "${OUTDIR}/singlesamples/${sample}/hisat_map_summary.txt" >> "${WORKDIR}/allsamples/HISAT_Stats.txt"
+    cat "${WORKDIR}/singlesamples/${sample}/hisat_map_summary.txt" >> "${WORKDIR}/allsamples/HISAT_Stats.txt"
     # Then, get alignment summary files
     BAMSTAT="${WORKDIR}/singlesamples/${sample}/${sample}_bamstats.txt"
     NMAPPED=$(grep '^SN' "${BAMSTAT}" | grep 'raw total sequences' | cut -f 3)
