@@ -240,7 +240,7 @@ else
     MULTI_MAP=$(awk '/Aligned >1 times/ {F=NF-1; print $F}' alignment.summary)
     DISCO_MAP="NA"
 fi
-echo "${SAMPLENM} ${TOTAL_REDS} ${UNMAP} ${SINGLE_MAP} ${MULTI_MAP} ${DISCO_MAP}" > "hisat_map_summary.txt"
+echo "${SAMPLENM} ${TOTAL_READS} ${UNMAP} ${SINGLE_MAP} ${MULTI_MAP} ${DISCO_MAP}" > "hisat_map_summary.txt"
 
 # the final step is to link the sorted.rmdup.bam file to the allsamples/
 # directory, as just the samplename. This is a bit of a hack to get featureCounts
