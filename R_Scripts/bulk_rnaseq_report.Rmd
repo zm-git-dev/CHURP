@@ -48,8 +48,8 @@ at <- barplot(
     ylim=c(0, max_reads*1.15),
     axes=FALSE,
     col=c("#d95f02", "#1b9e77"),
-    ylab="Read Count (Millions)",
-    main="Read Counts")
+    ylab="Fragment Count (Millions)",
+    main="Fragment Counts")
 legend("top", c("Raw", "Trimmed"), fill=c("#d95f02", "#1b9e77"), ncol=2)
 axis(side=2)
 axis(side=1, at=apply(at, 2, mean), labels=as.character(read_summary$V1), cex.axis=0.6, las=2)
@@ -290,7 +290,7 @@ at <- barplot(
     beside=FALSE,
     col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
     ylim=c(0, max_reads*1.15),
-    ylab="Read Count (Millions)",
+    ylab="Fragment Count (Millions)",
     main="HISAT2 Count Plot",
     axes=FALSE)
 axis(side=2)
@@ -315,7 +315,7 @@ barplot(
     beside=FALSE,
     col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
     ylim=c(0, 1.15),
-    ylab="Read Fraction",
+    ylab="Fraction",
     main="HISAT2 Proportion Plot",
     axes=FALSE)
 legend(
@@ -932,7 +932,7 @@ at <- barplot(
     beside=FALSE,
     col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
     ylim=c(0, max_reads*1.15),
-    ylab="Read Count (Millions)",
+    ylab="Fragment Count (Millions)",
     main="HISAT2 Count Plot",
     axes=FALSE)
 axis(side=2)
@@ -945,7 +945,7 @@ legend(
     cex=0.7)
 
 names(hisat_summary) <- c("Sample Name", "Total Fragments", "Unmapped", "Uniquely Mapped", "Multiply Mapped", "Discordantly Mapped")
-kable(hisat_summary, caption="Summary of alignment from HISAT2 based on read counts. Note that if the samples are paired-end, then each fragment is represented by 2 reads.")
+kable(hisat_summary, caption="Summary of alignment from HISAT2 based on fragment counts. Note that if the samples are paired-end, then each fragment is represented by 2 reads. If the samples are single-end, then each fragment is represented by 1 read.")
 ```
 
 ### Proportion-Based
@@ -960,7 +960,7 @@ barplot(
     beside=FALSE,
     col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
     ylim=c(0, 1.15),
-    ylab="Read Fraction",
+    ylab="Fraction",
     main="HISAT2 Proportion Plot",
     axes=FALSE)
 legend(
@@ -986,7 +986,7 @@ names(hisat_prop) <- c(
     "Uniquely Mapped",
     "Multiply Mapped",
     "Discordantly Mapped")
-kable(hisat_prop, caption="Summary of alignment from HISAT2 based on percentage of total reads. Note that if the samples are paired-end, then each fragment is represented by 2 reads.")
+kable(hisat_prop, caption="Summary of alignment from HISAT2 based on percentage of total reads. Note that if the samples are paired-end, then each fragment is represented by 2 reads. If the samples are single-end, then each fragment is represented by 1 read.")
 ```
 
 ## Mapping Statistics
@@ -1003,7 +1003,7 @@ names(mapping_summary) <- c(
     "Max Read Length",
     "Average Read Length",
     "Average Read Quality")
-kable(mapping_summary, caption="Summary of read mapping from SAMTools. *:counts both R1 and R2. Divide by 2 to get the number of fragments mapped.")
+kable(mapping_summary, caption="Summary of read mapping from SAMTools. *Note that this counts reads and not fragments.")
 ```
 
 ## Insert Size Metrics
