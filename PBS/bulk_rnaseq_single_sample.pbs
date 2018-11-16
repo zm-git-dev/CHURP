@@ -223,7 +223,7 @@ then
     echo "_JAVA_OPTIONS="'"'"-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"'"'" ${PTOOL}/picard.jar CollectInsertSizeMetrics I="'"'"${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}"'"'" O="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt"'"'" H="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"'"' >> "${LOG_FNAME}"
     _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar CollectInsertSizeMetrics I="${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}" O="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" H="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"
     # Extract the mean, median, standard deviation from the metrics file
-    grep -A 1 '^MEDIAN_INSERT_SIZE' "${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" | tail -n 1 | cut -f 1,5,6,9,17 > "${WORKDIR}/singlesamples/${SAMPLENM}/IS_Stats.txt"
+    grep -A 1 '^MEDIAN_INSERT_SIZE' "${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" | tail -n 1 | cut -f 1,5,6,9,11,15,17 > "${WORKDIR}/singlesamples/${SAMPLENM}/IS_Stats.txt"
 fi
 
 # Use awk to pick apart the alignment summary
