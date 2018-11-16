@@ -1027,7 +1027,7 @@ description of the bin widths, see the [Picard Documentation](https://broadinsti
 ```{r is_stats, echo=FALSE, message=FALSE}
 library(knitr)
 insertsize_file <- paste(params["workdir"], "allsamples", "IS_Stats.txt", sep="/")
-if(!file.exists(insertsize_file) {
+if(!file.exists(insertsize_file)) {
     print("No insert size metrics found.")
 } else {
     is_summary <- read.table(insertsize_file), header=F)
