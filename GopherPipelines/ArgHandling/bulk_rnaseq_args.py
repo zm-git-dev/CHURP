@@ -106,7 +106,8 @@ def add_args(ap):
         '-c',
         dest='mincpm',
         help=('Minimum expression value in CPM for a gene to be included in '
-              'differential expression testing. Defaults to 1.'),
+              'differential expression testing. Defaults to 1. Set to 0 to '
+              'disable CPM filtering.'),
         type=float,
         default=1.0)
     ap_opt.add_argument(
