@@ -225,6 +225,23 @@ then
     grep -A 1 '^MEDIAN_INSERT_SIZE' "${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" | tail -n 1 | cut -f 1,5,6 > "${WORKDIR}/singlesamples/${SAMPLENM}/IS_Stats.txt"
 fi
 
+# Use awk to pick apart the alignment summary
+if [ "${PE}" = "true" ]
+then
+    TOTAL_READS=$(awk '/Total pairs:/ {print $NF}' alignment.summary)
+    UNMAP=$(awk '/Aligned concordantly or discordantly 0 time/ {F=NF-1; print $F}' alignment.summary)
+    SINGLE_MAP=$(awk '/Aligned concordantly 1 time/ {F=NF-1; print $F}' alignment.summary)
+    MULTI_MAP=$(awk '/Aligned concordantly >1 times/ {F=NF-1; print $F}' alignment.summary)
+    DISCO_MAP=$(awk '/Aligned discordantly 1 time/ {F=NF-1; print $F}' alignment.summary)
+else
+    TOTAL_READS=$(awk '/Total reads:/ {print $NF}' alignment.summary)
+    UNMAP=$(awk '/Aligned 0 time/ {F=NF-1; print $F}' alignment.summary)
+    SINGLE_MAP=$(awk '/Aligned 1 time/ {F=NF-1; print $F}' alignment.summary)
+    MULTI_MAP=$(awk '/Aligned >1 times/ {F=NF-1; print $F}' alignment.summary)
+    DISCO_MAP="NA"
+fi
+echo "${SAMPLENM} ${TOTAL_REDS} ${UNMAP} ${SINGLE_MAP} ${MULTI_MAP} ${DISCO_MAP}" > "hisat_map_summary.txt"
+
 # the final step is to link the sorted.rmdup.bam file to the allsamples/
 # directory, as just the samplename. This is a bit of a hack to get featureCounts
 # to not print huge paths as samplenames

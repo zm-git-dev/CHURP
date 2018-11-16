@@ -1,5 +1,5 @@
 ---
-title: "Bulk RNAseq Pipeline Summary"
+title: "CHURP: Bulk RNAseq Pipeline Summary"
 output:
     html_document:
         smart: false
@@ -24,23 +24,261 @@ for(key in names(params)) {
 }
 ```
 
-These pipelines were developed by the Research Informatics Solutions (RIS) group
-at MSI with funding provided by the University of Minnesota Informatics
-Institute (UMII).
+CHURP was developed by the Research Informatics Solutions (RIS) group at MSI
+with funding provided by the University of Minnesota Informatics Institute
+(UMII).
 
 <https://www.msi.umn.edu/>
 
 <https://research.umn.edu/units/umii>
 
 # Key Figures and Summaries
-## Expression Summary
+## Read Quality Summary {.tabset}
+### Raw Reads
 
-```{r key_figs, echo=FALSE, message=FALSE, out.width="45%", out.height="350"}
+```{r raw_qual_sum, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
+# Use the samplesheet to get the sample names
+sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+samplenames <- sheet$V1
+
+plotqual_first <- function(sn) {
+    allquals <- matrix(0:45)
+    image(
+        allquals,
+        breaks=c(0, 10, 20, 25, 30, 40, 45),
+        col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+        axes=FALSE,
+        main="Quality Key")
+    axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+
+    plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+    names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+    # Make a plot
+    image(
+        as.matrix(dat$QMean),
+        breaks=c(0, 10, 20, 25, 30, 40, 45),
+        col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+        axes=FALSE,
+        main="Mean R1 Quality")
+    mtext(side=2, font=2, cex=0.5, las=2, sn)
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    if(!file.exists(qr2_file)) {
+        plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+        text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+    } else{
+        dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE,
+            main="Mean R2 Quality")
+    }
+}
+
+plotqual <- function(sn) {
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+    names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+    # Make a plot
+    image(
+        as.matrix(dat$QMean),
+        breaks=c(0, 10, 20, 25, 30, 40, 45),
+        col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+        axes=FALSE)
+    mtext(side=2, font=2, cex=0.5, las=2, sn)
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    if(!file.exists(qr2_file)) {
+        plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+        text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+    } else{
+        dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE)
+    }
+}
+
+plotqual_last <- function(sn) {
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+    names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+    # Make a plot
+    image(
+        as.matrix(dat$QMean),
+        breaks=c(0, 10, 20, 25, 30, 40, 45),
+        col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+        axes=FALSE)
+    mtext(side=2, font=2, cex=0.5, las=2, sn)
+    axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    if(!file.exists(qr2_file)) {
+        plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+        text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+    } else{
+        dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+        dat$X <- 1:nrow(dat)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE)
+        axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+    }
+}
+nsamp <- length(samplenames)
+par(mfrow=c(nsamp+1, 2))
+# Set the margins of the top to be high on the first two so we can add the R1/R2 labels
+par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
+dummy <- plotqual_first(samplenames[1])
+par(mar=c(1.1, 5, 1.1, 0.1))
+dummy <- sapply(samplenames[3:nsamp-1], plotqual)
+par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
+dummy <- plotqual_last(samplenames[nsamp])
+```
+
+### Trimmed Reads
+```{r trim_qual_sum, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
+# Use the samplesheet to get the sample names
+sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+samplenames <- sheet$V1[sheet$V7 == "yes"]
+if(length(samplenames) > 0) {
+    plotqual_first <- function(sn) {
+        allquals <- matrix(0:45)
+        image(
+            allquals,
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE,
+            main="Quality Key")
+        axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+
+        plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        # Make a plot
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE,
+            main="Mean R1 Quality")
+        mtext(side=2, font=2, cex=0.5, las=2, sn)
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        if(!file.exists(qr2_file)) {
+            plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+            text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+        } else{
+            dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+            names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+            image(
+                as.matrix(dat$QMean),
+                breaks=c(0, 10, 20, 25, 30, 40, 45),
+                col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+                axes=FALSE,
+                main="Mean R2 Quality")
+        }
+    }
+
+    plotqual <- function(sn) {
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        # Make a plot
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE)
+        mtext(side=2, font=2, cex=0.5, las=2, sn)
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        if(!file.exists(qr2_file)) {
+            plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+            text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+        } else{
+            dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+            names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+            image(
+                as.matrix(dat$QMean),
+                breaks=c(0, 10, 20, 25, 30, 40, 45),
+                col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+                axes=FALSE)
+        }
+    }
+
+    plotqual_last <- function(sn) {
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        # Make a plot
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE)
+        mtext(side=2, font=2, cex=0.5, las=2, sn)
+        axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        if(!file.exists(qr2_file)) {
+            plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+            text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+        } else{
+            dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+            dat$X <- 1:nrow(dat)
+            names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+            image(
+                as.matrix(dat$QMean),
+                breaks=c(0, 10, 20, 25, 30, 40, 45),
+                col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+                axes=FALSE)
+            axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+        }
+    }
+    nsamp <- length(samplenames)
+    par(mfrow=c(nsamp+1, 2))
+    # Set the margins of the top to be high on the first two so we can add the R1/R2 labels
+    par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
+    dummy <- plotqual_first(samplenames[1])
+    par(mar=c(1.1, 5, 1.1, 0.1))
+    dummy <- sapply(samplenames[3:nsamp-1], plotqual)
+    par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
+    dummy <- plotqual_last(samplenames[nsamp])
+    } else {
+        print("No trimming performed.")
+    }
+```
+
+## Expression Summary {.tabset}
+### CPM Plot
+
+```{r cpm_sum, echo=FALSE, message=FALSE, out.width="800", out.height="800"}
 library(knitr)
 cpm_plot <- paste(params["outdir"], "Plots", "cpm_plot.pdf", sep="/")
+include_graphics(cpm_plot)
+```
+
+### Clustering Heatmap
+
+```{r hmp_sum, echo=FALSE, message=FALSE, out.width="800", out.height="800"}
+library(knitr)
 heatmap_plot <- paste(params["outdir"], "Plots", "high_variance_heatmap.pdf", sep="/")
+include_graphics(heatmap_plot)
+```
+
+### MDS Plot
+
+```{r mds_sum, echo=FALSE, message=FALSE, out.width="800", out.height="800"}
+library(knitr)
 mds_plot <- paste(params["outdir"], "Plots", "mds_plot.pdf", sep="/")
-include_graphics(c(cpm_plot, heatmap_plot, mds_plot))
+include_graphics(mds_plot)
 ```
 
 ## DEG Summary
@@ -68,7 +306,7 @@ if(!dir.exists(degdir)) {
             } else {
                 lim <- 10
             }
-            print(kable(d_g[1:lim,], caption=paste("Top DEGs at the 0.05 FDR for ", gps, sep="")))
+            print(kable(d_g[1:lim,], caption=paste("Top 10 DEGs at the 0.05 FDR for ", gps, sep="")))
         }
     }
 }
@@ -117,7 +355,8 @@ following directories are of interest:
 - ``r paste(params["outdir"], "InsertSizeMetrics", sep="/")``
 
     Contains per-sample insert size summaries from Picard tools. The mean,
-    median, and standard deviation are summarized in a table below.
+    median, and standard deviation are summarized in a table in the "Alignment
+    Summaries" section of this report.
 
 - ``r paste(params["outdir"], "Logs", sep="/")``
 
@@ -128,7 +367,8 @@ following directories are of interest:
 - ``r paste(params["outdir"], "Plots", sep="/")``
 
     Contains PDF vector images of expression summary plots. The plots are also
-    embedded into this report.
+    embedded into the "Counts Summaries" subsection of the "Alignment Summaries"
+    section of this report.
 
 ### Work Directory
 The work directory is located at
@@ -166,9 +406,15 @@ turn off "smart quotes" and "smart dashes" on any text editors that you use to
 paste the following script. Smart quotes and smart dashes are not interpreted
 correctly by the shell on Mesabi and will also cause errors.
 
+<details><summary>
+
+**Click to show pipeline script**
+
+</summary>
 ```{bash pipeline_script, echo=FALSE, comment=NA}
 cat $pipeline
 ```
+</details>
 
 ## Samplesheet
 The path to the samplesheet is ``r params["samplesheet"]``
@@ -179,9 +425,17 @@ here. Like the pipeline script, be sure to save it with UNIX line endings
 (`LF` rather than `CR` [Mac] or `CRLF` [Windows]). Be sure to disable "smart
 quotes" and "smart dashes" on the text editor.
 
+<details><summary>
+
+**Click to show samplesheet**
+
+</summary>
+
 ```{bash samplesheet, echo=FALSE, comment=NA}
 cat $samplesheet
 ```
+
+</details>
 
 The raw samplesheet is difficult to read, so we will print out a readable
 summary below:
@@ -213,8 +467,10 @@ names(sheet) <- c(
 sheet
 ```
 
-## Software Environment
-Here are the software modules that were loaded for the single-sample analysis:
+## Software Environment {.tabset}
+### Single Sample Job Modules
+This is the full list of loaded modules for each single-sample job, which
+includes read trimming and read mapping.
 
 ```{bash single_sample_modules, echo=FALSE, comment=NA}
 first_sample=$(head -n 1 $samplesheet | cut -f 1 -d '|')
@@ -223,9 +479,9 @@ log_start=$(($(grep -n '^#BEGIN_MODULE' "${log_name}" | cut -f 1 -d ':') + 2))
 log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
 head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
 ```
-
-Here are the software modules that were loaded for the summary and differential
-expression analysis:
+### Summary Job Modules
+This is the full list of loaded modules for the summary job, which includes
+counting and differential expression testing.
 
 ```{bash summary_modules, echo=FALSE, comment=NA}
 log_name="${outdir}/Logs/BulkRNASeq_Summary_Log.txt"
@@ -248,16 +504,240 @@ names(read_summary) <- c(
 kable(read_summary, caption="Read count summary.")
 ```
 
-## Read Qualities
-The plots below summarize read quality for each sample. The black dot shows the
-mean quality, the red dot shows the median quality, the grey shaded region shows
-the inter-quartile range, and the vertical black lines show the 10th-90th
-percentile range.
+## Read Qualities {.tabset}
+Click on the tab headers to show plots of raw and trimmed read qualities.
 
-### Raw Read Qualities
+### Raw Read Qualities (Compact style)
 These plots show the read qualities as they came off the sequencing instrument.
-
 ```{r raw_read_quals, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
+# Use the samplesheet to get the sample names
+sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+samplenames <- sheet$V1
+
+plotqual_first <- function(sn) {
+    allquals <- matrix(0:45)
+    image(
+        allquals,
+        breaks=c(0, 10, 20, 25, 30, 40, 45),
+        col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+        axes=FALSE,
+        main="Quality Key")
+    axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+
+    plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+    names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+    # Make a plot
+    image(
+        as.matrix(dat$QMean),
+        breaks=c(0, 10, 20, 25, 30, 40, 45),
+        col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+        axes=FALSE,
+        main="Mean R1 Quality")
+    mtext(side=2, font=2, cex=0.5, las=2, sn)
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    if(!file.exists(qr2_file)) {
+        plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+        text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+    } else{
+        dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE,
+            main="Mean R2 Quality")
+    }
+}
+
+plotqual <- function(sn) {
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+    names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+    # Make a plot
+    image(
+        as.matrix(dat$QMean),
+        breaks=c(0, 10, 20, 25, 30, 40, 45),
+        col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+        axes=FALSE)
+    mtext(side=2, font=2, cex=0.5, las=2, sn)
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    if(!file.exists(qr2_file)) {
+        plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+        text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+    } else{
+        dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE)
+    }
+}
+
+plotqual_last <- function(sn) {
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+    names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+    # Make a plot
+    image(
+        as.matrix(dat$QMean),
+        breaks=c(0, 10, 20, 25, 30, 40, 45),
+        col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+        axes=FALSE)
+    mtext(side=2, font=2, cex=0.5, las=2, sn)
+    axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    if(!file.exists(qr2_file)) {
+        plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+        text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+    } else{
+        dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+        dat$X <- 1:nrow(dat)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE)
+        axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+    }
+}
+nsamp <- length(samplenames)
+par(mfrow=c(nsamp+1, 2))
+# Set the margins of the top to be high on the first two so we can add the R1/R2 labels
+par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
+dummy <- plotqual_first(samplenames[1])
+par(mar=c(1.1, 5, 1.1, 0.1))
+dummy <- sapply(samplenames[3:nsamp-1], plotqual)
+par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
+dummy <- plotqual_last(samplenames[nsamp])
+```
+
+### Trimmed Read Qualities (Compact style)
+These plots show read qualities post-trimming, if it was performed.
+
+```{r trim_read_quals, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
+# Use the samplesheet to get the sample names
+sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+samplenames <- sheet$V1[sheet$V7 == "yes"]
+if(length(samplenames) > 0) {
+    plotqual_first <- function(sn) {
+        allquals <- matrix(0:45)
+        image(
+            allquals,
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE,
+            main="Quality Key")
+        axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+
+        plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        # Make a plot
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE,
+            main="Mean R1 Quality")
+        mtext(side=2, font=2, cex=0.5, las=2, sn)
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        if(!file.exists(qr2_file)) {
+            plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+            text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+        } else{
+            dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+            names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+            image(
+                as.matrix(dat$QMean),
+                breaks=c(0, 10, 20, 25, 30, 40, 45),
+                col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+                axes=FALSE,
+                main="Mean R2 Quality")
+        }
+    }
+
+    plotqual <- function(sn) {
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        # Make a plot
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE)
+        mtext(side=2, font=2, cex=0.5, las=2, sn)
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        if(!file.exists(qr2_file)) {
+            plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+            text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+        } else{
+            dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+            names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+            image(
+                as.matrix(dat$QMean),
+                breaks=c(0, 10, 20, 25, 30, 40, 45),
+                col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+                axes=FALSE)
+        }
+    }
+
+    plotqual_last <- function(sn) {
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
+        names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+        # Make a plot
+        image(
+            as.matrix(dat$QMean),
+            breaks=c(0, 10, 20, 25, 30, 40, 45),
+            col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+            axes=FALSE)
+        mtext(side=2, font=2, cex=0.5, las=2, sn)
+        axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        if(!file.exists(qr2_file)) {
+            plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+            text(x=0.5, y=0.5, "No R2", cex=1, col="black")
+        } else{
+            dat <- read.table(qr2_file, header=F, stringsAsFactors=FALSE)
+            dat$X <- 1:nrow(dat)
+            names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
+            image(
+                as.matrix(dat$QMean),
+                breaks=c(0, 10, 20, 25, 30, 40, 45),
+                col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
+                axes=FALSE)
+            axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
+        }
+    }
+    nsamp <- length(samplenames)
+    par(mfrow=c(nsamp+1, 2))
+    # Set the margins of the top to be high on the first two so we can add the R1/R2 labels
+    par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
+    dummy <- plotqual_first(samplenames[1])
+    par(mar=c(1.1, 5, 1.1, 0.1))
+    dummy <- sapply(samplenames[3:nsamp-1], plotqual)
+    par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
+    dummy <- plotqual_last(samplenames[nsamp])
+    } else {
+        print("No trimming performed.")
+    }
+```
+
+### Raw Read Qualities (FastQC-style)
+The plots below show the variance in quality across the reads for each sample.
+The black dot shows the mean quality, the red dot shows the median quality,
+the grey shaded region shows the inter-quartile range, and the vertical black
+lines show the 10th-90th percentile range.
+
+```{r raw_read_quals_fastqc, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
 # Use the samplesheet to get the sample names
 sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
 samplenames <- sheet$V1
@@ -296,14 +776,17 @@ plotqual <- function(sn) {
         title(paste(sn, "R2", sep=" "))
     }
 }
-par(mfrow=c(2, 2), mar=c(4, 4, 1, 0))
+par(mfrow=c(3, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 plt_out <- sapply(samplenames, plotqual)
 ```
 
-### Trimmed Read Qualities
-These plots show read qualities post-trimming, if it was performed
+### Trimmed Read Qualities (FastQC-style)
+The plots below show the variance in quality across the reads for each sample.
+The black dot shows the mean quality, the red dot shows the median quality,
+the grey shaded region shows the inter-quartile range, and the vertical black
+lines show the 10th-90th percentile range.
 
-```{r trim_read_quals, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
+```{r trim_read_quals_fastqc, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
 # Use the samplesheet to get the sample names
 sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
 samplenames <- sheet$V1[sheet$V7 == "yes"]
@@ -343,7 +826,7 @@ if(length(samplenames) > 0) {
             title(paste(sn, "R2", sep=" "))
         }
     }
-    par(mfrow=c(2, 2), mar=c(4, 4, 1, 0))
+    par(mfrow=c(3, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
     plt_out <- sapply(samplenames, plotqual)
 } else {
     print("No trimming performed.")
@@ -351,19 +834,58 @@ if(length(samplenames) > 0) {
 ```
 
 # Alignment Summaries
+## HISAT2 Statistics
+The following plots summarize the mapping from HISAT2.
+
+```{r hisat2_stats, echo=FALSE, message=FALSE}
+hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
+names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
+count_dat <- as.matrix(hisat_summary[,c("UniqueMapped", "MultiMapped", "DiscoMapped", "Unmapped")])
+rownames(count_dat) <- as.character(hisat_summary$SampleName)
+barplot(
+    t(count_dat),
+    beside=FALSE,
+    col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
+    ylab="Read Count",
+    main="HISAT2 Count Plot")
+legend(
+    "top",
+    c("Uniquely Mapped", "Multiply Mapped", "Discordantly Mapped", "Unmapped"),
+    col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
+    ncol=2)
+
+# Then make a proportion plot
+prop_dat <- count_dat / hisat_summary$Total
+rownames(prop_dat) <- as.character(hisat_summary$SampleName)
+barplot(
+    t(prop_dat),
+    beside=FALSE,
+    col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
+    ylim=c(0, 1.25),
+    ylab="Read Fraction",
+    main="HISAT2 Count Plot")
+legend(
+    "top",
+    c("Uniquely Mapped", "Multiply Mapped", "Discordantly Mapped", "Unmapped"),
+    col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
+    ncol=2)
+```
+
 ## Mapping Statistics
+The following table summarizes alignment characteristics with the output from
+`samtools stats`.
+
 ```{r map_stats, echo=FALSE, message=FALSE}
 library(knitr)
-mapping_summary <- read.table(paste(params["workdir"], "allsamples", "Mapping_Stats.txt", sep="/"), header=F)
+mapping_summary <- read.table(paste(params["workdir"], "allsamples", "Samtools_Stats.txt", sep="/"), header=F)
 names(mapping_summary) <- c(
     "Sample Name",
-    "Mapping Rate",
     "Reads Mapped*",
     "MAPQ = 0",
     "Max Read Length",
     "Average Read Length",
     "Average Read Quality")
-kable(mapping_summary, caption="Summary of read mapping. *:counts both R1 and R2. Divide by 2 to get the number of fragments mapped.")
+kable(mapping_summary, caption="Summary of read mapping from SAMTools. *:counts both R1 and R2. Divide by 2 to get the number of fragments mapped.")
 ```
 
 ## Insert Size Metrics
@@ -380,7 +902,12 @@ names(is_summary) <- c(
 kable(is_summary, caption="Insert size summary.")
 ```
 
-## Counts Summaries
+## Counts Summaries {.tabset}
+These plots are available as PDF vector images at the following path:
+
+``r paste(params["outdir"], "Plots", sep="/")``
+
+### Expression in Counts-per-million
 Shown below is a distribution of expression values as log2(1+CPM). CPM (counts-per-million)
 is a transformation of raw counts that accounts for the number of fragments
 sequenced in the library, like FPKM. It does not account for gene length like
@@ -394,6 +921,7 @@ cpm_plot <- paste(params["outdir"], "Plots", "cpm_plot.pdf", sep="/")
 include_graphics(cpm_plot)
 ```
 
+### Sample Clustering Heatmap
 We then calculated the variance in CPM values for each gene across the sequenced
 samples. The 500 genes with the highest variance in expression were used to
 generate the following heatmap:
@@ -404,6 +932,7 @@ heatmap_plot <- paste(params["outdir"], "Plots", "high_variance_heatmap.pdf", se
 include_graphics(heatmap_plot)
 ```
 
+### Multidimensional Scaling Plot
 CPM values were then used to generate a multidimensional scaling (MDS) plot,
 which functions similarly to a principal components plot:
 
@@ -413,9 +942,6 @@ mds_plot <- paste(params["outdir"], "Plots", "mds_plot.pdf", sep="/")
 include_graphics(mds_plot)
 ```
 
-These plots are available as PDF vector images at the following path:
-
-``r paste(params["outdir"], "Plots", sep="/")``
 
 # DEG Testing
 If experimental groups were supplied, we test for differential expression

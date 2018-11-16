@@ -183,16 +183,15 @@ do
         TR2_COUNT=$(awk '{print $NF}' "${TRIMMED_R2}")
     fi
     echo -e "${sample}\\t${R1_COUNT}\\t${R2_COUNT}\\t${TR1_COUNT}\\t${TR2_COUNT}" >> "${WORKDIR}/allsamples/Read_Counts.txt"
+    cat "${OUTDIR}/singlesamples/${sample}/hisat_map_summary.txt" >> "${WORKDIR}/allsamples/HISAT_Stats.txt"
     # Then, get alignment summary files
     BAMSTAT="${WORKDIR}/singlesamples/${sample}/${sample}_bamstats.txt"
-    HISATSTAT="${WORKDIR}/singlesamples/${sample}/alignment.summary"
     NMAPPED=$(grep '^SN' "${BAMSTAT}" | grep 'raw total sequences' | cut -f 3)
     MQ0=$(grep '^SN' "${BAMSTAT}" | grep 'reads MQ0' | cut -f 3)
     MAXLEN=$(grep '^SN' "${BAMSTAT}" | grep 'maximum length' | cut -f 3)
     AVGLEN=$(grep '^SN' "${BAMSTAT}" | grep 'average length' | cut -f 3)
     AVGQUAL=$(grep '^SN' "${BAMSTAT}" | grep 'average quality' | cut -f 3)
-    ALN_RATE=$(tail -n 1 "${HISATSTAT}" | awk '{print $NF}')
-    echo -e "${sample}\\t${ALN_RATE}\\t${NMAPPED}\\t${MQ0}\\t${MAXLEN}\\t${AVGLEN}\\t${AVGQUAL}" >> "${WORKDIR}/allsamples/Mapping_Stats.txt"
+    echo -e "${sample}\\t${NMAPPED}\\t${MQ0}\\t${MAXLEN}\\t${AVGLEN}\\t${AVGQUAL}" >> "${WORKDIR}/allsamples/Samtools_Stats.txt"
     # Then, get the insert size summaries. These are really simple.
     echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/IS_Stats.txt)" >> "${WORKDIR}/allsamples/IS_Stats.txt"
 done
