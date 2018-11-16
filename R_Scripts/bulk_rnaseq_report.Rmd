@@ -33,7 +33,7 @@ with funding provided by the University of Minnesota Informatics Institute
 <https://research.umn.edu/units/umii>
 
 # Key Figures and Summaries
-## Read Counts Plot
+## Fragment Counts Plot
 ```{r counts_sum, echo=FALSE, message=FALSE}
 read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
 read_dat <- matrix(
