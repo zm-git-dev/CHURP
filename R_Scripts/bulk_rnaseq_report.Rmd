@@ -33,7 +33,7 @@ with funding provided by the University of Minnesota Informatics Institute
 <https://research.umn.edu/units/umii>
 
 # Key Figures and Summaries
-## Read Counts Summary
+## Read Counts Plot
 ```{r counts_sum, echo=FALSE, message=FALSE}
 read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
 read_dat <- matrix(
@@ -55,7 +55,7 @@ axis(side=2)
 axis(side=1, at=apply(at, 2, mean), labels=as.character(read_summary$V1), cex.axis=0.6, las=2)
 ```
 
-## Read Quality Summary {.tabset}
+## Read Quality Plots {.tabset}
 ### Raw Reads
 
 ```{r raw_qual_sum, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
@@ -279,7 +279,7 @@ if(length(samplenames) > 0) {
 ```
 
 ## HISAT2 Plots {.tabset}
-### Counts Plots
+### Counts
 ```{r hisat2_counts_sum, echo=FALSE, message=FALSE}
 hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
 names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
@@ -303,7 +303,7 @@ legend(
     cex=0.7)
 ```
 
-### Proportion Plots
+### Proportions
 ```{r hisat2_prop_sum, echo=FALSE, message=FALSE}
 hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
 names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
@@ -328,8 +328,21 @@ axis(side=2)
 axis(side=1, at=at, labels=as.character(hisat_summary$SampleName), cex.axis=0.6, las=2)
 ```
 
-## Expression Summary {.tabset}
-### CPM Plot
+## Expression Plots {.tabset}
+### Expressed Genes
+```{r expressed_sum, echo=FALSE, message=FALSE}
+subread_counts <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt", sep="/"), header=T, sep="\t", comment.char="#")
+subread_counts <- subread_counts[,-c(1:6)]
+num_expressed <- as.numeric(apply(subread_counts, 2, function(x) sum(x>0)))
+at <- barplot(
+    num_expressed,
+    ylab="Number of Expressed Features",
+    axes=FALSE)
+axis(side=2)
+axis(side=1, at=at, labels=names(subread_counts), las=2, cex.axis=0.7)
+```
+
+### CPM
 
 ```{r cpm_sum, echo=FALSE, message=FALSE, out.width="800", out.height="800"}
 library(knitr)
@@ -345,7 +358,7 @@ heatmap_plot <- paste(params["outdir"], "Plots", "high_variance_heatmap.pdf", se
 include_graphics(heatmap_plot)
 ```
 
-### MDS Plot
+### MDS
 
 ```{r mds_sum, echo=FALSE, message=FALSE, out.width="800", out.height="800"}
 library(knitr)
@@ -996,22 +1009,27 @@ kable(mapping_summary, caption="Summary of read mapping from SAMTools. *:counts 
 ## Insert Size Metrics
 The plot below shows the variance in insert size for each sample. The black dot
 shows the mean insert size, the red dot shows the median insert size, the grey
-shaded region shows the 30th-70th percentile range, and the vertical black lines
-show the 10th-90th percentile range.
+shaded region shows the bin that encompasses 30% of the insert sizes, and the
+black lines show the bin that encompasses 90% of the insert sizes.
+
+The bin widths reported in the table are widths of intervals, centered around
+the median, that encompass a certain percentage of the insert sizes. For a full
+description of the bin widths, see the [Picard Documentation](https://broadinstitute.github.io/picard/picard-metric-definitions.html#InsertSizeMetrics).
 
 ```{r is_stats, echo=FALSE, message=FALSE}
 library(knitr)
 is_summary <- read.table(paste(params["workdir"], "allsamples", "IS_Stats.txt", sep="/"), header=F)
-
+max_is <- max(is_summary$V8)
 plot(
-    is_summary$V3 ~ seq_along(is_summary$V1),
+    rep(0, nrow(is_summary)) ~ seq_along(is_summary$V1),
     type="n",
     xlab="",
     ylab="Insert Size (bp)",
     main="Insert Size Distribution",
+    ylim=c(0, max_is*1.1),
     axes=FALSE)
-segments(x0=seq_along(is_summary$V1), y1=is_summary$V5, y0=is_summary$V5, lwd=1, col="black")
-segments(x0=seq_along(is_summary$V1), y1=is_summary$V6, y0=is_summary$V7, lwd=8, col="grey")
+segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V8)/2, y0=is_summary$V2+(is_summary$V8)/2, lwd=1, col="black")
+segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V6)/2, y0=is_summary$V2+(is_summary$V6)/2, lwd=8, col="grey")
 points(is_summary$V3 ~ seq_along(is_summary$V1), pch=19, col="black", cex=0.75)
 points(is_summary$V2 ~ seq_along(is_summary$V1), pch=19, col="red", cex=0.75)
 axis(side=2)
@@ -1024,10 +1042,10 @@ names(is_summary) <- c(
     "Median Insert Size",
     "Mean Insert Size",
     "Insert Size StdDev",
-    "10th Percentile",
-    "30th Percentile",
-    "70th Percentile",
-    "90th Percentile")
+    "Width of 10% Bin",
+    "Width of 30% Bin",
+    "Width of 70% Bin",
+    "Width of 90% Bin")
 kable(is_summary, caption="Insert size summary.")
 ```
 
@@ -1035,6 +1053,22 @@ kable(is_summary, caption="Insert size summary.")
 These plots are available as PDF vector images at the following path:
 
 ``r paste(params["outdir"], "Plots", sep="/")``
+
+### Number of Expressed Features
+This plot shows the number of features (genes) that have at least one read
+mapping to them.
+
+```{r expressed_features, echo=FALSE, message=FALSE}
+subread_counts <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt", sep="/"), header=T, sep="\t", comment.char="#")
+subread_counts <- subread_counts[,-c(1:6)]
+num_expressed <- as.numeric(apply(subread_counts, 2, function(x) sum(x>0)))
+at <- barplot(
+    num_expressed,
+    ylab="Number of Expressed Features",
+    axes=FALSE)
+axis(side=2)
+axis(side=1, at=at, labels=names(subread_counts), las=2, cex.axis=0.7)
+```
 
 ### Expression in Counts-per-million
 Shown below is a distribution of expression values as log2(1+CPM). CPM (counts-per-million)
