@@ -151,7 +151,7 @@ ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
 # Prepare to generate HTML report by making unified files for everything. We
 # will have to iterate over every sample
 # Remove old summary files
-rm -f "${WORKDIR}/allsamples/Read_Counts.txt" "${WORKDIR}/allsamples/Mapping_Stats.txt" "${WORKDIR}/allsamples/IS_Stats.txt"
+rm -f "${WORKDIR}/allsamples/Read_Counts.txt" "${WORKDIR}/allsamples/Samtools_Stats.txt" "${WORKDIR}/allsamples/HISAT_Stats.txt" "${WORKDIR}/allsamples/IS_Stats.txt"
 # Remove from the instance of the first blank line to the end of the file
 OFFSET=$(cut -f 1 -d '|' "${SampleSheet}" | grep -nE '^$' | head -n 1 | sed -e 's/://g')
 SNAMES=($(cut -f 1 -d '|' "${SampleSheet}" | sed -e "${OFFSET},\\$d"))
