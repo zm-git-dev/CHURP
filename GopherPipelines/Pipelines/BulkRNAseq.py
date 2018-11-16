@@ -103,6 +103,10 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         if a['expr_groups']:
             a['expr_groups'] = os.path.realpath(os.path.expanduser(str(
                 a['expr_groups'])))
+        try:
+            assert a['headcrop'] >= 0
+        except AssertionError:
+            DieGracefully.die_gracefully(DieGracefully.BAD_HEADCROP)
         self.pipe_logger.debug('GTF: %s', a['gtf'])
         self.pipe_logger.debug('Adapters: %s', a['adapters'])
         self.pipe_logger.debug('FASTQ Folder: %s', a['fq_folder'])

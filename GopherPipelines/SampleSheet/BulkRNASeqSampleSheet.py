@@ -22,11 +22,25 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         # This pipeline takes options for trimmomatic and hisat2
         self.programs.extend(['trimmomatic', 'hisat2'])
         # Set the default trimmomatic options here. This is from YZ's scripts
-        self.defaultopts['trimmomatic'] = ''.join([
-            'ILLUMINACLIP:',
-            args['adapters'],
-            ':4:15:7:2:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18']
-            )
+        if args['headcrop'] > 0:
+            self.defaultopts['trimmomatic'] = ' '.join(
+                [
+                    'ILLUMINACLIP' + args['adapters'] + ':4:15:7:2:true',
+                    'HEADCROP:' + str(args['headcrop']),
+                    'LEADING:3',
+                    'TRAILING:3',
+                    'SLIDINGWINDOW:4:15',
+                    'MINLEN:18'
+                ])
+        else:
+            self.defaultopts['trimmomatic'] = ' '.join(
+                [
+                    'ILLUMINACLIP:' + args['adapters'] + ':4:15:7:2:true',
+                    'LEADING:3',
+                    'TRAILING:3',
+                    'SLIDINGWINDOW:4:15',
+                    'MINLEN:18'
+                ])
         self.defaultopts['hisat2'] = ''
         # Set the user options here
         self.useropts['trimmomatic'] = args['trimmomatic']

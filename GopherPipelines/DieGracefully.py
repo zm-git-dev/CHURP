@@ -12,6 +12,7 @@ BAD_WORKDIR = 11
 BAD_RESOURCES = 12
 BAD_FASTQ = 13
 EMPTY_FASTQ = 14
+BAD_HEADCROP = 15
 BRNASEQ_INC_ARGS = 20
 BRNASEQ_CONFLICT = 21
 BAD_HISAT = 22
@@ -336,6 +337,18 @@ The output from qsub is shown below:\n"""
     return
 
 
+def bad_headcrop():
+    """Call this function if the user provides an invalid value to the
+    headcrop option."""
+    msg = CREDITS + """----------
+ERROR
+
+You specified an invalid value for the --headcrop option. It must be an integer
+value greater than 0.\n"""
+    sys.stderr.write(msg)
+    return
+
+
 def die_gracefully(e, *args):
     """Print user-friendly error messages and exit."""
     err_dict = {
@@ -345,6 +358,7 @@ def die_gracefully(e, *args):
         BAD_FASTQ: bad_fastq,
         EMPTY_FASTQ: empty_fastq,
         BAD_HISAT: bad_hisat2,
+        BAD_HEADCROP: bad_headcrop,
         BRNASEQ_INC_ARGS: brnaseq_inc,
         BRNASEQ_CONFLICT: brnaseq_conflict,
         BAD_GTF: bad_gtf,

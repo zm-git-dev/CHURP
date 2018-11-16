@@ -110,6 +110,15 @@ def add_args(ap):
         action='store_true',
         default=False)
     ap_opt.add_argument(
+        '--headcrop',
+        dest='headcrop',
+        type=int,
+        help=('If supplied and greater than 0, we will add an operation to '
+              'trimmomatic that removes the first N bases from each read. '
+              'This is mostly used for a certain Clontech protocol that adds '
+              'random bases to the front end of reads.'),
+        default=0)
+    ap_opt.add_argument(
         '--adapters',
         '-a',
         metavar='<adapter file.fa>',
