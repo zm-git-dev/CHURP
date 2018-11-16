@@ -994,6 +994,11 @@ kable(mapping_summary, caption="Summary of read mapping from SAMTools. *:counts 
 ```
 
 ## Insert Size Metrics
+The plot below shows the variance in insert size for each sample. The black dot
+shows the mean insert size, the red dot shows the median insert size, the grey
+shaded region shows the 30th-70th percentile range, and the vertical black lines
+show the 10th-90th percentile range.
+
 ```{r is_stats, echo=FALSE, message=FALSE}
 library(knitr)
 is_summary <- read.table(paste(params["workdir"], "allsamples", "IS_Stats.txt", sep="/"), header=F)
@@ -1003,6 +1008,7 @@ plot(
     type="n",
     xlab="",
     ylab="Insert Size (bp)",
+    main="Insert Size Distribution",
     axes=FALSE)
 segments(x0=seq_along(is_summary$V1), y1=is_summary$V5, y0=is_summary$V5, lwd=1, col="black")
 segments(x0=seq_along(is_summary$V1), y1=is_summary$V6, y0=is_summary$V7, lwd=8, col="grey")
