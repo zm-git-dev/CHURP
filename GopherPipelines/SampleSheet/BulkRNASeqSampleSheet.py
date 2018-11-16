@@ -25,7 +25,7 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         if args['headcrop'] > 0:
             self.defaultopts['trimmomatic'] = ' '.join(
                 [
-                    'ILLUMINACLIP' + args['adapters'] + ':4:15:7:2:true',
+                    'ILLUMINACLIP:' + args['adapters'] + ':4:15:7:2:true',
                     'HEADCROP:' + str(args['headcrop']),
                     'LEADING:3',
                     'TRAILING:3',
