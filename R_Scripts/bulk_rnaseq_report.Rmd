@@ -528,12 +528,20 @@ summary below:
 ```{r samplesheet_readable, echo=FALSE, message=FALSE}
 library(knitr)
 sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+# Define an NA-robust function here
+base_na <- function(x) {
+    if(is.na(x)) {
+        return("NA")
+    } else {
+        return(basename(x))
+    }
+}
 # Change the full R1/R2 paths into basenames
-sheet$V3 <- as.character(sapply(sheet$V3, basename))
-sheet$V4 <- as.character(sapply(sheet$V4, basename))
+sheet$V3 <- as.character(sapply(sheet$V3, base_na))
+sheet$V4 <- as.character(sapply(sheet$V4, base_na))
 # And the reference, too
-sheet$V10 <- as.character(sapply(sheet$V10, basename))
-sheet$V13 <- as.character(sapply(sheet$V13, basename))
+sheet$V10 <- as.character(sapply(sheet$V10, base_na))
+sheet$V13 <- as.character(sapply(sheet$V13, base_na))
 # Drop the output and work directories, columns 5 and 6
 sheet <- sheet[,-c(5, 6)]
 # Make the names nice
@@ -1018,35 +1026,40 @@ description of the bin widths, see the [Picard Documentation](https://broadinsti
 
 ```{r is_stats, echo=FALSE, message=FALSE}
 library(knitr)
-is_summary <- read.table(paste(params["workdir"], "allsamples", "IS_Stats.txt", sep="/"), header=F)
-max_is <- max(is_summary$V8)
-plot(
-    rep(0, nrow(is_summary)) ~ seq_along(is_summary$V1),
-    type="n",
-    xlab="",
-    ylab="Insert Size (bp)",
-    main="Insert Size Distribution",
-    ylim=c(0, max_is*1.1),
-    axes=FALSE)
-segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V8)/2, y0=is_summary$V2+(is_summary$V8)/2, lwd=1, col="black")
-segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V6)/2, y0=is_summary$V2+(is_summary$V6)/2, lwd=8, col="grey")
-points(is_summary$V3 ~ seq_along(is_summary$V1), pch=19, col="black", cex=0.75)
-points(is_summary$V2 ~ seq_along(is_summary$V1), pch=19, col="red", cex=0.75)
-axis(side=2)
-axis(side=1, at=seq_along(is_summary$V1), labels=is_summary$V1, las=2, cex.axis=0.75)
+insertsize_file <- paste(params["workdir"], "allsamples", "IS_Stats.txt", sep="/")
+if(!file.exists(insertsize_file) {
+    print("No insert size metrics found.")
+} else {
+    is_summary <- read.table(insertsize_file), header=F)
+    max_is <- max(is_summary$V8)
+    plot(
+        rep(0, nrow(is_summary)) ~ seq_along(is_summary$V1),
+        type="n",
+        xlab="",
+        ylab="Insert Size (bp)",
+        main="Insert Size Distribution",
+        ylim=c(0, max_is*1.1),
+        axes=FALSE)
+    segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V8)/2, y0=is_summary$V2+(is_summary$V8)/2, lwd=1, col="black")
+    segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V6)/2, y0=is_summary$V2+(is_summary$V6)/2, lwd=8, col="grey")
+    points(is_summary$V3 ~ seq_along(is_summary$V1), pch=19, col="black", cex=0.75)
+    points(is_summary$V2 ~ seq_along(is_summary$V1), pch=19, col="red", cex=0.75)
+    axis(side=2)
+    axis(side=1, at=seq_along(is_summary$V1), labels=is_summary$V1, las=2, cex.axis=0.75)
 
-is_summary$V3 <- round(is_summary$V3, 3)
-is_summary$V4 <- round(is_summary$V4, 3)
-names(is_summary) <- c(
-    "Sample Name",
-    "Median Insert Size",
-    "Mean Insert Size",
-    "Insert Size StdDev",
-    "Width of 10% Bin",
-    "Width of 30% Bin",
-    "Width of 70% Bin",
-    "Width of 90% Bin")
-kable(is_summary, caption="Insert size summary.")
+    is_summary$V3 <- round(is_summary$V3, 3)
+    is_summary$V4 <- round(is_summary$V4, 3)
+    names(is_summary) <- c(
+        "Sample Name",
+        "Median Insert Size",
+        "Mean Insert Size",
+        "Insert Size StdDev",
+        "Width of 10% Bin",
+        "Width of 30% Bin",
+        "Width of 70% Bin",
+        "Width of 90% Bin")
+    kable(is_summary, caption="Insert size summary.")
+}
 ```
 
 ## Counts Summaries {.tabset}

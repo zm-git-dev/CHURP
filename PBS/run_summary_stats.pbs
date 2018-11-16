@@ -193,7 +193,10 @@ do
     AVGQUAL=$(grep '^SN' "${BAMSTAT}" | grep 'average quality' | cut -f 3)
     echo -e "${sample}\\t${NMAPPED}\\t${MQ0}\\t${MAXLEN}\\t${AVGLEN}\\t${AVGQUAL}" >> "${WORKDIR}/allsamples/Samtools_Stats.txt"
     # Then, get the insert size summaries. These are really simple.
-    echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/IS_Stats.txt)" >> "${WORKDIR}/allsamples/IS_Stats.txt"
+    if [ -f "${WORKDIR}/singlesamples/${sample}/IS_Stats.txt" ]
+    then
+        echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/IS_Stats.txt)" >> "${WORKDIR}/allsamples/IS_Stats.txt"
+    fi
 done
 
 # We will generate an HTML report
