@@ -43,6 +43,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
 
         # Set the minimum gene length
         self.min_gene_len = str(valid_args['mingene'])
+        # And the minimum depth
+        self.min_cpm = str(valid_args['mincpm'])
 
         # And make a sample sheet from the args
         self.sheet = BulkRNASeqSampleSheet.BulkRNASeqSampleSheet(valid_args)
@@ -106,7 +108,13 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         try:
             assert a['headcrop'] >= 0
         except AssertionError:
-            DieGracefully.die_gracefully(DieGracefully.BAD_HEADCROP)
+            DieGracefully.die_gracefully(
+                DieGracefully.BAD_NUMBER, '--headcrop')
+        try:
+            assert a['mincpm'] >= 0
+        except AssertionError:
+            DieGracefully.die_gracefully(
+                DieGracefully.BAD_NUMBER, '--min-cpm')
         self.pipe_logger.debug('GTF: %s', a['gtf'])
         self.pipe_logger.debug('Adapters: %s', a['adapters'])
         self.pipe_logger.debug('FASTQ Folder: %s', a['fq_folder'])
@@ -272,6 +280,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'SampleSheet=${SAMPLESHEET}',
             ',MINLEN=',
             self.min_gene_len,
+            ',MINCPM=',
+            self.min_cpm,
             ',RSUMMARY=${DE_SCRIPT}',
             ',PIPE_SCRIPT=${PIPE_SCRIPT}',
             ',BULK_RNASEQ_REPORT=${REPORT_SCRIPT}'])
