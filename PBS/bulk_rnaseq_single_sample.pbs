@@ -145,6 +145,11 @@ for fastqc_out_dir in $(find "${WORKDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 
 do
     out_pref=${fastqc_out_dir/_fastqc/.trimmed_readcount.txt}
     read_no=$(basename "${fastqc_out_dir}" | sed -nr 's/.*([1|2])P_fastqc/\\1/p')
+    # If the files are single-end, then $read_no is empty
+    if [ -z "${read_no}" ]
+    then
+        read_no="1"
+    fi
     echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
     awk '/>>Per base sequence quality/{flag=1; next} />>END_MODULE/{flag=0} flag' "${fastqc_out_dir}/fastqc_data.txt" | sed -e 's/ /./g' > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_R${read_no}_trim_quals.txt"
     rm -rf "${fastqc_out_dir}.processed"
