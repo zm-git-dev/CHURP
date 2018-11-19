@@ -168,8 +168,8 @@ do
     else
         R2_COUNT=$(awk '{print $NF}' "${RAW_R2}")
     fi
-    TRIMMED_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*1P.trimmed_readcount.txt')
-    TRIMMED_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*2P.trimmed_readcount.txt')
+    TRIMMED_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*1*.trimmed_readcount.txt')
+    TRIMMED_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*2*.trimmed_readcount.txt')
     if [ -z "${TRIMMED_R1}" ]
     then
         TR1_COUNT="NA"
