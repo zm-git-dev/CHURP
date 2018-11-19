@@ -865,7 +865,7 @@ the grey shaded region shows the inter-quartile range, and the vertical black
 lines show the 10th-90th percentile range.
 
 ```{r trim_read_quals_fastqc, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.75*nrow(sheet)}
-if(length(samplenames) > 0) {
+if(length(trim_samp) > 0) {
     plotqual <- function(sn) {
         qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
@@ -902,7 +902,7 @@ if(length(samplenames) > 0) {
         }
     }
     par(mfrow=c(nsamp, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
-    plt_out <- sapply(samplenames, plotqual)
+    plt_out <- sapply(trim_samp, plotqual)
 } else {
     print("No trimming performed.")
 }

@@ -46,7 +46,11 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         self.useropts['trimmomatic'] = args['trimmomatic']
         self.useropts['hisat2'] = args['hisat2']
         if args['no_trim']:
-            self.useropts['trim'] = 'no'
+            if args['headcrop']:
+                self.useropts['trim'] = 'yes'
+                self.useropts['trimmomatic'] = 'HEADCROP:' + str(args['headcrop'])
+            else:
+                self.useropts['trim'] = 'no'
         else:
             self.useropts['trim'] = 'yes'
         if args['rmdup']:
