@@ -22,6 +22,16 @@ params:
 for(key in names(params)) {
     do.call("Sys.setenv", params[key])
 }
+
+# Read in the data sets here so that we don't have to keep doing it later
+read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
+# Set NAs in read summary to 0
+read_summary[is.na(read_summary)] <- 0
+sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+samplenames <- sheet$V1
+nsamp <- length(samplenames)
+hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
+names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
 ```
 
 CHURP was developed by the Research Informatics Solutions (RIS) group at MSI
@@ -35,7 +45,7 @@ with funding provided by the University of Minnesota Informatics Institute
 # Key Figures and Summaries
 ## Fragment Counts Plot
 ```{r counts_sum, echo=FALSE, message=FALSE}
-read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
+# read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
 read_dat <- matrix(
     c(read_summary$V2, read_summary$V4)/1000000,
     byrow=FALSE,
@@ -58,11 +68,7 @@ axis(side=1, at=apply(at, 2, mean), labels=as.character(read_summary$V1), cex.ax
 ## Read Quality Plots {.tabset}
 ### Raw Reads
 
-```{r raw_qual_sum, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
-# Use the samplesheet to get the sample names
-sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
-samplenames <- sheet$V1
-
+```{r raw_qual_sum, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.7*nrow(sheet)}
 plotqual_first <- function(sn) {
     allquals <- matrix(0:45)
     image(
@@ -155,7 +161,6 @@ plotqual_last <- function(sn) {
         axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
     }
 }
-nsamp <- length(samplenames)
 par(mfrow=c(nsamp+1, 2))
 # Set the margins of the top to be high on the first two so we can add the R1/R2 labels
 par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
@@ -167,11 +172,9 @@ dummy <- plotqual_last(samplenames[nsamp])
 ```
 
 ### Trimmed Reads
-```{r trim_qual_sum, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
-# Use the samplesheet to get the sample names
-sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
-samplenames <- sheet$V1[sheet$V7 == "yes"]
-if(length(samplenames) > 0) {
+```{r trim_qual_sum, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.7*nrow(sheet)}
+trim_samp <- sheet$V1[sheet$V7 == "yes"]
+if(length(trim_samp) > 0) {
     plotqual_first <- function(sn) {
         allquals <- matrix(0:45)
         image(
@@ -264,15 +267,15 @@ if(length(samplenames) > 0) {
             axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
         }
     }
-    nsamp <- length(samplenames)
+    nsamp <- length(trim_samp)
     par(mfrow=c(nsamp+1, 2))
     # Set the margins of the top to be high on the first two so we can add the R1/R2 labels
     par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
-    dummy <- plotqual_first(samplenames[1])
+    dummy <- plotqual_first(trim_samp[1])
     par(mar=c(1.1, 5, 1.1, 0.1))
-    dummy <- sapply(samplenames[3:nsamp-1], plotqual)
+    dummy <- sapply(trim_samp[3:nsamp-1], plotqual)
     par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
-    dummy <- plotqual_last(samplenames[nsamp])
+    dummy <- plotqual_last(trim_samp[nsamp])
     } else {
         print("No trimming performed.")
     }
@@ -281,8 +284,6 @@ if(length(samplenames) > 0) {
 ## HISAT2 Plots {.tabset}
 ### Counts
 ```{r hisat2_counts_sum, echo=FALSE, message=FALSE}
-hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
-names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
 count_dat <- as.matrix(hisat_summary[,c("UniqueMapped", "MultiMapped", "DiscoMapped", "Unmapped")])
 max_reads <- max(hisat_summary$Total)/1000000
 at <- barplot(
@@ -305,8 +306,6 @@ legend(
 
 ### Proportions
 ```{r hisat2_prop_sum, echo=FALSE, message=FALSE}
-hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
-names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
 count_dat <- as.matrix(hisat_summary[,c("UniqueMapped", "MultiMapped", "DiscoMapped", "Unmapped")])
 # Then make a proportion plot
 prop_dat <- count_dat / hisat_summary$Total
@@ -527,13 +526,20 @@ summary below:
 
 ```{r samplesheet_readable, echo=FALSE, message=FALSE}
 library(knitr)
-sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+# Define an NA-robust function here
+base_na <- function(x) {
+    if(is.na(x)) {
+        return("NA")
+    } else {
+        return(basename(x))
+    }
+}
 # Change the full R1/R2 paths into basenames
-sheet$V3 <- as.character(sapply(sheet$V3, basename))
-sheet$V4 <- as.character(sapply(sheet$V4, basename))
+sheet$V3 <- as.character(sapply(sheet$V3, base_na))
+sheet$V4 <- as.character(sapply(sheet$V4, base_na))
 # And the reference, too
-sheet$V10 <- as.character(sapply(sheet$V10, basename))
-sheet$V13 <- as.character(sapply(sheet$V13, basename))
+sheet$V10 <- as.character(sapply(sheet$V10, base_na))
+sheet$V13 <- as.character(sapply(sheet$V13, base_na))
 # Drop the output and work directories, columns 5 and 6
 sheet <- sheet[,-c(5, 6)]
 # Make the names nice
@@ -579,7 +585,6 @@ head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
 ## Read Counts
 ```{r read_counts, echo=FALSE, message=FALSE}
 library(knitr)
-read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
 names(read_summary) <- c(
     "Sample Name",
     "Raw R1 Count",
@@ -594,11 +599,7 @@ Click on the tab headers to show plots of raw and trimmed read qualities.
 
 ### Raw Read Qualities (Compact style)
 These plots show the read qualities as they came off the sequencing instrument.
-```{r raw_read_quals, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
-# Use the samplesheet to get the sample names
-sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
-samplenames <- sheet$V1
-
+```{r raw_read_quals, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.7*nrow(sheet)}
 plotqual_first <- function(sn) {
     allquals <- matrix(0:45)
     image(
@@ -691,7 +692,6 @@ plotqual_last <- function(sn) {
         axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
     }
 }
-nsamp <- length(samplenames)
 par(mfrow=c(nsamp+1, 2))
 # Set the margins of the top to be high on the first two so we can add the R1/R2 labels
 par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
@@ -704,12 +704,8 @@ dummy <- plotqual_last(samplenames[nsamp])
 
 ### Trimmed Read Qualities (Compact style)
 These plots show read qualities post-trimming, if it was performed.
-
-```{r trim_read_quals, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
-# Use the samplesheet to get the sample names
-sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
-samplenames <- sheet$V1[sheet$V7 == "yes"]
-if(length(samplenames) > 0) {
+```{r trim_read_quals, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.7*nrow(sheet)}
+if(length(trim_samp) > 0) {
     plotqual_first <- function(sn) {
         allquals <- matrix(0:45)
         image(
@@ -802,15 +798,15 @@ if(length(samplenames) > 0) {
             axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
         }
     }
-    nsamp <- length(samplenames)
+    nsamp <- length(trim_samp)
     par(mfrow=c(nsamp+1, 2))
     # Set the margins of the top to be high on the first two so we can add the R1/R2 labels
     par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
-    dummy <- plotqual_first(samplenames[1])
+    dummy <- plotqual_first(trim_samp[1])
     par(mar=c(1.1, 5, 1.1, 0.1))
-    dummy <- sapply(samplenames[3:nsamp-1], plotqual)
+    dummy <- sapply(trim_samp[3:nsamp-1], plotqual)
     par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
-    dummy <- plotqual_last(samplenames[nsamp])
+    dummy <- plotqual_last(trim_samp[nsamp])
     } else {
         print("No trimming performed.")
     }
@@ -822,10 +818,7 @@ The black dot shows the mean quality, the red dot shows the median quality,
 the grey shaded region shows the inter-quartile range, and the vertical black
 lines show the 10th-90th percentile range.
 
-```{r raw_read_quals_fastqc, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
-# Use the samplesheet to get the sample names
-sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
-samplenames <- sheet$V1
+```{r raw_read_quals_fastqc, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.75*nrow(sheet)}
 plotqual <- function(sn) {
     qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
@@ -861,7 +854,7 @@ plotqual <- function(sn) {
         title(paste(sn, "R2", sep=" "))
     }
 }
-par(mfrow=c(3, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
+par(mfrow=c(nsamp, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 plt_out <- sapply(samplenames, plotqual)
 ```
 
@@ -871,10 +864,7 @@ The black dot shows the mean quality, the red dot shows the median quality,
 the grey shaded region shows the inter-quartile range, and the vertical black
 lines show the 10th-90th percentile range.
 
-```{r trim_read_quals_fastqc, echo=FALSE, message=FALSE, out.width="850", out.height="750"}
-# Use the samplesheet to get the sample names
-sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
-samplenames <- sheet$V1[sheet$V7 == "yes"]
+```{r trim_read_quals_fastqc, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.75*nrow(sheet)}
 if(length(samplenames) > 0) {
     plotqual <- function(sn) {
         qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
@@ -911,7 +901,7 @@ if(length(samplenames) > 0) {
             title(paste(sn, "R2", sep=" "))
         }
     }
-    par(mfrow=c(3, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
+    par(mfrow=c(nsamp, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
     plt_out <- sapply(samplenames, plotqual)
 } else {
     print("No trimming performed.")
@@ -923,8 +913,6 @@ if(length(samplenames) > 0) {
 ### Counts-Based
 ```{r hisat2_counts, echo=FALSE, message=FALSE}
 library(knitr)
-hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
-names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
 count_dat <- as.matrix(hisat_summary[,c("UniqueMapped", "MultiMapped", "DiscoMapped", "Unmapped")])
 max_reads <- max(hisat_summary$Total)/1000000
 at <- barplot(
@@ -1018,35 +1006,40 @@ description of the bin widths, see the [Picard Documentation](https://broadinsti
 
 ```{r is_stats, echo=FALSE, message=FALSE}
 library(knitr)
-is_summary <- read.table(paste(params["workdir"], "allsamples", "IS_Stats.txt", sep="/"), header=F)
-max_is <- max(is_summary$V8)
-plot(
-    rep(0, nrow(is_summary)) ~ seq_along(is_summary$V1),
-    type="n",
-    xlab="",
-    ylab="Insert Size (bp)",
-    main="Insert Size Distribution",
-    ylim=c(0, max_is*1.1),
-    axes=FALSE)
-segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V8)/2, y0=is_summary$V2+(is_summary$V8)/2, lwd=1, col="black")
-segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V6)/2, y0=is_summary$V2+(is_summary$V6)/2, lwd=8, col="grey")
-points(is_summary$V3 ~ seq_along(is_summary$V1), pch=19, col="black", cex=0.75)
-points(is_summary$V2 ~ seq_along(is_summary$V1), pch=19, col="red", cex=0.75)
-axis(side=2)
-axis(side=1, at=seq_along(is_summary$V1), labels=is_summary$V1, las=2, cex.axis=0.75)
+insertsize_file <- paste(params["workdir"], "allsamples", "IS_Stats.txt", sep="/")
+if(!file.exists(insertsize_file)) {
+    print("No insert size metrics found.")
+} else {
+    is_summary <- read.table(insertsize_file, header=F)
+    max_is <- max(is_summary$V8)
+    plot(
+        rep(0, nrow(is_summary)) ~ seq_along(is_summary$V1),
+        type="n",
+        xlab="",
+        ylab="Insert Size (bp)",
+        main="Insert Size Distribution",
+        ylim=c(0, max_is*1.1),
+        axes=FALSE)
+    segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V8)/2, y0=is_summary$V2+(is_summary$V8)/2, lwd=1, col="black")
+    segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V6)/2, y0=is_summary$V2+(is_summary$V6)/2, lwd=8, col="grey")
+    points(is_summary$V3 ~ seq_along(is_summary$V1), pch=19, col="black", cex=0.75)
+    points(is_summary$V2 ~ seq_along(is_summary$V1), pch=19, col="red", cex=0.75)
+    axis(side=2)
+    axis(side=1, at=seq_along(is_summary$V1), labels=is_summary$V1, las=2, cex.axis=0.75)
 
-is_summary$V3 <- round(is_summary$V3, 3)
-is_summary$V4 <- round(is_summary$V4, 3)
-names(is_summary) <- c(
-    "Sample Name",
-    "Median Insert Size",
-    "Mean Insert Size",
-    "Insert Size StdDev",
-    "Width of 10% Bin",
-    "Width of 30% Bin",
-    "Width of 70% Bin",
-    "Width of 90% Bin")
-kable(is_summary, caption="Insert size summary.")
+    is_summary$V3 <- round(is_summary$V3, 3)
+    is_summary$V4 <- round(is_summary$V4, 3)
+    names(is_summary) <- c(
+        "Sample Name",
+        "Median Insert Size",
+        "Mean Insert Size",
+        "Insert Size StdDev",
+        "Width of 10% Bin",
+        "Width of 30% Bin",
+        "Width of 70% Bin",
+        "Width of 90% Bin")
+    kable(is_summary, caption="Insert size summary.")
+}
 ```
 
 ## Counts Summaries {.tabset}
@@ -1119,8 +1112,6 @@ out of the samplesheet:
 
 ```{r expr_groups, echo=FALSE, message=FALSE}
 library(knitr)
-sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
-# Keep only the sample name and the group
 sheet_sub <- sheet[,c(1, 2)]
 names(sheet_sub) <- c("Sample Name", "Group")
 kable(sheet_sub, caption="Experimental groups.")

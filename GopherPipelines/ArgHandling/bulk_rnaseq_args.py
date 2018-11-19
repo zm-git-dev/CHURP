@@ -102,6 +102,15 @@ def add_args(ap):
         type=int,
         default=200)
     ap_opt.add_argument(
+        '--min-cpm',
+        '-c',
+        dest='mincpm',
+        help=('Minimum expression value in CPM for a gene to be included in '
+              'differential expression testing. Defaults to 1. Set to 0 to '
+              'disable CPM filtering.'),
+        type=float,
+        default=1.0)
+    ap_opt.add_argument(
         '--unstranded',
         dest='unstranded',
         help=('If supplied, count reads as "unstranded" in featureCounts. '

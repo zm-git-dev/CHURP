@@ -115,7 +115,7 @@ fi
 # Summarize the merged count data, including descriptive summaries and differential expression tests if >1 group present.
 echo "# $(date '+%F %T'): Running edgeR analysis on counts" >> "${LOG_FNAME}"
 echo "Rscript "'"'"${RSUMMARY}"'"'" "'"'"${OUTDIR}"'"'" "'"'"${WORKDIR}"'"'" "'"'"${SampleSheet}"'"'" "'"'"${WORKDIR}/subread_counts.txt"'"' '"'"${MINLEN}"'"' " &> Rout.txt" >> "${LOG_FNAME}"
-Rscript "${RSUMMARY}" "${OUTDIR}" "${WORKDIR}" "${SampleSheet}" "${WORKDIR}/allsamples/subread_counts.txt" "${MINLEN}" &> Rout.txt
+Rscript "${RSUMMARY}" "${OUTDIR}" "${WORKDIR}" "${SampleSheet}" "${WORKDIR}/allsamples/subread_counts.txt" "${MINLEN}" "${MINCPM}" &> Rout.txt
 
 echo "# ----- Output from ${RSUMMARY} below" >> "${LOG_FNAME}"
 cat Rout.txt >> "${LOG_FNAME}"
@@ -193,7 +193,10 @@ do
     AVGQUAL=$(grep '^SN' "${BAMSTAT}" | grep 'average quality' | cut -f 3)
     echo -e "${sample}\\t${NMAPPED}\\t${MQ0}\\t${MAXLEN}\\t${AVGLEN}\\t${AVGQUAL}" >> "${WORKDIR}/allsamples/Samtools_Stats.txt"
     # Then, get the insert size summaries. These are really simple.
-    echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/IS_Stats.txt)" >> "${WORKDIR}/allsamples/IS_Stats.txt"
+    if [ -f "${WORKDIR}/singlesamples/${sample}/IS_Stats.txt" ]
+    then
+        echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/IS_Stats.txt)" >> "${WORKDIR}/allsamples/IS_Stats.txt"
+    fi
 done
 
 # We will generate an HTML report
