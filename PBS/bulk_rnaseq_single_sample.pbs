@@ -108,7 +108,7 @@ do
     then
         read_no="1"
     fi
-    out_pref="${SAMPLENM}_${read_no}.raw_readcount.txt}"
+    out_pref="${SAMPLENM}_${read_no}.raw_readcount.txt"
     echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
     awk '/>>Per base sequence quality/{flag=1; next} />>END_MODULE/{flag=0} flag' "${fastqc_out_dir}/fastqc_data.txt" | sed -e 's/ /./g' > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_${read_no}_raw_quals.txt"
     rm -rf "${fastqc_out_dir}.processed"
@@ -153,7 +153,7 @@ do
     then
         read_no="1"
     fi
-    out_pref="${SAMPLENM}_${read_no}.trimmed_readcount.txt}"
+    out_pref="${SAMPLENM}_${read_no}.trimmed_readcount.txt"
     echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
     awk '/>>Per base sequence quality/{flag=1; next} />>END_MODULE/{flag=0} flag' "${fastqc_out_dir}/fastqc_data.txt" | sed -e 's/ /./g' > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_R${read_no}_trim_quals.txt"
     rm -rf "${fastqc_out_dir}.processed"
