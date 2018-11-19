@@ -25,6 +25,8 @@ for(key in names(params)) {
 
 # Read in the data sets here so that we don't have to keep doing it later
 read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
+# Set NAs in read summary to 0
+read_summary[is.na(read_summary)] <- 0
 sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
 samplenames <- sheet$V1
 nsamp <- length(samplenames)
