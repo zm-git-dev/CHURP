@@ -1,6 +1,6 @@
 # CHURP
 This repository contains the **C**ollection of **H**ierarchical **U**MII-**R**IS
-**P**ipelines (CHURP). They were 
+**P**ipelines (CHURP).
 
 ## Acknowledgements
 This software package was developed by the Research Informatics Solutions (RIS)
