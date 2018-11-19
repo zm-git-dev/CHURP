@@ -200,8 +200,8 @@ do
 done
 
 # We will generate an HTML report
-# This is an ugly workaround, but should prevent the weird writing issue that Rmarkdown/knitr has
-ln -sf "${BULK_RNASEQ_REPORT}" "./Report.Rmd"
-PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/gopher-pipelines/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('Report.Rmd', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRIPT}"', samplesheet='"${SampleSheet}"'))"
+# This is an ugly workaround, but sidesteps the problem of write-locked public dirs for Rmarkdown/knitr
+cp -u "${BULK_RNASEQ_REPORT}" "./Report.Rmd"
+PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/gopher-pipelines/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('./Report.Rmd', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRIPT}"', samplesheet='"${SampleSheet}"'))"
 
 echo "# $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
