@@ -1011,7 +1011,10 @@ if(!file.exists(insertsize_file)) {
     print("No insert size metrics found.")
 } else {
     is_summary <- read.table(insertsize_file, header=F)
-    max_is <- max(is_summary$V8)
+    # Calculate the widest interval that we would have to plot:
+    # mean insert size + 1/2 of the 90% percentile bin
+    lims <- is_summary$V3 + (is_summary$V8)/2
+    max_is <- max(lims)
     plot(
         rep(0, nrow(is_summary)) ~ seq_along(is_summary$V1),
         type="n",
