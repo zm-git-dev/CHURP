@@ -43,6 +43,40 @@ with funding provided by the University of Minnesota Informatics Institute
 <https://research.umn.edu/units/umii>
 
 # Key Figures and Summaries
+## Experiment Summary
+A tabular summary of the samples and reads that were analyzed is shown below:
+
+```{r samplesheet_sum, echo=FALSE, message=FALSE}
+library(knitr)
+# Define an NA-robust function here
+base_na <- function(x) {
+    if(is.na(x)) {
+        return("NA")
+    } else {
+        return(basename(x))
+    }
+}
+# Change the full R1/R2 paths into basenames
+sheet$V3 <- as.character(sapply(sheet$V3, base_na))
+sheet$V4 <- as.character(sapply(sheet$V4, base_na))
+# And the reference, too
+sheet$V10 <- as.character(sapply(sheet$V10, base_na))
+sheet$V13 <- as.character(sapply(sheet$V13, base_na))
+# Keep only sample name, group, R1, R2, Trim, rmdup, Trim opts, unstranded
+sheet <- sheet[,c(1, 2, 3, 4, 7, 8, 9, 12)]
+# Make the names nice
+names(sheet) <- c(
+    "Sample Name",
+    "Group",
+    "R1",
+    "R2",
+    "Trim?",
+    "Remove Dups?",
+    "Trim Options",
+    "Unstranded?")
+sheet
+```
+
 ## Fragment Counts Plot
 ```{r counts_sum, echo=FALSE, message=FALSE}
 # read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
