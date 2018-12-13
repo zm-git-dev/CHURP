@@ -60,12 +60,10 @@ base_na <- function(x) {
 sheet$V3 <- as.character(sapply(sheet$V3, base_na))
 sheet$V4 <- as.character(sapply(sheet$V4, base_na))
 # And the reference, too
-sheet$V10 <- as.character(sapply(sheet$V10, base_na))
-sheet$V13 <- as.character(sapply(sheet$V13, base_na))
 # Keep only sample name, group, R1, R2, Trim, rmdup, Trim opts, unstranded
-sheet <- sheet[,c(1, 2, 3, 4, 7, 8, 9, 12)]
+sumsheet <- sheet[,c(1, 2, 3, 4, 7, 8, 9, 12)]
 # Make the names nice
-names(sheet) <- c(
+names(sumsheet) <- c(
     "Sample Name",
     "Group",
     "R1",
@@ -74,7 +72,7 @@ names(sheet) <- c(
     "Remove Dups?",
     "Trim Options",
     "Unstranded?")
-sheet
+sumsheet
 ```
 
 ## Fragment Counts Plot
