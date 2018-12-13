@@ -140,6 +140,8 @@ cp -u "${GTFFILE}" "${OUTDIR}"
 # gene names
 echo "# $(date '+%F %T'): Generating translation table of gene name and Ensembl ID." >> "${LOG_FNAME}"
 awk -F '\\t' '$3 == "gene" { print $9 }' <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") | tr -d ';"' | awk -F ' ' -v OFS='\\t' '{print $2,$6}' > "${OUTDIR}/gene_id_gene_name_map.txt"
+# This is a slower but more general command to get gene_id and gene_name
+# awk -F'\t' '$3 == "gene" {print $9}' | awk -F';' '{for(i = 1; i <= NF; i++) { if( $i ~ /gene_id/ ) {split($i,GI," ")}; if( $i ~ /gene_name/ ) {split($i,GN," ")} }; print GI[2]"\t"GN[2]}' | sed -e 's/"//g'
 
 # Link the work directories to the output directory
 echo "ln -sf "'"'"${WORKDIR}/singlesamples"'"'" "'"'"${OUTDIR}/singlesamples_work_directory"'"' >> "${LOG_FNAME}"

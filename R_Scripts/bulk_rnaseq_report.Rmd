@@ -333,9 +333,12 @@ axis(side=1, at=at, labels=as.character(hisat_summary$SampleName), cex.axis=0.6,
 subread_counts <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt", sep="/"), header=T, sep="\t", comment.char="#")
 subread_counts <- subread_counts[,-c(1:6)]
 num_expressed <- as.numeric(apply(subread_counts, 2, function(x) sum(x>0)))
+maxexpr <- max(num_expressed)
 at <- barplot(
     num_expressed,
     ylab="Number of Expressed Features",
+    ylim=c(0, maxexpr*1.15),
+    col="#1f78b4",
     axes=FALSE)
 axis(side=2)
 axis(side=1, at=at, labels=names(subread_counts), las=2, cex.axis=0.7)
