@@ -43,6 +43,38 @@ with funding provided by the University of Minnesota Informatics Institute
 <https://research.umn.edu/units/umii>
 
 # Key Figures and Summaries
+## Experiment Summary
+A tabular summary of the samples and reads that were analyzed is shown below:
+
+```{r samplesheet_sum, echo=FALSE, message=FALSE}
+library(knitr)
+# Define an NA-robust function here
+base_na <- function(x) {
+    if(is.na(x)) {
+        return("NA")
+    } else {
+        return(basename(x))
+    }
+}
+# Change the full R1/R2 paths into basenames
+sheet$V3 <- as.character(sapply(sheet$V3, base_na))
+sheet$V4 <- as.character(sapply(sheet$V4, base_na))
+# And the reference, too
+# Keep only sample name, group, R1, R2, Trim, rmdup, Trim opts, unstranded
+sumsheet <- sheet[,c(1, 2, 3, 4, 7, 8, 9, 12)]
+# Make the names nice
+names(sumsheet) <- c(
+    "Sample Name",
+    "Group",
+    "R1",
+    "R2",
+    "Trim?",
+    "Remove Dups?",
+    "Trim Options",
+    "Unstranded?")
+sumsheet
+```
+
 ## Fragment Counts Plot
 ```{r counts_sum, echo=FALSE, message=FALSE}
 # read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
@@ -333,9 +365,12 @@ axis(side=1, at=at, labels=as.character(hisat_summary$SampleName), cex.axis=0.6,
 subread_counts <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt", sep="/"), header=T, sep="\t", comment.char="#")
 subread_counts <- subread_counts[,-c(1:6)]
 num_expressed <- as.numeric(apply(subread_counts, 2, function(x) sum(x>0)))
+maxexpr <- max(num_expressed)
 at <- barplot(
     num_expressed,
     ylab="Number of Expressed Features",
+    ylim=c(0, maxexpr*1.15),
+    col="#1f78b4",
     axes=FALSE)
 axis(side=2)
 axis(side=1, at=at, labels=names(subread_counts), las=2, cex.axis=0.7)

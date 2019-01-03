@@ -196,7 +196,7 @@ if [ ! -f samtools.done ]; then
         echo "# $(date '+%F %T'): Sorting by read name and removing duplicates from HISAT2 alignment." >> "${LOG_FNAME}"
         echo "samtools view -bh -F 4 -@ ${PBS_NUM_PPN} "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
         echo "samtools rmdup "'"'"${SAMPLENM}.sorted.bam"'"'" "'"'"${SAMPLENM}.sorted.rmdup.bam"'"' >> "${LOG_FNAME}"
-        samtools view -bh -F 4 -@ ${PBS_NUM_PPN} "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
+        samtools view -bh -F 4 -q 60 -@ ${PBS_NUM_PPN} "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
         samtools rmdup "${SAMPLENM}.sorted.bam" "${SAMPLENM}.sorted.rmdup.bam"
         # Sort the bam by coordinate, too
         samtools sort -o "${SAMPLENM}_Coord.sorted.rmdup.bam" -@ ${PBS_NUM_PPN} -O bam -T temp "${SAMPLENM}.sorted.rmdup.bam"
@@ -210,7 +210,7 @@ if [ ! -f samtools.done ]; then
     else
         echo "# $(date '+%F %T'): Sorting by read name" >> "${LOG_FNAME}"
         echo "samtools view -bh -F 4 -@ ${PBS_NUM_PPN} "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
-        samtools view -bh -F 4 -@ ${PBS_NUM_PPN} "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
+        samtools view -bh -F 4 -q 60 -@ ${PBS_NUM_PPN} "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
         # Sort the bam by coordinate, too
         samtools sort -o "${SAMPLENM}_Coord.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp "${SAMPLENM}.sorted.bam"
         samtools index "${SAMPLENM}_Coord.sorted.bam"
