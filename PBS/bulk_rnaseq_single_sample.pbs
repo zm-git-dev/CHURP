@@ -256,10 +256,10 @@ if [ ! -f hisat2.done ]; then
                 && touch hisat2.done
         fi
     fi
+    # Stick the alignment summary onto the analysis log
+    cat alignment.summary >> "${LOG_FNAME}"
 fi
 
-# Stick the alignment summary onto the analysis log
-cat alignment.summary >> "${LOG_FNAME}"
 
 # Process the alignments with samtools
 if [ ! -f samtools.done ]; then
@@ -294,6 +294,7 @@ if [ ! -f samtools.done ]; then
             "${SAMPLENM}_Raw_CoordSort.bam" \
             "${SAMPLENM}_rmdup.bam" \
             2> markdup.stats
+            cat markdup.stats >> "${LOG_FNAME}"
         echo "# $(date '+%F %T'): Name-sorting de-duplicated BAM." >> "${LOG_FNAME}"
         samtools sort \
             -n \
@@ -310,6 +311,7 @@ if [ ! -f samtools.done ]; then
             "${SAMPLENM}_Raw_CoordSort.bam" \
             "${SAMPLENM}_markdup.bam" \
             2> markdup.stats
+            cat markdup.stats >> "${LOG_FNAME}"
         echo "# $(date '+%F %T'): Name-sorting markdup BAM." >> "${LOG_FNAME}"
         samtools sort \
             -n \
@@ -327,14 +329,14 @@ if [ ! -f samtools.done ]; then
         -@ "${PBS_NUM_PPN}" \
         -F 4 \
         -q 60 \
-        -o "${SAMPLENM}_Filtered.bam"
+        -o "${SAMPLENM}_Filtered.bam" \
         "${TO_FLT}"
     echo "# $(date '+%F %T'): Making coordinate-sorted filtered BAM." >> "${LOG_FNAME}"
     samtools sort \
         -O bam \
         -@ "${PBS_NUM_PPN}" \
         -T temp \
-        -o "${SAMPLENM}_Filtered_CoordSort.bam"
+        -o "${SAMPLENM}_Filtered_CoordSort.bam" \
         "${SAMPLENM}_Filtered.bam"
     # Make indices for coordinate sorted BAMs
     echo "# $(date '+%F %T'): Generating indices for coordinate-sorted BAMs." >> "${LOG_FNAME}"
