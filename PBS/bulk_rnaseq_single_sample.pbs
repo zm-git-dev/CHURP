@@ -7,7 +7,8 @@ set -u
 set -o pipefail
 
 # Export the PS4 variable for the trace
-export PS4='[$(date "+%F %T")] Line ${LINENO}: '
+# Taken from https://wiki.bash-hackers.org/scripting/debuggingtips
+export PS4='+(${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
 # Check the major version of the pipeline. If they mismatch, then quit with an error
 PIPELINE_VERSION="0"
@@ -263,7 +264,17 @@ cat alignment.summary 2>> "${LOG_FNAME}"
 # use samtools to remove unmapped reads, could be done in picard too.
 if [ ! -f samtools.done ]; then
     if [ "${RMDUP}" = "yes" ]; then
-        echo "# $(date '+%F %T'): Sorting by read name and removing duplicates from HISAT2 alignment." >> "${LOG_FNAME}"
+        echo "# $(date '+%F %T'): Generating raw coordinate-sorted BAM from HISAT2 SAM." >> "${LOG_FNAME}"
+        samtools view \
+            -ubh \
+            -@ "${PBS_NUM_PPN}" \
+            "${SAMPLENM}.sam" \
+            | samtools sort \
+            -o "${SAMPLENM}_Raw_Coord.sorted.bam" \
+            -@ "${PBS_NUM_PPN}" \
+            -O bam \
+            -T temp
+        echo "# $(date '+%F %T'): Sorting HISAT2 SAM by read name, removing unmapped reads, and applying MAPQ >= 60 filter." >> "${LOG_FNAME}"
         samtools view \
             -bh \
             -F 4 \
@@ -276,49 +287,66 @@ if [ ! -f samtools.done ]; then
             -@ ${PBS_NUM_PPN} \
             -O bam \
             -T temp
+        echo "# $(date '+%F %T'): Removing duplicate reads based on mapping position." >> "${LOG_FNAME}"
         samtools rmdup \
             "${SAMPLENM}.sorted.bam" \
             "${SAMPLENM}.sorted.rmdup.bam"
         # Sort the bam by coordinate, too
+        echo "# $(date '+%F %T'): Generating filtered coordinate-sorted BAM." >> "${LOG_FNAME}"
         samtools sort \
-            -o "${SAMPLENM}_Coord.sorted.rmdup.bam" \
+            -o "${SAMPLENM}_Flt_Coord.sorted.rmdup.bam" \
             -@ ${PBS_NUM_PPN} \
             -O bam \
             -T temp \
             "${SAMPLENM}.sorted.rmdup.bam"
-        samtools index "${SAMPLENM}_Coord.sorted.rmdup.bam"
-        # Generate some summaries of the bam here
-        samtools stats "${SAMPLENM}_Coord.sorted.rmdup.bam" > "${SAMPLENM}_bamstats.txt"
+        echo "# $(date '+%F %T'): Generating indices of all coordinate-sorted BAMs." >> "${LOG_FNAME}"
+        samtools index "${SAMPLENM}_Raw_Coord.sorted.bam"
+        samtools index "${SAMPLENM}_Flt_Coord.sorted.rmdup.bam"
+        samtools stats "${SAMPLENM}_Flt_Coord.sorted.rmdup.bam" > "${SAMPLENM}_bamstats.txt"
         FINAL_BAM="${SAMPLENM}.sorted.rmdup.bam"
-        COORD_BAM="${SAMPLENM}_Coord.sorted.rmdup.bam"
-        COORD_BAI="${SAMPLENM}_Coord.sorted.rmdup.bam.bai"
+        COORD_BAM="${SAMPLENM}_Flt_Coord.sorted.rmdup.bam"
+        COORD_BAI="${SAMPLENM}_Flt_Coord.sorted.rmdup.bam.bai"
         touch samtools.done
     else
-        echo "# $(date '+%F %T'): Sorting by read name" >> "${LOG_FNAME}"
+        echo "# $(date '+%F %T'): Generating raw coordinate-sorted BAM from HISAT2 SAM." >> "${LOG_FNAME}"
+        samtools view \
+            -ubh \
+            -@ "${PBS_NUM_PPN}" \
+            "${SAMPLENM}.sam" \
+            | samtools sort \
+            -o "${SAMPLENM}_Raw_Coord.sorted.bam" \
+            -@ "${PBS_NUM_PPN}" \
+            -O bam \
+            -T temp
+        echo "# $(date '+%F %T'): Sorting HISAT2 SAM by read name, removing unmapped reads, and applying MAPQ >= 60 filter." >> "${LOG_FNAME}"
         samtools view \
             -bh \
             -F 4 \
-            -q 60\
-             -@ ${PBS_NUM_PPN} \
-             "${SAMPLENM}.sam" \
-             | samtools sort \
-             -n \
-             -o "${SAMPLENM}.sorted.bam" \
-             -@ ${PBS_NUM_PPN} \
-             -O bam \
-             -T temp
+            -q 60 \
+            -@ ${PBS_NUM_PPN} \
+            "${SAMPLENM}.sam" \
+            | samtools sort \
+            -n \
+            -o "${SAMPLENM}.sorted.bam" \
+            -@ ${PBS_NUM_PPN} \
+            -O bam \
+            -T temp
         # Sort the bam by coordinate, too
+        echo "# $(date '+%F %T'): Generating filtered coordinate-sorted BAM." >> "${LOG_FNAME}"
         samtools sort \
-            -o "${SAMPLENM}_Coord.sorted.bam" \
+            -o "${SAMPLENM}_Flt_Coord.sorted.bam" \
             -@ ${PBS_NUM_PPN} \
             -O bam \
             -T temp \
             "${SAMPLENM}.sorted.bam"
-        samtools index "${SAMPLENM}_Coord.sorted.bam"
+        echo "# $(date '+%F %T'): Generating indices of all coordinate-sorted BAMs." >> "${LOG_FNAME}"
+        samtools index "${SAMPLENM}_Raw_Coord.sorted.bam"
+        samtools index "${SAMPLENM}_Flt_Coord.sorted.bam"
+        samtools stats "${SAMPLENM}_Flt_Coord.sorted.bam" > "${SAMPLENM}_bamstats.txt"
         samtools stats "${SAMPLENM}_Coord.sorted.bam" > "${SAMPLENM}_bamstats.txt"
         FINAL_BAM="${SAMPLENM}.sorted.bam"
-        COORD_BAM="${SAMPLENM}_Coord.sorted.bam"
-        COORD_BAI="${SAMPLENM}_Coord.sorted.bam.bai"
+        COORD_BAM="${SAMPLENM}_Flt_Coord.sorted.bam"
+        COORD_BAI="${SAMPLENM}_Flt_Coord.sorted.bam.bai"
         touch samtools.done
     fi
 fi
@@ -377,5 +405,5 @@ ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${COORD_BAI}" "${OUTDIR}/Coordinate
 echo "# $(date '+%F %T'): Finished processing ${SAMPLENM}." >> "${LOG_FNAME}"
 touch "${SAMPLENM}.done"
 
-# And close the file descriptor we were using
+# And close the file descriptor we were using for the trace
 exec 5>&-
