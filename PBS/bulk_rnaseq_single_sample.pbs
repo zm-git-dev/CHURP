@@ -295,15 +295,7 @@ if [ ! -f samtools.done ]; then
             "${SAMPLENM}_rmdup.bam" \
             2> markdup.stats
             cat markdup.stats >> "${LOG_FNAME}"
-        echo "# $(date '+%F %T'): Name-sorting de-duplicated BAM." >> "${LOG_FNAME}"
-        samtools sort \
-            -n \
-            -O bam \
-            -@ "${PBS_NUM_PPN}" \
-            -T temp \
-            -o "${SAMPLENM}_rmdup_sorted.bam"
-            "${SAMPLENM}_rmdup.bam"
-        TO_FLT="${SAMPLENM}_rmdup_sorted.bam"
+        TO_FLT="${SAMPLENM}_rmdup.bam"
     else
         echo "# $(date '+%F %T'): Marking (not removing) duplicates in sorted fixmate BAM." >> "${LOG_FNAME}"
         samtools markdup \
@@ -312,25 +304,22 @@ if [ ! -f samtools.done ]; then
             "${SAMPLENM}_markdup.bam" \
             2> markdup.stats
             cat markdup.stats >> "${LOG_FNAME}"
-        echo "# $(date '+%F %T'): Name-sorting markdup BAM." >> "${LOG_FNAME}"
-        samtools sort \
-            -n \
-            -O bam \
-            -@ "${PBS_NUM_PPN}" \
-            -T temp \
-            -o "${SAMPLENM}_markdup_sorted.bam" \
-            "${SAMPLENM}_markdup.bam"
         TO_FLT="${SAMPLENM}_markdup.bam"
     fi
     # Now, we remove unmapped and mulitply-mapped reads
-    echo "# $(date '+%F %T'): Removing unmapped and MAPQ<60 reads." >> "${LOG_FNAME}"
+    echo "# $(date '+%F %T'): Removing unmapped and MAPQ<60 reads and sorting by name." >> "${LOG_FNAME}"
     samtools view \
-        -bh \
+        -bhu \
         -@ "${PBS_NUM_PPN}" \
         -F 4 \
         -q 60 \
+        "${TO_FLT}" \
+        | samtools sort \
+        -n \
+        -O bam \
         -o "${SAMPLENM}_Filtered.bam" \
-        "${TO_FLT}"
+        -T temp \
+        -@ "${PBS_PUM_PPN}"
     echo "# $(date '+%F %T'): Making coordinate-sorted filtered BAM." >> "${LOG_FNAME}"
     samtools sort \
         -O bam \
