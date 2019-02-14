@@ -343,7 +343,6 @@ if [ ! -f samtools.done ]; then
         samtools index "${SAMPLENM}_Raw_Coord.sorted.bam"
         samtools index "${SAMPLENM}_Flt_Coord.sorted.bam"
         samtools stats "${SAMPLENM}_Flt_Coord.sorted.bam" > "${SAMPLENM}_bamstats.txt"
-        samtools stats "${SAMPLENM}_Coord.sorted.bam" > "${SAMPLENM}_bamstats.txt"
         FINAL_BAM="${SAMPLENM}.sorted.bam"
         COORD_BAM="${SAMPLENM}_Flt_Coord.sorted.bam"
         COORD_BAI="${SAMPLENM}_Flt_Coord.sorted.bam.bai"
