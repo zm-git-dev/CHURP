@@ -319,7 +319,7 @@ if [ ! -f samtools.done ]; then
         -O bam \
         -o "${SAMPLENM}_Filtered.bam" \
         -T temp \
-        -@ "${PBS_PUM_PPN}"
+        -@ "${PBS_NUM_PPN}"
     echo "# $(date '+%F %T'): Making coordinate-sorted filtered BAM." >> "${LOG_FNAME}"
     samtools sort \
         -O bam \
