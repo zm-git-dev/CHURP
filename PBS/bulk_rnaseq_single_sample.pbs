@@ -261,93 +261,95 @@ fi
 # Stick the alignment summary onto the analysis log
 cat alignment.summary >> "${LOG_FNAME}"
 
-# use samtools to remove unmapped reads, could be done in picard too.
+# Process the alignments with samtools
 if [ ! -f samtools.done ]; then
+    echo "# $(date '+%F %T'): Sorting raw HISAT2 SAM by read name." >> "${LOG_FNAME}"
+    samtools sort \
+        -n \
+        -O bam \
+        -@ "${PBS_NUM_PPN}" \
+        -T temp \
+        -o "${SAMPLENM}_Raw_NameSort.bam" \
+        "${SAMPLENM}.sam"
+    echo "# $(date '+%F %T'): Running fixmate on name-sorted BAM." >> "${LOG_FNAME}"
+    samtools fixmate \
+        -m \
+        -O bam \
+        -@ "${PBS_NUM_PPN}" \
+        "${SAMPLENM}_Raw_NameSort.bam" \
+        "${SAMPLENM}_Raw_FixMate.bam"
+    echo "# $(date '+%F %T'): Sorting fixmate BAM by coordinate." >> "${LOG_FNAME}"
+    samtools sort \
+        -O bam \
+        -@ "${PBS_NUM_PPN}" \
+        -T temp \
+        -o "${SAMPLENM}_Raw_CoordSort.bam" \
+        "${SAMPLENM}_Raw_FixMate.bam"
+    # If rmdup, then remove them. Else, mark them.
     if [ "${RMDUP}" = "yes" ]; then
-        echo "# $(date '+%F %T'): Generating raw coordinate-sorted BAM from HISAT2 SAM." >> "${LOG_FNAME}"
-        samtools view \
-            -ubh \
-            -@ "${PBS_NUM_PPN}" \
-            "${SAMPLENM}.sam" \
-            | samtools sort \
-            -o "${SAMPLENM}_Raw_Coord.sorted.bam" \
-            -@ "${PBS_NUM_PPN}" \
-            -O bam \
-            -T temp
-        echo "# $(date '+%F %T'): Sorting HISAT2 SAM by read name, removing unmapped reads, and applying MAPQ >= 60 filter." >> "${LOG_FNAME}"
-        samtools view \
-            -bh \
-            -F 4 \
-            -q 60 \
-            -@ ${PBS_NUM_PPN} \
-            "${SAMPLENM}.sam" \
-            | samtools sort \
-            -n \
-            -o "${SAMPLENM}.sorted.bam" \
-            -@ ${PBS_NUM_PPN} \
-            -O bam \
-            -T temp
-        echo "# $(date '+%F %T'): Removing duplicate reads based on mapping position." >> "${LOG_FNAME}"
-        samtools rmdup \
-            "${SAMPLENM}.sorted.bam" \
-            "${SAMPLENM}.sorted.rmdup.bam"
-        # Sort the bam by coordinate, too
-        echo "# $(date '+%F %T'): Generating filtered coordinate-sorted BAM." >> "${LOG_FNAME}"
+        echo "# $(date '+%F %T'): Removing duplicates from sorted fixmate BAM." >> "${LOG_FNAME}"
+        samtools markdup \
+            -r \
+            -s \
+            "${SAMPLENM}_Raw_CoordSort.bam" \
+            "${SAMPLENM}_rmdup.bam" \
+            2> markdup.stats
+        echo "# $(date '+%F %T'): Name-sorting de-duplicated BAM." >> "${LOG_FNAME}"
         samtools sort \
-            -o "${SAMPLENM}_Flt_Coord.sorted.rmdup.bam" \
-            -@ ${PBS_NUM_PPN} \
+            -n \
             -O bam \
+            -@ "${PBS_NUM_PPN}" \
             -T temp \
-            "${SAMPLENM}.sorted.rmdup.bam"
-        echo "# $(date '+%F %T'): Generating indices of all coordinate-sorted BAMs." >> "${LOG_FNAME}"
-        samtools index "${SAMPLENM}_Raw_Coord.sorted.bam"
-        samtools index "${SAMPLENM}_Flt_Coord.sorted.rmdup.bam"
-        samtools stats "${SAMPLENM}_Flt_Coord.sorted.rmdup.bam" > "${SAMPLENM}_bamstats.txt"
-        FINAL_BAM="${SAMPLENM}.sorted.rmdup.bam"
-        COORD_BAM="${SAMPLENM}_Flt_Coord.sorted.rmdup.bam"
-        COORD_BAI="${SAMPLENM}_Flt_Coord.sorted.rmdup.bam.bai"
-        touch samtools.done
+            -o "${SAMPLENM}_rmdup_sorted.bam"
+            "${SAMPLENM}_rmdup.bam"
+        TO_FLT="${SAMPLENM}_rmdup_sorted.bam"
     else
-        echo "# $(date '+%F %T'): Generating raw coordinate-sorted BAM from HISAT2 SAM." >> "${LOG_FNAME}"
-        samtools view \
-            -ubh \
-            -@ "${PBS_NUM_PPN}" \
-            "${SAMPLENM}.sam" \
-            | samtools sort \
-            -o "${SAMPLENM}_Raw_Coord.sorted.bam" \
-            -@ "${PBS_NUM_PPN}" \
-            -O bam \
-            -T temp
-        echo "# $(date '+%F %T'): Sorting HISAT2 SAM by read name, removing unmapped reads, and applying MAPQ >= 60 filter." >> "${LOG_FNAME}"
-        samtools view \
-            -bh \
-            -F 4 \
-            -q 60 \
-            -@ ${PBS_NUM_PPN} \
-            "${SAMPLENM}.sam" \
-            | samtools sort \
-            -n \
-            -o "${SAMPLENM}.sorted.bam" \
-            -@ ${PBS_NUM_PPN} \
-            -O bam \
-            -T temp
-        # Sort the bam by coordinate, too
-        echo "# $(date '+%F %T'): Generating filtered coordinate-sorted BAM." >> "${LOG_FNAME}"
+        echo "# $(date '+%F %T'): Marking (not removing) duplicates in sorted fixmate BAM." >> "${LOG_FNAME}"
+        samtools markdup \
+            -s \
+            "${SAMPLENM}_Raw_CoordSort.bam" \
+            "${SAMPLENM}_markdup.bam" \
+            2> markdup.stats
+        echo "# $(date '+%F %T'): Name-sorting markdup BAM." >> "${LOG_FNAME}"
         samtools sort \
-            -o "${SAMPLENM}_Flt_Coord.sorted.bam" \
-            -@ ${PBS_NUM_PPN} \
+            -n \
             -O bam \
+            -@ "${PBS_NUM_PPN}" \
             -T temp \
-            "${SAMPLENM}.sorted.bam"
-        echo "# $(date '+%F %T'): Generating indices of all coordinate-sorted BAMs." >> "${LOG_FNAME}"
-        samtools index "${SAMPLENM}_Raw_Coord.sorted.bam"
-        samtools index "${SAMPLENM}_Flt_Coord.sorted.bam"
-        samtools stats "${SAMPLENM}_Flt_Coord.sorted.bam" > "${SAMPLENM}_bamstats.txt"
-        FINAL_BAM="${SAMPLENM}.sorted.bam"
-        COORD_BAM="${SAMPLENM}_Flt_Coord.sorted.bam"
-        COORD_BAI="${SAMPLENM}_Flt_Coord.sorted.bam.bai"
-        touch samtools.done
+            -o "${SAMPLENM}_markdup_sorted.bam" \
+            "${SAMPLENM}_markdup.bam"
+        TO_FLT="${SAMPLENM}_markdup.bam"
     fi
+    # Now, we remove unmapped and mulitply-mapped reads
+    echo "# $(date '+%F %T'): Removing unmapped and MAPQ<60 reads." >> "${LOG_FNAME}"
+    samtools view \
+        -bh \
+        -@ "${PBS_NUM_PPN}" \
+        -F 4 \
+        -q 60 \
+        -o "${SAMPLENM}_Filtered.bam"
+        "${TO_FLT}"
+    echo "# $(date '+%F %T'): Making coordinate-sorted filtered BAM." >> "${LOG_FNAME}"
+    samtools sort \
+        -O bam \
+        -@ "${PBS_NUM_PPN}" \
+        -T temp \
+        -o "${SAMPLENM}_Filtered_CoordSort.bam"
+        "${SAMPLENM}_Filtered.bam"
+    # Make indices for coordinate sorted BAMs
+    echo "# $(date '+%F %T'): Generating indices for coordinate-sorted BAMs." >> "${LOG_FNAME}"
+    samtools index "${TO_FLT}"
+    samtools index "${SAMPLENM}_Filtered_CoordSort.bam"
+    # Set some variables to link the files into the output directory
+    FOR_COUNTS="${SAMPLENM}_Filtered.bam"
+    RAW_COORD="${TO_FLT}"
+    RAW_COORD_IDX="${TO_FLT}.bai"
+    FLT_COORD="${SAMPLENM}_Filtered_CoordSort.bam"
+    FLT_COORD_IDX="${SAMPLENM}_Filtered_CoordSort.bam.bai"
+    # Generate some stats for the report
+    echo "# $(date '+%F %T'): Generating alignment stats based on raw BAM." >> "${LOG_FNAME}"
+    samtools stats "${RAW_COORD}" > "${SAMPLENM}_bamstats.txt"
+    touch samtools.done
 fi
 
 # Use picard to collect the insert size metrics, but only if paired end
@@ -358,7 +360,7 @@ then
     mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"
     _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar \
         CollectInsertSizeMetrics \
-        I="${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}" \
+        I="${WORKDIR}/singlesamples/${SAMPLENM}/${FOR_COUNTS}" \
         O="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" \
         H="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf" \
         2>> "${LOG_FNAME}"
@@ -394,12 +396,14 @@ echo "${SAMPLENM} ${TOTAL_READS} ${UNMAP} ${SINGLE_MAP} ${MULTI_MAP} ${DISCO_MAP
 # to not print huge paths as samplenames
 echo "# $(date '+%F %T'): Linking ${SAMPLENM} into ${WORKDIR}/allsamples" >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/allsamples"
-ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}" "${WORKDIR}/allsamples/${SAMPLENM}"
+ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FOR_COUNTS}" "${WORKDIR}/allsamples/${SAMPLENM}"
 
-echo "$ $(date '+%F %T'): Linking coordinate-sorted BAMs into ${OUTDIR}/Coordinate_Sorted_BAMs/" >> "${LOG_FNAME}"
+echo "# $(date '+%F %T'): Linking coordinate-sorted BAMs into ${OUTDIR}/Coordinate_Sorted_BAMs/" >> "${LOG_FNAME}"
 mkdir -p "${OUTDIR}/Coordinate_Sorted_BAMs"
-ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${COORD_BAM}" "${OUTDIR}/Coordinate_Sorted_BAMs/${COORD_BAM}"
-ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${COORD_BAI}" "${OUTDIR}/Coordinate_Sorted_BAMs/${COORD_BAI}"
+ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${RAW_COORD}" "${OUTDIR}/Coordinate_Sorted_BAMs/${RAW_COORD}"
+ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${RAW_COORD_IDX}" "${OUTDIR}/Coordinate_Sorted_BAMs/${RAW_COORD_IDX}"
+ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FLT_COORD}" "${OUTDIR}/Coordinate_Sorted_BAMs/${FLT_COORD}"
+ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FLT_COORD_IDX}" "${OUTDIR}/Coordinate_Sorted_BAMs/${FLT_COORD_IDX}"
 
 echo "# $(date '+%F %T'): Finished processing ${SAMPLENM}." >> "${LOG_FNAME}"
 touch "${SAMPLENM}.done"
