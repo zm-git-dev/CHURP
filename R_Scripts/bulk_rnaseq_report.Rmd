@@ -1022,6 +1022,7 @@ mapping_summary <- read.table(paste(params["workdir"], "allsamples", "Samtools_S
 names(mapping_summary) <- c(
     "Sample Name",
     "Reads Mapped*",
+    "PCR Duplicate",
     "MAPQ = 0",
     "Max Read Length",
     "Average Read Length",
