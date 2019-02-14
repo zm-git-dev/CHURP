@@ -7,7 +7,7 @@ set -u
 set -o pipefail
 
 # Export the PS4 variable for the trace
-export PS4='$(date '+%F %T') Line ${LINENO}: '
+export PS4='$(date "+%F %T") Line ${LINENO}: '
 
 # Check the major version of the pipeline. If they mismatch, then quit with an error
 PIPELINE_VERSION="0"
