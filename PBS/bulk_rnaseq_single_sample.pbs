@@ -50,6 +50,7 @@ mkdir -p "${LOGDIR}"
 TRACE_FNAME="${LOGDIR}/${SAMPLENM}_Trace.log"
 LOG_FNAME="${LOGDIR}/${SAMPLENM}_Commands.log"
 exec 5> "${TRACE_FNAME}"
+export BASH_XTRACEFD=5
 set -x
 
 # load necessary modules
