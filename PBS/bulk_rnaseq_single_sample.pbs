@@ -149,7 +149,7 @@ if [ "${TRIM}" = "yes" ]; then
                 -basein "${R1FILE}" \
                 -baseout "${SAMPLENM}" \
                 $(echo "${TRIMOPTS}" | envsubst) \
-                2> trim.log \
+                2>> "${LOG_FNAME} \
                 && touch trimmomatic.done
         else
             echo "# $(date '+%F %T'): Running trimmomatic on ${R1FILE}." >> "${LOG_FNAME}"
@@ -159,7 +159,7 @@ if [ "${TRIM}" = "yes" ]; then
                 "${R1FILE}" \
                 "${SAMPLENM}_trimmed" \
                 $(echo "${TRIMOPTS}" | envsubst) \
-                2> trim.log \
+                2>> "${LOG_FNAME} \
                 && touch trimmomatic.done
         fi
     fi
@@ -257,6 +257,9 @@ if [ ! -f hisat2.done ]; then
     fi
 fi
 
+# Stick the alignment summary onto the analysis log
+cat alignment.summary 2>> "${LOG_FNAME}"
+
 # use samtools to remove unmapped reads, could be done in picard too.
 if [ ! -f samtools.done ]; then
     if [ "${RMDUP}" = "yes" ]; then
@@ -330,7 +333,8 @@ then
         CollectInsertSizeMetrics \
         I="${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}" \
         O="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" \
-        H="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"
+        H="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf" \
+        2>> "${LOG_FNAME}"
     # Extract the mean, median, standard deviation from the metrics file
     grep \
         -A 1 \
