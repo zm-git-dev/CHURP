@@ -150,7 +150,7 @@ if [ "${TRIM}" = "yes" ]; then
                 -basein "${R1FILE}" \
                 -baseout "${SAMPLENM}" \
                 $(echo "${TRIMOPTS}" | envsubst) \
-                2>> "${LOG_FNAME} \
+                2>> "${LOG_FNAME}" \
                 && touch trimmomatic.done
         else
             echo "# $(date '+%F %T'): Running trimmomatic on ${R1FILE}." >> "${LOG_FNAME}"
@@ -160,7 +160,7 @@ if [ "${TRIM}" = "yes" ]; then
                 "${R1FILE}" \
                 "${SAMPLENM}_trimmed" \
                 $(echo "${TRIMOPTS}" | envsubst) \
-                2>> "${LOG_FNAME} \
+                2>> "${LOG_FNAME}" \
                 && touch trimmomatic.done
         fi
     fi
