@@ -7,7 +7,7 @@ set -u
 set -o pipefail
 
 # Export the PS4 variable for the trace
-export PS4='$(date "+%F %T") Line ${LINENO}: '
+export PS4='[$(date "+%F %T")] Line ${LINENO}: '
 
 # Check the major version of the pipeline. If they mismatch, then quit with an error
 PIPELINE_VERSION="0"
@@ -53,6 +53,8 @@ exec 5> "${TRACE_FNAME}"
 export BASH_XTRACEFD=5
 set -x
 
+# This is annoying to see, so we will exclude it from verbose outout
+set +v
 # load necessary modules
 module load hisat2/2.1.0
 module load fastqc/0.11.7
@@ -62,6 +64,8 @@ module load samtools/1.7
 module load picard/2.9.0
 module load R/3.5.0
 
+# And re-enable verbosity here
+set -v
 module list -t
 module list -t 2>> "${LOG_FNAME}"
 
@@ -76,7 +80,6 @@ else
 fi
 
 # set working directory
-echo "mkdir -p "'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" && cd "'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"' >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}" && cd "${WORKDIR}/singlesamples/${SAMPLENM}"
 
 # check whether to purge files or not. $PURGE will be parsed by command line
