@@ -259,7 +259,7 @@ if [ ! -f hisat2.done ]; then
 fi
 
 # Stick the alignment summary onto the analysis log
-cat alignment.summary 2>> "${LOG_FNAME}"
+cat alignment.summary >> "${LOG_FNAME}"
 
 # use samtools to remove unmapped reads, could be done in picard too.
 if [ ! -f samtools.done ]; then
