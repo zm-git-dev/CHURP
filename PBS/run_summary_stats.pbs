@@ -65,7 +65,10 @@ exec 5> "${TRACE_FNAME}"
 export BASH_XTRACEFD=5
 set -x
 echo "# $(date '+%F %T'): Summary started" > "${LOG_FNAME}"
+echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
+echo '#END_MODULES' >> "${LOG_FNAME}"
+
 
 if [ -z "${R2FILE}" ]
 then

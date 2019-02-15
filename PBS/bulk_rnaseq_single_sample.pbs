@@ -68,7 +68,10 @@ module load R/3.5.0
 # And re-enable verbosity here
 set -v
 module list -t
+
+echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
+echo '#END_MODULES' >> "${LOG_FNAME}"
 
 # Check if we are running in paired or single end mode
 if [ -z "${R2FILE}" ]
