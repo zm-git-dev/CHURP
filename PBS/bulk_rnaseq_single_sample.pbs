@@ -113,9 +113,9 @@ fi
 
 echo "# $(date '+%F %T'): Using BBDuk to search for rRNA contamination in subsampled reads." >> "${LOG_FNAME}"
 if [ "${PE}" = "true" ]; then
-    kallisto quant -i "${SILVA_REF}"-o "${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" "${R2FILE}"
+    kallisto quant -i "${SILVA_REF}" -t "${PBS_NUM_PPN}" -o "${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" "${R2FILE}"
 else
-    kallisto quant -i "${SILVA_REF}"-o "${WORKDIR}/singlesamples/${SAMPLENM}" --single -l 200 -s 50 "${R1FILE}"
+    kallisto quant -i "${SILVA_REF}" -t "${PBS_NUM_PPN}" -o "${WORKDIR}/singlesamples/${SAMPLENM}" --single -l 200 -s 50 "${R1FILE}"
 fi
 
 if [ ! -f fastqc.done ]; then
