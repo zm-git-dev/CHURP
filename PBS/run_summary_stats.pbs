@@ -15,7 +15,7 @@ PIPELINE_VERSION="0"
 SAMPLESHEET_VERSION=$(tail -n 1 "${SampleSheet}" | sed -E 's/#//g')
 if [ "${SAMPLESHEET_VERSION}" -ne "${PIPELINE_VERSION}" ]
 then
-    echo "${SampleSheet} is incompatible with this version of gopher-pipelines."
+    echo "${SampleSheet} is incompatible with this version of CHURP."
     echo "${SampleSheet} was generated with version ${SAMPLESHEET_VERSION}, and this script requires ${PIPELINE_VERSION}."
     exit 100
 fi
@@ -85,12 +85,12 @@ fi
 
 # Set the R_LIBS_USER variable here. This is where packages will be loaded from
 # within R
-echo "# $(date '+%F %T'): Adding /home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/R to R_LIBS_USER" >> "${LOG_FNAME}"
-export R_LIBS_USER="/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/R"
+echo "# $(date '+%F %T'): Adding /home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}/R to R_LIBS_USER" >> "${LOG_FNAME}"
+export R_LIBS_USER="/home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}/R"
 
 # Set the path to the featureCounts executable.
 echo "# $(date '+%F %T'): Using counting reads with featureCounts v. 1.6.2" >> "${LOG_FNAME}"
-FEATURECOUNTS="/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/Supp/subread-1.6.2-Linux-x86_64/bin/featureCounts"
+FEATURECOUNTS="/home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}/Supp/subread-1.6.2-Linux-x86_64/bin/featureCounts"
 mkdir -p "${WORKDIR}/allsamples" && cd "${WORKDIR}/allsamples"
 
 # Use featureCounts to make a merged counts matrix
@@ -241,7 +241,7 @@ done
 # We will generate an HTML report
 # This is an ugly workaround, but sidesteps the problem of write-locked public dirs for Rmarkdown/knitr
 cp -u "${BULK_RNASEQ_REPORT}" "./Report.Rmd"
-PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/gopher-pipelines/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('./Report.Rmd', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRIPT}"', samplesheet='"${SampleSheet}"'))"
+PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/CHURP_Deps/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('./Report.Rmd', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRIPT}"', samplesheet='"${SampleSheet}"'))"
 
 echo "# $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
 # Close the trace file descriptor
