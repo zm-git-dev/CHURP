@@ -123,7 +123,8 @@ if [ "${PE}" = "true" ]; then
         outs="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_singles.fastq" \
         stats="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_rRNA_Stats.txt" \
         k=31 \
-        editdistance=1
+        hammingdistance=1 \
+        prealloc=t
 else
     ${BBDUK} \
         in="${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq" \
@@ -132,7 +133,8 @@ else
         outm="${WORKDIR}/singlesamples/${SAMPLENM}/R1_rRNA_Contam.fastq" \
         stats="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_rRNA_Stats.txt" \
         k=31 \
-        editdistance=1
+        hammingdistance=1 \
+        prealloc=t
 fi
 
 if [ ! -f fastqc.done ]; then
