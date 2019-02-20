@@ -76,7 +76,7 @@ set -v
 
 # Set paths to BBDuk, seqtk, and the SILVA databases
 DEPS_DIR="/home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}"
-SILVA_REF="${DEPS_DIR}/db/SILVA_132_LSU_SSU_Ref.fasta.gz"
+SILVA_REF="${DEPS_DIR}/db/SILVA_132_LSU_SSU_Ref_Dedup_Kmers.fasta.gz"
 BBDUK="${DEPS_DIR}/Supp/bbmap/bbduk.sh"
 SEQTK="${DEPS_DIR}/Supp/seqtk-1.3/seqtk"
 
