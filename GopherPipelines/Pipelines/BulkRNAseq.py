@@ -122,6 +122,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug('Working Dir: %s', a['workdir'])
         self.pipe_logger.debug('HISAT2 Idx: %s', a['hisat2_idx'])
         self.pipe_logger.debug('Expr Groups: %s', a['expr_groups'])
+        self.pipe_logger.debug('Strandedness: %s', a['strand'])
         # Check that the adapters and GTF file exist
         try:
             handle = open(a['gtf'], 'r')

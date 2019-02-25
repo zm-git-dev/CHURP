@@ -39,7 +39,7 @@ while IFS="|" read -ra OPTS; do
     TRIMOPTS=${OPTS[8]}
     HISAT2INDEX=${OPTS[9]}
     HISAT2OPTS=${OPTS[10]}
-    UNSTRANDED=${OPTS[11]}
+    STRAND=${OPTS[11]}
     GTFFILE=${OPTS[12]}
 done <<< "$IN"
 
@@ -96,54 +96,29 @@ mkdir -p "${WORKDIR}/allsamples" && cd "${WORKDIR}/allsamples"
 # Use featureCounts to make a merged counts matrix
 echo "# $(date '+%F %T'): Making a counts matrix for all samples." >> "${LOG_FNAME}"
 BAM_LIST=($(find . -type l -exec basename {} \\;| sort -V))
-if [ "${UNSTRANDED}" = "yes" ]
+if [ "${PE}" = "true" ]
 then
-    if [ "${PE}" = "true" ]
-    then
-        echo "# $(date '+%F %T'): Library is unstranded and paired-end" >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" \
-            -a "${GTFFILE}" \
-            -T ${PBS_NUM_PPN} \
-            -B \
-            -p \
-            -Q 10 \
-            -s 0 \
-            -o subread_counts.txt \
-            "${BAM_LIST[@]}"
-    else
-        echo "# $(date '+%F %T'): Library is unstranded and single-end" >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" \
-            -a "${GTFFILE}" \
-            -T ${PBS_NUM_PPN} \
-            -B \
-            -Q 10 \
-            -s 0 \
-            -o subread_counts.txt \
-            "${BAM_LIST[@]}"
-    fi
+    echo "# $(date '+%F %T'): Library is paired-end with strand ${STRAND}." >> "${LOG_FNAME}"
+    "${FEATURECOUNTS}" \
+        -a "${GTFFILE}" \
+        -T ${PBS_NUM_PPN} \
+        -B \
+        -p \
+        -Q 10 \
+        -s "${STRAND}" \
+        -R CORE \
+        -o subread_counts.txt \
+        "${BAM_LIST[@]}"
 else
-    if [ "${PE}" = "true" ]
-    then
-        echo "# $(date '+%F %T'): Library is stranded and paired-end." >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" \
-            -a "${GTFFILE}" \
-            -T ${PBS_NUM_PPN} \
-            -B \
-            -p \
-            -Q 10 \
-            -s 2 \
-            -o subread_counts.txt \
-            "${BAM_LIST[@]}"
-    else
-        echo "# $(date '+%F %T'): Library is stranded and single-end" >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" \
-            -a "${GTFFILE}" \
-            -T ${PBS_NUM_PPN} \
-            -Q 10 \
-            -s 2 \
-            -o subread_counts.txt \
-            "${BAM_LIST[@]}"
-    fi
+    echo "# $(date '+%F %T'): Library is single-end with strand ${STRAND}" >> "${LOG_FNAME}"
+    "${FEATURECOUNTS}" \
+        -a "${GTFFILE}" \
+        -T ${PBS_NUM_PPN} \
+        -Q 10 \
+        -s "${STRAND}" \
+        -R CORE \
+        -o subread_counts.txt \
+        "${BAM_LIST[@]}"
 fi
 
 # Summarize the merged count data, including descriptive summaries and differential expression tests if >1 group present.

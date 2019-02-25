@@ -111,13 +111,16 @@ def add_args(ap):
         type=float,
         default=1.0)
     ap_opt.add_argument(
-        '--unstranded',
-        dest='unstranded',
-        help=('If supplied, count reads as "unstranded" in featureCounts. '
-              'The default RNAseq library prep protocol used by UMGC is '
-              'stranded. Default: false'),
-        action='store_true',
-        default=False)
+        '--strand',
+        dest='strand',
+        help=('Specify the strandedness of the library. Consult the protocol '
+              'of the kit used to prepare your library to get this '
+              'information. The "standard" kit used by the UMGC is the TruSeq '
+              'Stranded mRNA kit, which is RF stranded. If you are using '
+              'single-end data, specify RF for reverse-strand, FR for '
+              'forward-strand, and U for unstranded.'),
+        choices=['RF', 'FR', 'U'],
+        default='RF')
     ap_opt.add_argument(
         '--headcrop',
         dest='headcrop',
