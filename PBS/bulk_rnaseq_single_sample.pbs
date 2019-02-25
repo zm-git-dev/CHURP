@@ -123,7 +123,7 @@ if [ "${PE}" = "true" ]; then
         editdistance=1 \
         prealloc=t \
         threads="${PBS_NUM_PPN}" \
-        -Xmx8g
+        -Xmx10g
 else
     ${BBDUK} \
         in="${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq" \
@@ -133,7 +133,7 @@ else
         editdistance=1 \
         prealloc=t \
         threads="${PBS_NUM_PPN}" \
-        -Xmx8g
+        -Xmx10g
 fi
 
 if [ ! -f fastqc.done ]; then
