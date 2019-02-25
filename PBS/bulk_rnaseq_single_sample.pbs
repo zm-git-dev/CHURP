@@ -60,10 +60,10 @@ set +v
 module load hisat2/2.1.0
 module load fastqc/0.11.7
 module load trimmomatic/0.33
-module load java/openjdk-11.0.2
 module load samtools/1.7
 module load picard/2.9.0
 module load R/3.5.0
+module load java/openjdk-11.0.2
 
 module list -t
 echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
@@ -103,12 +103,14 @@ fi
 [ -f "${SAMPLENM}.done" ] && echo "found done analysis, exit" && exit $?
 
 # First; subsample the FASTQ and assay for rRNA contamination
-SUBSAMP="100000"
+SUBSAMP="10000"
 echo "# $(date '+%F %T'): Subsampling reads to ${SUBSAMP} fragments." >> "${LOG_FNAME}"
 ${SEQTK} sample -s123 -2 "${R1FILE}" "${SUBSAMP}" > "${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq"
 if [ "${PE}" = "true" ]; then
     ${SEQTK} sample -s123 -2 "${R2FILE}" "${SUBSAMP}" > "${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsamp.fastq"
 fi
+
+which java >> "${LOG_FNAME}"
 
 echo "# $(date '+%F %T'): Using BBDuk to search for rRNA contamination in subsampled reads." >> "${LOG_FNAME}"
 if [ "${PE}" = "true" ]; then
