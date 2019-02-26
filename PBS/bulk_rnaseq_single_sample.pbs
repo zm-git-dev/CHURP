@@ -395,7 +395,7 @@ else
     PICARD_STRAND="NONE"
 fi
 echo "# $(date '+%F %T'): Converting the GTF to a refFlat file for Picard CollectRnaSeqMetrics." >> "${LOG_FNAME}"
-${GTFTOGENEPRED} -genePredExt -geneNameAsName2 <$(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") > "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt"
+${GTFTOGENEPRED} -genePredExt -geneNameAsName2 <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") > "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt"
 paste \
     <(cut -f 12 "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt") \
     <(cut -f 1-10 "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt") \
@@ -406,7 +406,7 @@ samtools view \
     "${WORKDIR}/singlesamples/${SAMPLENM}/${RAW_COORD}" \
     > "${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list"
 grep 'gene_biotype "rRNA"' \
-    <$(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") \
+    <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") \
     | awk '$3 == "gene"' \
     | cut -f 1,4,5,7,9 \
     >> "${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list"
