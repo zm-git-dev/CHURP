@@ -96,6 +96,7 @@ def add_args(ap):
     ap_opt.add_argument(
         '--min-gene-length',
         '-l',
+        metavar="<min length>",
         dest='mingene',
         help=('Minimum gene length to retain for edgeR analysis, in bp. '
               'Default: 200'),
@@ -104,6 +105,7 @@ def add_args(ap):
     ap_opt.add_argument(
         '--min-cpm',
         '-c',
+        metavar="<min CPM>",
         dest='mincpm',
         help=('Minimum expression value in CPM for a gene to be included in '
               'differential expression testing. Set to 0 to disable CPM '
@@ -112,6 +114,7 @@ def add_args(ap):
         default=1.0)
     ap_opt.add_argument(
         '--strand',
+        metavar='<library strandedness>',
         dest='strand',
         help=('Specify the strandedness of the library. Consult the protocol '
               'of the kit used to prepare your library to get this '
@@ -123,8 +126,9 @@ def add_args(ap):
         default='RF')
     ap_opt.add_argument(
         '--subsample',
+        metavar='<num pairs to sample>',
         dest='subsample',
-        help=('Number of reads to subsample for rRNA and duplication '
+        help=('Number of read pairs to subsample for rRNA and duplication '
               'estimation. This does not affect how many reads are used in the '
               'analysis; this is only for QC and diagnostic purposes. '
               'Default: 10000'),
@@ -132,6 +136,7 @@ def add_args(ap):
         default=10000)
     ap_opt.add_argument(
         '--headcrop',
+        metavar='<num bp to crop>',
         dest='headcrop',
         type=int,
         help=('If supplied and greater than 0, we will add an operation to '

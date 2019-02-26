@@ -79,6 +79,7 @@ DEPS_DIR="/home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}"
 SILVA_REF="${DEPS_DIR}/db/SILVA_132_LSU_SSU_Ref_Dedup_Kmers_min100.fasta.gz"
 BBDUK="${DEPS_DIR}/Supp/bbmap/bbduk.sh"
 SEQTK="${DEPS_DIR}/Supp/seqtk-1.3/seqtk"
+GTFTOGENEPRED="${DEPS_DIR}/Supp/UCSC/gtfToGenePred"
 
 # Check if we are running in paired or single end mode
 if [ -z "${R2FILE}" ]
@@ -384,6 +385,43 @@ if [ ! -f samtools.done ]; then
     samtools stats "${RAW_COORD}" > "${SAMPLENM}_bamstats.txt"
     touch samtools.done
 fi
+
+# Use picard to collect RNAseq metrics
+if [ "${STRAND}" = "2" ]; then
+    PICARD_STRAND="SECOND_READ_TRANSCRIPTION_STRAND"
+elif [ "${STRAND}" = "1" ]; then
+    PICARD_STRAND="FIRST_READ_TRANSCRIPTION_STRAND"
+else
+    PICARD_STRAND="NONE"
+fi
+echo "# $(date '+%F %T'): Converting the GTF to a refFlat file for Picard CollectRnaSeqMetrics." >> "${LOG_FNAME}"
+${GTFTOGENEPRED} -genePredExt -geneNameAsName2 <$(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") > "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt"
+paste \
+    <(cut -f 12 "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt") \
+    <(cut -f 1-10 "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt") \
+    | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat.txt.gz"
+echo "# $(date '+%F %T'): Generating rRNA interval list file from GTF and raw BAM." >> "${LOG_FNAME}"
+samtools view \
+    -H \
+    "${WORKDIR}/singlesamples/${SAMPLENM}/${RAW_COORD}" \
+    > "${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list"
+grep 'gene_biotype "rRNA"' \
+    <$(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") \
+    | awk '$3 == "gene"' \
+    | cut -f 1,4,5,7,9 \
+    >> "${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list"
+mkdir -p "${OUTDIR}/RNASeqMetrics"
+mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"
+echo "# $(date '+%F %T'): Collecting RNAseq Metrics for ${SAMPLENM}" >> "${LOG_FNAME}"
+_JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar \
+    CollectRnaSeqMetrics \
+    I="${WORKDIR}/singlesamples/${SAMPLENM}/${RAW_COORD}" \
+    O="${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Metrics.txt" \
+    REF_FLAT="${WORKDIR}/singlesamples/${SAMPLENM}/refFlat.txt.gz" \
+    RIBOSOMAL_INTERVALS="${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list" \
+    MINIMUM_LENGTH="0" \
+    CHART_OUTPUT="${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Coverage_Bias.pdf" \
+    STRAND_SPECIFICITY="${PICARD_STRAND}"
 
 # Use picard to collect the insert size metrics, but only if paired end
 if [ "${PE}" = "true" ]
