@@ -123,7 +123,8 @@ if [ "${PE}" = "true" ]; then
         editdistance=1 \
         prealloc=t \
         threads="${PBS_NUM_PPN}" \
-        -Xmx10g
+        -Xmx10g \
+        2>> "${LOG_FNAME}"
 else
     ${BBDUK} \
         in="${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq" \
@@ -133,7 +134,8 @@ else
         editdistance=1 \
         prealloc=t \
         threads="${PBS_NUM_PPN}" \
-        -Xmx10g
+        -Xmx10g \
+        2>> "${LOG_FNAME}"
 fi
 
 if [ ! -f fastqc.done ]; then
@@ -421,7 +423,8 @@ _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"
     RIBOSOMAL_INTERVALS="${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list" \
     MINIMUM_LENGTH="0" \
     CHART_OUTPUT="${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Coverage_Bias.pdf" \
-    STRAND_SPECIFICITY="${PICARD_STRAND}"
+    STRAND_SPECIFICITY="${PICARD_STRAND}" \
+    2>> "${LOG_FNAME}"
 
 # Use picard to collect the insert size metrics, but only if paired end
 if [ "${PE}" = "true" ]
