@@ -103,7 +103,6 @@ fi
 [ -f "${SAMPLENM}.done" ] && echo "found done analysis, exit" && exit $?
 
 # First; subsample the FASTQ and assay for rRNA contamination
-SUBSAMP="10000"
 echo "# $(date '+%F %T'): Subsampling reads to ${SUBSAMP} fragments." >> "${LOG_FNAME}"
 ${SEQTK} sample -s123 -2 "${R1FILE}" "${SUBSAMP}" > "${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq"
 if [ "${PE}" = "true" ]; then

@@ -84,7 +84,7 @@ def add_args(ap):
         metavar='<loglevel>',
         dest='verbosity',
         help=('How much logging output to show. '
-              'Choose one of "debug," "info," or "warn."'),
+              'Choose one of "debug," "info," or "warn." Default: warn'),
         choices=['debug', 'info', 'warn'],
         default='warn')
     ap_opt.add_argument(
@@ -106,8 +106,8 @@ def add_args(ap):
         '-c',
         dest='mincpm',
         help=('Minimum expression value in CPM for a gene to be included in '
-              'differential expression testing. Defaults to 1. Set to 0 to '
-              'disable CPM filtering.'),
+              'differential expression testing. Set to 0 to disable CPM '
+              'filtering. Default: 1'),
         type=float,
         default=1.0)
     ap_opt.add_argument(
@@ -118,9 +118,18 @@ def add_args(ap):
               'information. The "standard" kit used by the UMGC is the TruSeq '
               'Stranded mRNA kit, which is RF stranded. If you are using '
               'single-end data, specify RF for reverse-strand, FR for '
-              'forward-strand, and U for unstranded.'),
+              'forward-strand, and U for unstranded. Default: RF'),
         choices=['RF', 'FR', 'U'],
         default='RF')
+    ap_opt.add_argument(
+        '--subsample',
+        dest='subsample',
+        help=('Number of reads to subsample for rRNA and duplication '
+              'estimation. This does not affect how many reads are used in the '
+              'analysis; this is only for QC and diagnostic purposes. '
+              'Default: 10000'),
+        type=int,
+        default=10000)
     ap_opt.add_argument(
         '--headcrop',
         dest='headcrop',
@@ -210,8 +219,8 @@ def add_args(ap):
         '-m',
         metavar='<mem per job (Mb)>',
         dest='mem',
-        help=('Memory, in megabytes, to allocate to each task. '
-              'Defaults to 12000 (12GB)'),
+        help=('Memory, in megabytes, to allocate to each task. Must be at '
+              'least 12000 (12GB). Default: 12000'),
         type=int,
         default=12000)
     ap_sched.add_argument(
@@ -219,8 +228,8 @@ def add_args(ap):
         '-w',
         metavar='<wall clock time (hours)>',
         dest='walltime',
-        help=('Walltime, in hours, to allocate to each task. '
-              'Defaults to 12 hours.'),
+        help=('Walltime, in hours, to allocate to each task. Must be at least '
+              '2 hours. Defaults to 12 hours.'),
         type=int,
         default=12)
     return
