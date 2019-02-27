@@ -645,7 +645,7 @@ summaries of rRNA contamination.
 
 ### Plot
 ```{r bbduk_plot, echo=FALSE, message=FALSE}
-plt_dat <- as.numeric(bbduk_summary$rRNA_PCT)
+plt_dat <- as.numeric(bbduk_summary$rRNA_Pct)
 at <- barplot(
     plt_dat,
     col="#e41a1c",
