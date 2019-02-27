@@ -61,13 +61,13 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         self.useropts['hisat2_idx'] = args['hisat2_idx']
         self.useropts['hisat2_threads'] = '-p ' + str(args['ppn'])
         self.useropts['hisat2_other'] = '--no-mixed --new-summary'
-        # Add flags to the HISAT2 options for strandedness
+        # Add flags to the HISAT2 options for strandness
         if args['strand'] == 'RF':
             self.useropts['strand'] = '2'
-            self.useropts['hisat2_other'] += ' --rna-strandedness RF'
+            self.useropts['hisat2_other'] += ' --rna-strandness RF'
         elif args['strand'] == 'FR':
             self.useropts['strand'] = '1'
-            self.useropts['hisat2_other'] += ' --rna-strandedness FR'
+            self.useropts['hisat2_other'] += ' --rna-strandness FR'
         elif args['strand'] == 'U':
             self.useropts['strand'] = '0'
         # Set the column order to be the columns of the sample sheet. This will
@@ -175,8 +175,8 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
                     }
             else:
                 se_hisat2_other = self.useropts['hisat2_other'].replace(
-                    '--rna-strandedness RF', '--rna-strandedness R').replace(
-                    '--rna-strandedness FR', '--rna-strandedness F')
+                    '--rna-strandness RF', '--rna-strandness R').replace(
+                    '--rna-strandness FR', '--rna-strandness F')
                 self.final_sheet[s] = {
                     'Group': self.samples[s]['Group'],
                     'FastqR1files': self.samples[s]['R1'],
