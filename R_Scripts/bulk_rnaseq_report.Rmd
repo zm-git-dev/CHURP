@@ -717,7 +717,7 @@ plot_dup <- function(sn) {
         xlab="Duplication Level",
         ylab="Percentage",
         main=paste("Duplication in ", sn, " R1", sep=""))
-    axis(side=1, at=apply(at, 2, mean), labels=as.character(plt_dat$V1), las=2, cex.axis=0.6)
+    axis(side=1, at=apply(at, 2, mean), labels=as.character(r1_dup$V1), las=2, cex.axis=0.6)
     axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
     legend("top", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"), ncol=2)
     r2_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_R2_Dups.txt", sep=""), sep="/")
@@ -736,7 +736,7 @@ plot_dup <- function(sn) {
                 xlab="Duplication Level",
                 ylab="Percentage",
                 main=paste("Duplication in ", sn, " R2", sep=""))
-            axis(side=1, at=apply(at, 2, mean), labels=as.character(plt_dat$V1), las=2, cex.axis=0.6)
+            axis(side=1, at=apply(at, 2, mean), labels=as.character(r2_dup$V1), las=2, cex.axis=0.6)
             axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
             legend("top", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"), ncol=2)
     }
