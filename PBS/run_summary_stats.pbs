@@ -225,7 +225,7 @@ do
         echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/IS_Stats.txt)" >> "${WORKDIR}/allsamples/IS_Stats.txt"
     fi
     # And collect the RNAseq metrics into a single file for summarization
-    echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${SAMPLENM}/rnaseq_metrics.txt")" >> "${WORKDIR}/allsamples/RNASeq_Metrics.txt"
+    echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${SAMPLENM}/rnaseq_metrics.txt)" >> "${WORKDIR}/allsamples/RNASeq_Metrics.txt"
 done
 
 # We will generate an HTML report

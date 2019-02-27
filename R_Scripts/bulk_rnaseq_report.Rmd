@@ -640,7 +640,7 @@ kable(read_summary, caption="Read count summary.")
 
 ## rRNA Contamination (Based on Kmer Matching) {.tabset}
 These counts were based on searching a subset of the raw reads against a
-reference database of ribosomal K-mers. Click on the tabl headers to show the
+reference database of ribosomal K-mers. Click on the table headers to show the
 summaries of rRNA contamination.
 
 ### Plot
@@ -661,7 +661,7 @@ rect(
     xright=par("usr")[2],
     ybottom=20,
     ytop=35,
-    col=rgb(255/255, 237/255, 160/255, 0.5)
+    col=rgb(255/255, 237/255, 160/255, 0.5),
     border=NA
     )
 rect(
@@ -669,7 +669,7 @@ rect(
     xright=par("usr")[2],
     ybottom=35,
     ytop=100,
-    col=rgb(228/255, 26/255, 28/255, 0.25)
+    col=rgb(228/255, 26/255, 28/255, 0.25),
     border=NA
     )
 ```
