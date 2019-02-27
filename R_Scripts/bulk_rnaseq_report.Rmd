@@ -688,7 +688,7 @@ Click on the tab headers to show the various summaries.
 ```{r dup_overall, echo=FALSE, message=FALSE}
 plt_dat <- matrix(as.numeric(c(dup_summary$R1_Dup, dup_summary$R2_Dup)), nrow=2, byrow=TRUE)
 at <- barplot(
-    plt_dat,
+    100-plt_dat,
     beside=TRUE,
     axes=F,
     col=c("#d95f02", "#1b9e77"),
@@ -698,7 +698,7 @@ at <- barplot(
     main="Total Duplication")
 axis(side=1, at=apply(at, 2, mean), labels=as.character(dup_summary$SampleName), las=2, cex.axis=0.6)
 axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
-legend("topright", c("R1", "R2"), fill=c("#d95f02", "#1b9e77"))
+legend("top", c("R1", "R2"), fill=c("#d95f02", "#1b9e77"), ncol=2)
 ```
 
 ### Duplication Histograms
@@ -707,7 +707,7 @@ par(mfrow=c(nrow(sheet), 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 plot_dup <- function(sn) {
     r1_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_R1_Dups.txt", sep=""), sep="/")
     r1_dup <- read.table(r1_dfile, header=FALSE, stringsAsFactors=FALSE)
-    plt_dat <- as.matrix(r1_dfile[, c(2, 3)])
+    plt_dat <- as.matrix(r1_dup[, c(2, 3)])
     at <- barplot(
         t(plt_dat),
         axes=F,
@@ -719,14 +719,14 @@ plot_dup <- function(sn) {
         main=paste("Duplication in ", sn, " R1", sep=""))
     axis(side=1, at=apply(at, 2, mean), labels=as.character(plt_dat$V1), las=2, cex.axis=0.6)
     axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
-    legend("topright", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"))
+    legend("top", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"), ncol=2)
     r2_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_R2_Dups.txt", sep=""), sep="/")
     if(!file.exists(r2_dfile)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
         } else {
             r2_dup <- read.table(r2_dfile, header=FALSE, stringsAsFactors=FALSE)
-            plt_dat <- as.matrix(r2_dfile[, c(2, 3)])
+            plt_dat <- as.matrix(r2_dup[, c(2, 3)])
             at <- barplot(
                 t(plt_dat),
                 axes=F,
@@ -738,7 +738,7 @@ plot_dup <- function(sn) {
                 main=paste("Duplication in ", sn, " R2", sep=""))
             axis(side=1, at=apply(at, 2, mean), labels=as.character(plt_dat$V1), las=2, cex.axis=0.6)
             axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
-            legend("topright", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"))
+            legend("top", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"), ncol=2)
     }
 }
 sapply(samplenames, plot_dup)
