@@ -161,6 +161,8 @@ if [ ! -f fastqc.done ]; then
     fi
 fi
 
+mkdir -p "${OUTDIR}/Dup_Stats"
+
 # The fastqc files are auto-extracted, so we search for the directories that
 # end in '_fastqc', pull out the total number of reads, then throw away the
 # directory
@@ -177,6 +179,11 @@ do
         "${fastqc_out_dir}/fastqc_data.txt" \
         | sed -e 's/ /./g' \
         > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_${read_no}_raw_quals.txt"
+    awk '/>>Sequence Duplication Levels/{flag=1; next} />>END_MODULE/{flag=0} flag' \
+        "${fastqc_out_dir}/fastqc_data.txt" \
+        | sed -e 's/ /./g' \
+        > "${OUTDIR}/Dup_Stats/${SAMPLENM}_${read_no}_Dups.txt"
+    head -n 1 "${OUTDIR}/Dup_Stats/${SAMPLENM}_${read_no}_Dups.txt" | cut -f 2 > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_${read_no}_overall_dup.txt"
     rm -rf "${fastqc_out_dir}.processed"
     mv -f "${fastqc_out_dir}" "${fastqc_out_dir}.processed"
 done
@@ -425,6 +432,13 @@ _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"
     CHART_OUTPUT="${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Coverage_Bias.pdf" \
     STRAND_SPECIFICITY="${PICARD_STRAND}" \
     2>> "${LOG_FNAME}"
+# Collect the relevant parts out of the metrics file. The fields that are of the
+# most import are duplication, rRNA pct, PCT_USABLE, PCT_CODING, PCT_INTRONIC
+# and the bias into a file
+grep -A 1 '^PF_BASES' "${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Metrics.txt" \
+    | tail -n 1 \
+    | cut -f 3,4,5,6,7,9,16,17,18,19,20,22,23 \
+    > "${WORKDIR}/singlesamples/${SAMPLENM}/rnaseq_metrics.txt"
 
 # Use picard to collect the insert size metrics, but only if paired end
 if [ "${PE}" = "true" ]

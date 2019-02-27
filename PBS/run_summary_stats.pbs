@@ -196,6 +196,17 @@ do
         TR2_COUNT=$(awk '{print $NF}' "${TRIMMED_R2}")
     fi
     echo -e "${sample}\\t${R1_COUNT}\\t${R2_COUNT}\\t${TR1_COUNT}\\t${TR2_COUNT}" >> "${WORKDIR}/allsamples/Read_Counts.txt"
+    # Get overall duplication stats
+    R1_DUP=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R1*_overall_dup.txt')
+    R2_DUP=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R2*_overall_dup.txt')
+    TOT_R1_DUP=$(awk '{print $NF}' "${R1_DUP}")
+    if [ -z "${R2_DUP}" ]
+    then
+        TOT_R2_DUP="NA"
+    else
+        TOT_R2_DUP=$(awk '{print $NF}' "${R2_DUP}")
+    fi
+    echo -e "${sample}\\t${TOT_R1_DUP}\\t${TOT_R2_DUP}" >> "${WORKDIR}/allsamples/Dup_Stats.txt"
     cat "${WORKDIR}/singlesamples/${sample}/hisat_map_summary.txt" >> "${WORKDIR}/allsamples/HISAT_Stats.txt"
     # Then, get alignment summary files
     BAMSTAT="${WORKDIR}/singlesamples/${sample}/${sample}_bamstats.txt"
@@ -206,11 +217,15 @@ do
     AVGLEN=$(grep '^SN' "${BAMSTAT}" | grep 'average length' | cut -f 3)
     AVGQUAL=$(grep '^SN' "${BAMSTAT}" | grep 'average quality' | cut -f 3)
     echo -e "${sample}\\t${NMAPPED}\\t${DUPLICATED}\\t${MQ0}\\t${MAXLEN}\\t${AVGLEN}\\t${AVGQUAL}" >> "${WORKDIR}/allsamples/Samtools_Stats.txt"
+    # Get the BBDuk rRNA screen stats
+    echo -e "${sample}\\t$(grep '#Matched' ${WORKDIR}/singlesamples/${sample}/BBDuk_rRNA_Stats.txt | cut -f 2-3)" >> "${WORKDIR}/allsamples/rRNA_kmers.txt"
     # Then, get the insert size summaries. These are really simple.
     if [ -f "${WORKDIR}/singlesamples/${sample}/IS_Stats.txt" ]
     then
         echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/IS_Stats.txt)" >> "${WORKDIR}/allsamples/IS_Stats.txt"
     fi
+    # And collect the RNAseq metrics into a single file for summarization
+    echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${SAMPLENM}/rnaseq_metrics.txt")" >> "${WORKDIR}/allsamples/RNASeq_Metrics.txt"
 done
 
 # We will generate an HTML report

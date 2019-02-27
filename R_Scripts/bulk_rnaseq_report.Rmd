@@ -32,6 +32,16 @@ samplenames <- sheet$V1
 nsamp <- length(samplenames)
 hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
 names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
+dup_summary <- read.table(paste(params["workdir"], "allsamples", "Dup_Stats.txt", sep="/"), header=F)
+names(dup_summary) <- c("SampleName", "R1_Dup", "R2_Dup")
+bbduk_summary <- read.table(paste(params["workdir"], "allsamples", "rRNA_kmers.txt", sep="/"), header=F)
+names(bbduk_summary) <- c("SampleName", "rRNA_Fragments", "rRNA_Pct")
+picard_rnaseq_summary <- read.table(paste(params["workdir"], "allsamples", "RNASeq_Metrics.txt", sep="/"), header=F)
+names(picard_rnaseq_summary) <- c(
+    "SampleName",
+    "RIBOSOMAL_BASES", "CODING_BASES", "UTR_BASES", "INTRONIC_BASES", "INTERGENIC_BASES",
+    "CORRECT_STRAND_READS", "PCT_RIBOSOMAL_BASES", "PCT_CODING_BASES", "PCT_UTR_BASES",
+    "PCT_INTRONIC_BASES", "PCT_INTERGENIC_BASES", "PCT_USABLE_BASES", "PCT_CORRECT_STRAND_READS")
 ```
 
 CHURP was developed by the Research Informatics Solutions (RIS) group at MSI
@@ -71,13 +81,12 @@ names(sumsheet) <- c(
     "Trim?",
     "Remove Dups?",
     "Trim Options",
-    "Unstranded?")
+    "Strand")
 sumsheet
 ```
 
 ## Fragment Counts Plot
 ```{r counts_sum, echo=FALSE, message=FALSE}
-# read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
 read_dat <- matrix(
     c(read_summary$V2, read_summary$V4)/1000000,
     byrow=FALSE,
@@ -588,7 +597,7 @@ names(sheet) <- c(
     "Trimmomatic Options",
     "Reference Genome",
     "HISAT2 Options",
-    "Untranded Library?",
+    "Strand",
     "GTF Name")
 sheet
 ```
@@ -616,7 +625,7 @@ log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
 head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
 ```
 
-# Read Summaries
+# QC Metrics
 ## Read Counts
 ```{r read_counts, echo=FALSE, message=FALSE}
 library(knitr)
@@ -627,6 +636,112 @@ names(read_summary) <- c(
     "Trimmed R1 Count",
     "Trimmed R2 Count")
 kable(read_summary, caption="Read count summary.")
+```
+
+## rRNA Contamination (Based on Kmer Matching) {.tabset}
+These counts were based on searching a subset of the raw reads against a
+reference database of ribosomal K-mers. Click on the tabl headers to show the
+summaries of rRNA contamination.
+
+### Plot
+```{r bbduk_plot, echo=FALSE, message=FALSE}
+plt_dat <- as.numeric(bbduk_summary$rRNA_PCT)
+at <- barplot(
+    plt_dat,
+    col="#e41a1c",
+    ylim=c(0, 110),
+    xlab="",
+    ylab="Percent rRNA",
+    main="K-mer Based rRNA Contamination",
+    axes=F)
+axis(side=1, at=at, labels=as.character(bbduk_summary$SampleName), las=2, cex.axis=0.6)
+axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+rect(
+    xleft=par("usr")[1],
+    xright=par("usr")[2],
+    ybottom=20,
+    ytop=35,
+    col=rgb(255/255, 237/255, 160/255, 0.5)
+    border=NA
+    )
+rect(
+    xleft=par("usr")[1],
+    xright=par("usr")[2],
+    ybottom=35,
+    ytop=100,
+    col=rgb(228/255, 26/255, 28/255, 0.25)
+    border=NA
+    )
+```
+
+### Table
+```{r bbduk_table, echo=FALSE, message=FALSE}
+library(knitr)
+kable(bbduk_summary, caption="Number of read pairs and percentage of library that is estimated to be derived from ribosomal RNA.")
+```
+
+## Sequence Duplication {.tabset}
+These plots show sequence duplication summaries, derived from FastQC output.
+Click on the tab headers to show the various summaries.
+
+### Overall Duplication
+```{r dup_overall, echo=FALSE, message=FALSE}
+plt_dat <- matrix(as.numeric(c(dup_summary$R1_Dup, dup_summary$R2_Dup)), nrow=2, byrow=TRUE)
+at <- barplot(
+    plt_dat,
+    beside=TRUE,
+    axes=F,
+    col=c("#d95f02", "#1b9e77"),
+    ylim=c(0, 110),
+    xlab="",
+    ylab="Percent Duplicated",
+    main="Total Duplication")
+axis(side=1, at=apply(at, 2, mean), labels=as.character(dup_summary$SampleName), las=2, cex.axis=0.6)
+axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+legend("topright", c("R1", "R2"), fill=c("#d95f02", "#1b9e77"))
+```
+
+### Duplication Histograms
+```{r dup_hist, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.75*nrow(sheet)}
+par(mfrow=c(nrow(sheet), 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
+plot_dup <- function(sn) {
+    r1_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_R1_Dups.txt", sep=""), sep="/")
+    r1_dup <- read.table(r1_dfile, header=FALSE, stringsAsFactors=FALSE)
+    plt_dat <- as.matrix(r1_dfile[, c("V2", "V3")])
+    at <- barplot(
+        t(plt_dat),
+        axes=F,
+        beside=TRUE,
+        col=c("#a6cee3", "#1f78b4"),
+        ylim=c(0, 110),
+        xlab="Duplication Level",
+        ylab="Percentage",
+        main=paste("Duplication in ", sn, " R1", sep=""))
+    axis(side=1, at=apply(at, 2, mean), labels=as.character(plt_dat$V1), las=2, cex.axis=0.6)
+    axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+    legend("topright", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"))
+    r2_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_R2_Dups.txt", sep=""), sep="/")
+    if(!file.exists(r2_dfile)) {
+            plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+            text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
+        } else {
+            r2_dup <- read.table(r2_dfile, header=FALSE, stringsAsFactors=FALSE)
+            plt_dat <- as.matrix(r2_dfile[, c("V2", "V3")])
+            at <- barplot(
+                t(plt_dat),
+                axes=F,
+                beside=TRUE,
+                col=c("#a6cee3", "#1f78b4"),
+                ylim=c(0, 110),
+                xlab="Duplication Level",
+                ylab="Percentage",
+                main=paste("Duplication in ", sn, " R2", sep=""))
+            axis(side=1, at=apply(at, 2, mean), labels=as.character(plt_dat$V1), las=2, cex.axis=0.6)
+            axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+            legend("topright", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"))
+    }
+}
+sapply(samplenames, plot_dup)
 ```
 
 ## Read Qualities {.tabset}
