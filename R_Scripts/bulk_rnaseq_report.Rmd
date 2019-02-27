@@ -707,7 +707,7 @@ par(mfrow=c(nrow(sheet), 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 plot_dup <- function(sn) {
     r1_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_R1_Dups.txt", sep=""), sep="/")
     r1_dup <- read.table(r1_dfile, header=FALSE, stringsAsFactors=FALSE)
-    plt_dat <- as.matrix(r1_dfile[, c("V2", "V3")])
+    plt_dat <- as.matrix(r1_dfile[, c(2, 3)])
     at <- barplot(
         t(plt_dat),
         axes=F,
@@ -726,7 +726,7 @@ plot_dup <- function(sn) {
             text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
         } else {
             r2_dup <- read.table(r2_dfile, header=FALSE, stringsAsFactors=FALSE)
-            plt_dat <- as.matrix(r2_dfile[, c("V2", "V3")])
+            plt_dat <- as.matrix(r2_dfile[, c(2, 3)])
             at <- barplot(
                 t(plt_dat),
                 axes=F,
