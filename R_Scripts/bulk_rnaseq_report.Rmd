@@ -456,14 +456,14 @@ Trimmomatic. If trimmed, the cleaned reads are re-assessed with FastQC. Length,
 quality, and duplication metrics were extracted from each FastQC run.
 
 ### Alignment
-Trimmed read (or raw reads, if `--no-trim` was specified) rimmed reads were
-aligned to the reference genome with HISAT2. Duplicate reads based on alignment
-position were marked with SAMTools. If `--rmdup` was specified, then the
-positional duplicates were removed instead of marked. Alignments with duplicates
-marked were summarized with Picard CollectRnaSeqMetrics to summarize the number
-of mapped bases that occur in off-target regions and in annotated ribosomal
-regions. Processed alignments were filtered of reads that have a mapping quality
-of less than 60, and sorted by query name rather than position.
+Trimmed reads (or raw reads, if `--no-trim` was specified) were aligned to the
+reference genome with HISAT2. Duplicate reads based on alignment position were
+marked with SAMTools. If `--rmdup` was specified, then the positional duplicates
+were removed instead of marked. Alignments with duplicates marked were
+summarized with Picard CollectRnaSeqMetrics to summarize the number of mapped
+bases that occur in off-target regions and in annotated ribosomal regions.
+Processed alignments were filtered of reads that have a mapping quality of less
+than 60, and sorted by query name rather than position.
 
 ### Counts and Differential Expression testing
 Cleaned and name-sorted alignments were processed with the featureCounts tool
