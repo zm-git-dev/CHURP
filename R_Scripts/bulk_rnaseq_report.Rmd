@@ -755,7 +755,7 @@ This plot will show the percentage of bases that map to off-target regions
 (i.e., non-exon regions).
 
 ```{r gdna_plot, echo=FALSE, message=FALSE}
-par(mfrow=c(2, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
+par(mfrow=c(2, 1), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 cts_dat <- matrix(
     c(
         as.numeric(picard_rnaseq_summary$CODING_BASES),
@@ -774,7 +774,8 @@ at <- barplot(
     ylim=c(0, max_ct*1.1),
     ylab="Number of Bases (Millions)",
     main="Base Positions",
-    xlab="")
+    xlab="",
+    col=bar_cols)
 axis(side=1, at=apply(at, 2, mean), labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
 axis(side=2)
 legend("top", c("Coding", "UTR", "Intron", "Intergenic"), fill=bar_cols, ncol=4)
@@ -795,7 +796,8 @@ at <- barplot(
     ylim=c(0, 1.1),
     ylab="Proportion of Bases",
     main="Base Positions",
-    xlab="")
+    xlab="",
+    col=bar_cols)
 axis(side=1, at=apply(at, 2, mean), labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
 axis(side=2)
 legend("top", c("Coding", "UTR", "Intron", "Intergenic"), fill=bar_cols, ncol=4)
@@ -839,14 +841,14 @@ rect(
     xleft=par("usr")[1],
     xright=par("usr")[2],
     ybottom=0.2,
-    ytop=0.25,
+    ytop=0.35,
     col=rgb(255/255, 237/255, 160/255, 0.5),
     border=NA
     )
 rect(
     xleft=par("usr")[1],
     xright=par("usr")[2],
-    ybottom=0.25,
+    ybottom=0.35,
     ytop=1,
     col=rgb(228/255, 26/255, 28/255, 0.25),
     border=NA
@@ -859,7 +861,7 @@ axis(side=2)
 This plot will show normalized coverage across all transcripts. Ideally, the
 curve is symmetrical, showing no bias toward one end of the transcripts.
 
-```{r coverage_bias, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.75*nrow(sheet)}
+```{r coverage_bias, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.75*nrow(sheet)}
 samprow <- ceiling(nrow(sheet)/2)
 par(mfrow=c(samprow, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 plot_cov <- function(sn) {
