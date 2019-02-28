@@ -798,7 +798,7 @@ at <- barplot(
     main="Base Positions",
     xlab="",
     col=bar_cols)
-axis(side=1, at=apply(at, 2, mean), labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
+axis(side=1, at=at, labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
 axis(side=2)
 legend("top", c("Coding", "UTR", "Intron", "Intergenic"), fill=bar_cols, ncol=4)
 ```
