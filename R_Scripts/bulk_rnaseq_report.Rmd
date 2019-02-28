@@ -861,7 +861,7 @@ axis(side=2)
 This plot will show normalized coverage across all transcripts. Ideally, the
 curve is symmetrical, showing no bias toward one end of the transcripts.
 
-```{r coverage_bias, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.75*nrow(sheet)}
+```{r coverage_bias, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.25*nrow(sheet)}
 samprow <- ceiling(nrow(sheet)/2)
 par(mfrow=c(samprow, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 plot_cov <- function(sn) {
