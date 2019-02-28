@@ -437,7 +437,7 @@ _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"
 # and the bias into a file
 grep -A 1 '^PF_BASES' "${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Metrics.txt" \
     | tail -n 1 \
-    | cut -f 3,4,5,6,7,9,16,17,18,19,20,22,23 \
+    | cut -f 3,4,5,6,7,9,10,16,17,18,19,20,22,23 \
     > "${WORKDIR}/singlesamples/${SAMPLENM}/rnaseq_metrics.txt"
 
 # Use picard to collect the insert size metrics, but only if paired end
