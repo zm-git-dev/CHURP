@@ -50,6 +50,7 @@ LOGDIR="${OUTDIR}/Logs"
 mkdir -p "${LOGDIR}"
 TRACE_FNAME="${LOGDIR}/${SAMPLENM}_Trace.log"
 LOG_FNAME="${LOGDIR}/${SAMPLENM}_Analysis.log"
+echo "# $(date '+%F %T'): Analysis started for ${SAMPLENM}" > "${LOG_FNAME}"
 exec 5> "${TRACE_FNAME}"
 export BASH_XTRACEFD=5
 set -x
