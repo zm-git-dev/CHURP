@@ -1382,7 +1382,7 @@ plt_dat_prop <- t(plt_dat_prop)
 at <- barplot(
     plt_dat_prop,
     beside=FALSE,
-    col=bar_Cols,
+    col=bar_cols,
     axes=FALSE,
     ylim=c(0, 1.4),
     xlab="",
