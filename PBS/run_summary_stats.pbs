@@ -156,6 +156,19 @@ awk -F '\\t' '$3 == "gene" { print $9 }' <(gzip -cd "${GTFFILE}" || cat "${GTFFI
 # This is a slower but more general command to get gene_id and gene_name
 # awk -F'\t' '$3 == "gene" {print $9}' | awk -F';' '{for(i = 1; i <= NF; i++) { if( $i ~ /gene_id/ ) {split($i,GI," ")}; if( $i ~ /gene_name/ ) {split($i,GN," ")} }; print GI[2]"\t"GN[2]}' | sed -e 's/"//g'
 
+# Chop up the subread_counts.txt file a little bit to make it easier to import
+# into other tools like CLC Genomics Workbench
+echo "# $(date '+%F %T'): Linking gene symbol with Ensembl ID for subread_counts.txt" >> "${LOG_FNAME}"
+echo -e "GeneName\\t$(head -n 2 ${COUNTSDIR}/subread_counts.txt | tail -n 1 | cut -f 7-)" > "${COUNTSDIR}/subread_counts_gene_symbol.txt"
+join \
+    -e "NA" \
+    -a 2 \
+    <(sort -k 1,1 "${OUTDIR}/gene_id_gene_name_map.txt") \
+    <(tail -n +3 "${COUNTSDIR}/subread_counts.txt" | cut -f 1,7- | sort -k 1,1) \
+    | cut -f 2- -d ' ' \
+    | tr ' ' '\\t' \
+    >> "${COUNTSDIR}/subread_counts_gene_symbol.txt"
+
 # Link the work directories to the output directory
 rm -f "${OUTDIR}/singlesamples_work_directory" "${OUTDIR}/allsamples_work_directory"
 ln -sf "${WORKDIR}/singlesamples" "${OUTDIR}/singlesamples_work_directory"
