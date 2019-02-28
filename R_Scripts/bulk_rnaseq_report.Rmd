@@ -1361,10 +1361,10 @@ categories <- c(
     "NoFeatures",
     "Overlapping",
     "Ambiguity")
-bar_cols <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99")
+bar_cols <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928")
 maxct <- max(plt_dat)/1000000
 at <- barplot(
-    t(plt_dat)/1000000,
+    plt_dat/1000000,
     beside=TRUE,
     col=bar_cols,
     axes=FALSE,
@@ -1378,6 +1378,7 @@ legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
 
 plt_dat_prop <- t(plt_dat_prop)
 plt_dat_prop <- plt_dat_prop/rowSums(plt_dat_prop)
+plt_dat_prop <- t(plt_dat_prop)
 at <- barplot(
     plt_dat_prop,
     beside=FALSE,
