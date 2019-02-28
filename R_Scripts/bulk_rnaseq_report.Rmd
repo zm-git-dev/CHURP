@@ -791,7 +791,7 @@ prop_dat <- matrix(
     nrow=4)
 at <- barplot(
     prop_dat,
-    beside=TRUE,
+    beside=FALSE,
     axes=F,
     ylim=c(0, 1.1),
     ylab="Proportion of Bases",
