@@ -1376,7 +1376,7 @@ axis(side=1, at=apply(at, 2, mean), labels=colnames(subread_sum[-c(1)]), las=2, 
 axis(side=1)
 legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
 
-plt_dat_prop <- t(plt_dat_prop)
+plt_dat_prop <- t(plt_dat)
 plt_dat_prop <- plt_dat_prop/rowSums(plt_dat_prop)
 plt_dat_prop <- t(plt_dat_prop)
 at <- barplot(
