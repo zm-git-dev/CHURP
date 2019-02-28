@@ -875,7 +875,7 @@ plot_cov <- function(sn) {
         xlab="Normalized Position",
         ylab="Normalized Coverage",
         main=sn,
-        ylim=c(0, 2)
+        ylim=c(0, 1.7)
         )
     abline(h=1, lwd=1, col="grey", lty=3)
 }
