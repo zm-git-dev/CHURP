@@ -752,7 +752,8 @@ contamination, based on alignment to annotated rRNA features.
 
 ### gDNA Contamination Metrics
 This plot will show the percentage of bases that map to off-target regions
-(i.e., non-exon regions).
+(i.e., non-exon regions). Note that the counts and proportions here *exclude*
+ribosomal mapping.
 
 ```{r gdna_plot, echo=FALSE, message=FALSE}
 par(mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
