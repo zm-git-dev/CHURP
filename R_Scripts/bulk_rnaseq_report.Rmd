@@ -1373,7 +1373,7 @@ at <- barplot(
     ylab="Fragment Count (Millions)",
     main="Subread Summary")
 axis(side=1, at=apply(at, 2, mean), labels=colnames(subread_sum[-c(1)]), las=2, cex.axis=0.6)
-axis(side=1)
+axis(side=2)
 legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
 
 plt_dat_prop <- t(plt_dat)
@@ -1389,7 +1389,7 @@ at <- barplot(
     ylab="Fragment Proportions",
     main="Subread Summary")
 axis(side=1, at=at, labels=colnames(subread_sum[-c(1)]), las=2, cex.axis=0.6)
-axis(side=1)
+axis(side=2)
 legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
 
 kable(subread_sum, caption="Summary of subread featureCounts assignment.")
