@@ -170,7 +170,8 @@ rm -f \
     "${WORKDIR}/allsamples/HISAT_Stats.txt" \
     "${WORKDIR}/allsamples/IS_Stats.txt" \
     "${WORKDIR}/allsamples/Dup_Stats.txt" \
-    "${WORKDIR}/allsamples/RNASeq_Metrics.txt"
+    "${WORKDIR}/allsamples/RNASeq_Metrics.txt" \
+    "${WORKDIR}/allsamples/rRNA_kmers.txt"
 # Remove from the instance of the first blank line to the end of the file
 OFFSET=$(cut -f 1 -d '|' "${SampleSheet}" | grep -nE '^$' | head -n 1 | sed -e 's/://g')
 SNAMES=($(cut -f 1 -d '|' "${SampleSheet}" | sed -e "${OFFSET},\\$d"))
