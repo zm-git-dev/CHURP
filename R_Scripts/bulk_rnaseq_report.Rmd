@@ -755,7 +755,7 @@ This plot will show the percentage of bases that map to off-target regions
 (i.e., non-exon regions).
 
 ```{r gdna_plot, echo=FALSE, message=FALSE}
-par(mfrow=c(2, 1), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
+par(mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 cts_dat <- matrix(
     c(
         as.numeric(picard_rnaseq_summary$CODING_BASES),
@@ -771,7 +771,7 @@ at <- barplot(
     cts_dat,
     beside=TRUE,
     axes=F,
-    ylim=c(0, max_ct*1.1),
+    ylim=c(0, max_ct*1.2),
     ylab="Number of Bases (Millions)",
     main="Base Positions",
     xlab="",
