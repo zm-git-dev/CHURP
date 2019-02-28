@@ -96,7 +96,7 @@ max_reads <- max(read_dat)
 at <- barplot(
     t(read_dat),
     beside=TRUE,
-    ylim=c(0, max_reads*1.15),
+    ylim=c(0, max_reads*1.2),
     axes=FALSE,
     col=c("#d95f02", "#1b9e77"),
     ylab="Fragment Count (Millions)",
@@ -331,7 +331,7 @@ at <- barplot(
     t(count_dat)/1000000,
     beside=FALSE,
     col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
-    ylim=c(0, max_reads*1.15),
+    ylim=c(0, max_reads*1.2),
     ylab="Fragment Count (Millions)",
     main="HISAT2 Count Plot",
     axes=FALSE)
@@ -378,7 +378,7 @@ maxexpr <- max(num_expressed)
 at <- barplot(
     num_expressed,
     ylab="Number of Expressed Features",
-    ylim=c(0, maxexpr*1.15),
+    ylim=c(0, maxexpr*1.2),
     col="#1f78b4",
     axes=FALSE)
 axis(side=2)
@@ -1208,7 +1208,7 @@ at <- barplot(
     t(count_dat)/1000000,
     beside=FALSE,
     col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
-    ylim=c(0, max_reads*1.15),
+    ylim=c(0, max_reads*1.2),
     ylab="Fragment Count (Millions)",
     main="HISAT2 Count Plot",
     axes=FALSE)
@@ -1311,7 +1311,7 @@ if(!file.exists(insertsize_file)) {
         xlab="",
         ylab="Insert Size (bp)",
         main="Insert Size Distribution",
-        ylim=c(0, max_is*1.1),
+        ylim=c(0, max_is*1.2),
         axes=FALSE)
     segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V8)/2, y0=is_summary$V2+(is_summary$V8)/2, lwd=1, col="black")
     segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V6)/2, y0=is_summary$V2+(is_summary$V6)/2, lwd=8, col="grey")
@@ -1340,6 +1340,60 @@ These plots are available as PDF vector images at the following path:
 
 ``r paste(params["outdir"], "Plots", sep="/")``
 
+### Subread Assignment Summary
+This plot will show the breakdown of read assignment by `featureCounts`.
+
+```{r subread_summary, echo=FALSE, message=FALSE}
+library(knitr)
+subread_sum <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt.summary", sep="/"), header=TRUE)
+plt_dat <- as.matrix(subread_sum[,-c(1)])
+colnames(plt_dat) <- NULL
+categories <- c(
+    "Assigned",
+    "Unmapped",
+    "MQ<10",
+    "Chimera",
+    "TooShort",
+    "Duplicate",
+    "MultiMap",
+    "Secondary",
+    "Nonjunction",
+    "NoFeatures",
+    "Overlapping",
+    "Ambiguity")
+bar_cols <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99")
+maxct <- max(plt_dat)/1000000
+at <- barplot(
+    t(plt_dat)/1000000,
+    beside=TRUE,
+    col=bar_cols,
+    axes=FALSE,
+    ylim=c(0, maxct*1.4),
+    xlab="",
+    ylab="Fragment Count (Millions)",
+    main="Subread Summary")
+axis(side=1, at=apply(at, 2, mean), labels=colnames(subread_sum[-c(1)]), las=2, cex.axis=0.6)
+axis(side=1)
+legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
+
+plt_dat_prop <- t(plt_dat_prop)
+plt_dat_prop <- plt_dat_prop/rowSums(plt_dat_prop)
+at <- barplot(
+    plt_dat_prop,
+    beside=FALSE,
+    col=bar_Cols,
+    axes=FALSE,
+    ylim=c(0, 1.4),
+    xlab="",
+    ylab="Fragment Proportions",
+    main="Subread Summary")
+axis(side=1, at=at, labels=colnames(subread_sum[-c(1)]), las=2, cex.axis=0.6)
+axis(side=1)
+legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
+
+kable(subread_sum, caption="Summary of subread featureCounts assignment.")
+```
+
 ### Number of Expressed Features
 This plot shows the number of features (genes) that have at least one read
 mapping to them.
@@ -1348,9 +1402,12 @@ mapping to them.
 subread_counts <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt", sep="/"), header=T, sep="\t", comment.char="#")
 subread_counts <- subread_counts[,-c(1:6)]
 num_expressed <- as.numeric(apply(subread_counts, 2, function(x) sum(x>0)))
+maxexpr <- max(num_expressed)
 at <- barplot(
     num_expressed,
     ylab="Number of Expressed Features",
+    ylim=c(0, maxexpr*1.2),
+    col="#1f78b4",
     axes=FALSE)
 axis(side=2)
 axis(side=1, at=at, labels=names(subread_counts), las=2, cex.axis=0.7)
