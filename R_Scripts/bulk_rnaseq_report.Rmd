@@ -912,18 +912,29 @@ samprow <- ceiling(nrow(sheet)/2)
 par(mfrow=c(samprow, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 plot_cov <- function(sn) {
     cf <- paste(params["outdir"], "RNASeqMetrics", paste(sn, "_Metrics.txt", sep=""), sep="/")
-    cov_dat <- read.table(cf, header=FALSE, stringsAsFactors=FALSE, skip=11)
-    plot(
-        cov_dat$V2 ~ cov_dat$V1,
-        type="l",
-        lwd=2,
-        col="#1f78b4",
-        xlab="Normalized Position",
-        ylab="Normalized Coverage",
-        main=sn,
-        ylim=c(0, 1.7)
+    # Wrap this read in a tryCatch for the cases where there are no normalized coverage numbers
+    cov_dat <- tryCatch(
+        {read.table(cf, header=FALSE, stringsAsFactors=FALSE, skip=11)},
+        error=function(x) {
+            return(FALSE)
+        }
         )
-    abline(h=1, lwd=1, col="grey", lty=3)
+    if(cov_dat) {
+        plot(
+            cov_dat$V2 ~ cov_dat$V1,
+            type="l",
+            lwd=2,
+            col="#1f78b4",
+            xlab="Normalized Position",
+            ylab="Normalized Coverage",
+            main=sn,
+            ylim=c(0, 1.7)
+            )
+        abline(h=1, lwd=1, col="grey", lty=3)
+    } else {
+        plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+        text(x=0.5, y=0.5, "No Bias Metrics Found", cex=1, col="black")
+    }
 }
 dummy <- sapply(samplenames, plot_cov)
 ```
