@@ -916,10 +916,10 @@ plot_cov <- function(sn) {
     cov_dat <- tryCatch(
         {read.table(cf, header=FALSE, stringsAsFactors=FALSE, skip=11)},
         error=function(x) {
-            return(FALSE)
+            return(data.frame())
         }
         )
-    if(cov_dat) {
+    if(length(cov_dat) > 0) {
         plot(
             cov_dat$V2 ~ cov_dat$V1,
             type="l",
