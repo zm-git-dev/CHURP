@@ -1447,7 +1447,7 @@ legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
 # We want to transpose this table so that it scales vertically with the number
 # of samples.
 hdr <- as.character(subread_sum$Status)
-samples <- colnames(hdr)[-c(1)]
+samples <- colnames(subread_sum)[-c(1)]
 t_subread <- as.data.frame(subread_sum[,-c(1)])
 rownames(t_subread) <- NULL
 colnames(t_subread) <- hdr
