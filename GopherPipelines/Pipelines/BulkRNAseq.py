@@ -261,7 +261,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         qsub_resources += ',walltime=' + str(self.walltime * 3600) + '"'
         # Set the group string here
         if self.group:
-            qsub_group = '-A' + ' ' + self.group
+            qsub_group = '-A ' + self.group + ' -W "group_list=' + self.group + '"'
         else:
             qsub_group = ''
         qsub_array = '1'
