@@ -269,6 +269,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             qsub_array += '-' + str(len(self.sheet.final_sheet))
         # Write a few variables into the header of the script so they are
         # easy to find
+        handle.write('QSUB_ARRAY=' + '"' + qsub_array + '"\n')
         handle.write('OUTDIR=' + '"' + str(self.outdir) + '"\n')
         handle.write('WORKDIR=' + '"' + str(self.workdir) + '"\n')
         handle.write('DE_SCRIPT=' + '"' + self.de_script + '"\n')
@@ -286,7 +287,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-o', '"${OUTDIR}"',
             '-e', '"${OUTDIR}"',
             '-l', qsub_resources,
-            '-t', qsub_array,
+            '-t', '"${QSUB_ARRAY}"',
             '-v', '"SampleSheet=${SAMPLESHEET},PURGE=${PURGE},SUBSAMP=${SUBSAMP}"',
             self.single_sample_script,
             '||',
