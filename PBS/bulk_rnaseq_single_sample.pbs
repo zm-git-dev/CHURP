@@ -27,7 +27,7 @@ IN=$(head -n "${PBS_ARRAYID}" "${SampleSheet}" | tail -1)
 # handle empty line and comment line. We return a 0 exit status because we do not
 # want a comment/blank line in the samplesheet to hold up the array jobs
 [ -z "${IN// }" ] && echo "You have submitted an empty line from the sample sheet to the job array. This array job will quit without error, but you should determine why this occured." && exit 0
-[ "$IN" = "#.*" ] && echo "You have submitted an empty line from the sample sheet to the job array. This array job will quit without error, but you should determine why this occured." && exit 0
+[ "$IN" = "#.*" ] && echo "You have submitted a comment line from the sample sheet to the job array. This array job will quit without error, but you should determine why this occured." && exit 0
 while IFS="|" read -ra OPTS; do 
     SAMPLENM=${OPTS[0]}
     EXPR_GROUP=${OPTS[1]}
