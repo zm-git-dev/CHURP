@@ -9,6 +9,9 @@ import datetime
 import getpass
 
 # Define today's date and the current time
+curr_time = datetime.datetime.now()
 TODAY = datetime.date.isoformat(datetime.datetime.today())
-NOW = datetime.datetime.now().isoformat(sep=' ', timespec='seconds')
+# A time stamp to append to the date stamp, in ISO format
+TIMESTAMP = 'T{t.hour:02}{t.minute:02}{t.second:02}'.format(t=curr_time)
+NOW = curr_time.isoformat(sep=' ', timespec='seconds')
 UNAME = getpass.getuser()
