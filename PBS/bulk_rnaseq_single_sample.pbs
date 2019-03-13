@@ -1,9 +1,14 @@
 #!/bin/bash -l
 #PBS -l nodes=1:ppn=8,mem=16gb,walltime=24:00:00
 
+set -v
 set -e
 set -u
 set -o pipefail
+
+# Export the PS4 variable for the trace
+# Taken from https://wiki.bash-hackers.org/scripting/debuggingtips
+export PS4='+(${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
 # Check the major version of the pipeline. If they mismatch, then quit with an error
 PIPELINE_VERSION="0"
@@ -21,8 +26,8 @@ fi
 IN=$(head -n "${PBS_ARRAYID}" "${SampleSheet}" | tail -1)
 # handle empty line and comment line. We return a 0 exit status because we do not
 # want a comment/blank line in the samplesheet to hold up the array jobs
-[ -z "${IN// }" ] && echo "hit an empty line in sample sheet" && exit 0
-[ "$IN" = "#.*" ] && echo "hit a comment line in sample sheet" && exit 0
+[ -z "${IN// }" ] && echo "You have submitted an empty line from the sample sheet to the job array. This array job will quit without error, but you should determine why this occured." && exit 0
+[ "$IN" = "#.*" ] && echo "You have submitted a comment line from the sample sheet to the job array. This array job will quit without error, but you should determine why this occured." && exit 0
 while IFS="|" read -ra OPTS; do 
     SAMPLENM=${OPTS[0]}
     EXPR_GROUP=${OPTS[1]}
@@ -35,29 +40,47 @@ while IFS="|" read -ra OPTS; do
     TRIMOPTS=${OPTS[8]}
     HISAT2INDEX=${OPTS[9]}
     HISAT2OPTS=${OPTS[10]}
-    UNSTRANDED=${OPTS[11]}
+    STRAND=${OPTS[11]}
     GTFFILE=${OPTS[12]}
 done <<< "$IN"
 
+# Start the trace. In this case, we use file descriptor 5 to avoid clobbering
+# any other fds that are in use
+LOGDIR="${OUTDIR}/Logs"
+mkdir -p "${LOGDIR}"
+TRACE_FNAME="${LOGDIR}/${SAMPLENM}_Trace.log"
+LOG_FNAME="${LOGDIR}/${SAMPLENM}_Analysis.log"
+echo "# $(date '+%F %T'): Analysis started for ${SAMPLENM}" > "${LOG_FNAME}"
+exec 5> "${TRACE_FNAME}"
+export BASH_XTRACEFD=5
+set -x
+
+# This is annoying to see, so we will exclude it from verbose outout
+set +v
 # load necessary modules
 module load hisat2/2.1.0
 module load fastqc/0.11.7
 module load trimmomatic/0.33
-module load java/jdk1.8.0_144
 module load samtools/1.7
 module load picard/2.9.0
 module load R/3.5.0
+module load java/openjdk-11.0.2
 
 module list -t
-
-# Print the loaded module information to a file
-LOGDIR="${OUTDIR}/Logs"
-mkdir -p "${LOGDIR}"
-LOG_FNAME="${LOGDIR}/${SAMPLENM}_Log.txt"
-echo "# $(date '+%F %T'): Analysis for ${SAMPLENM} started" > "${LOG_FNAME}"
 echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 echo '#END_MODULES' >> "${LOG_FNAME}"
+
+
+# And re-enable verbosity here
+set -v
+
+# Set paths to BBDuk, seqtk, and the SILVA databases
+DEPS_DIR="/home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}"
+SILVA_REF="${DEPS_DIR}/db/SILVA_132_LSU_SSU_Ref_Dedup_Kmers_min100.fasta.gz"
+BBDUK="${DEPS_DIR}/Supp/bbmap/bbduk.sh"
+SEQTK="${DEPS_DIR}/Supp/seqtk-1.3/seqtk"
+GTFTOGENEPRED="${DEPS_DIR}/Supp/UCSC/gtfToGenePred"
 
 # Check if we are running in paired or single end mode
 if [ -z "${R2FILE}" ]
@@ -70,33 +93,76 @@ else
 fi
 
 # set working directory
-echo "mkdir -p "'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" && cd "'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"' >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}" && cd "${WORKDIR}/singlesamples/${SAMPLENM}"
 
 # check whether to purge files or not. $PURGE will be parsed by command line
 if [ "${PURGE}" = "true" ]; then
     echo "# $(date '+%F %T'): PURGE=true; re-running all analyses." >> "${LOG_FNAME}"
-    echo "find . -name '*.done' -delete" >> "${LOG_FNAME}"
     find . -name '*.done' -delete
 fi
 
 # start workflow with check point
 [ -f "${SAMPLENM}.done" ] && echo "found done analysis, exit" && exit $?
 
-# Set Up a log file instead (?)
+# First; subsample the FASTQ and assay for rRNA contamination
+echo "# $(date '+%F %T'): Subsampling reads to ${SUBSAMP} fragments." >> "${LOG_FNAME}"
+${SEQTK} sample -s123 -2 "${R1FILE}" "${SUBSAMP}" > "${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq"
+if [ "${PE}" = "true" ]; then
+    ${SEQTK} sample -s123 -2 "${R2FILE}" "${SUBSAMP}" > "${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsamp.fastq"
+fi
+
+which java >> "${LOG_FNAME}"
+
+echo "# $(date '+%F %T'): Using BBDuk to search for rRNA contamination in subsampled reads." >> "${LOG_FNAME}"
+if [ "${PE}" = "true" ]; then
+    ${BBDUK} \
+        in="${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq" \
+        in2="${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsamp.fastq" \
+        ref="${SILVA_REF}" \
+        stats="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_rRNA_Stats.txt" \
+        k=25 \
+        editdistance=1 \
+        prealloc=t \
+        threads="${PBS_NUM_PPN}" \
+        -Xmx10g \
+        2>> "${LOG_FNAME}"
+else
+    ${BBDUK} \
+        in="${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq" \
+        ref="${SILVA_REF}" \
+        stats="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_rRNA_Stats.txt" \
+        k=25 \
+        editdistance=1 \
+        prealloc=t \
+        threads="${PBS_NUM_PPN}" \
+        -Xmx10g \
+        2>> "${LOG_FNAME}"
+fi
+
 if [ ! -f fastqc.done ]; then
     if [ "${PE}" = "true" ]
     then
         echo "# $(date '+%F %T'): Running fastqc on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
-        echo "fastqc -t 2 --outdir="'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" "'"'"${R1FILE}"'"'" "'"'"${R2FILE}"'"' >> "${LOG_FNAME}"
-        fastqc -t 2 --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" "${R2FILE}" && touch fastqc.done
-
+        fastqc \
+            -t 2 \
+            --extract \
+            --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" \
+            "${R1FILE}" \
+            "${R2FILE}" \
+            2>> "${LOG_FNAME}" \
+        && touch fastqc.done
     else
         echo "# $(date '+%F %T'): Running fastqc on ${R1FILE}." >> "${LOG_FNAME}"
-        echo "fastqc -t 2 --outdir="'"'"${WORKDIR}/singlesamples/${SAMPLENM}"'"'" "'"'"${R1FILE}"'"' >> "${LOG_FNAME}"
-        fastqc --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${R1FILE}" && touch fastqc.done
+        fastqc \
+            --extract \
+            --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" \
+            "${R1FILE}" \
+            2>> "${LOG_FNAME}" \
+            && touch fastqc.done
     fi
 fi
+
+mkdir -p "${OUTDIR}/Dup_Stats"
 
 # The fastqc files are auto-extracted, so we search for the directories that
 # end in '_fastqc', pull out the total number of reads, then throw away the
@@ -110,7 +176,15 @@ do
     fi
     out_pref="${SAMPLENM}_${read_no}.raw_readcount.txt"
     echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
-    awk '/>>Per base sequence quality/{flag=1; next} />>END_MODULE/{flag=0} flag' "${fastqc_out_dir}/fastqc_data.txt" | sed -e 's/ /./g' > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_${read_no}_raw_quals.txt"
+    awk '/>>Per base sequence quality/{flag=1; next} />>END_MODULE/{flag=0} flag' \
+        "${fastqc_out_dir}/fastqc_data.txt" \
+        | sed -e 's/ /./g' \
+        > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_${read_no}_raw_quals.txt"
+    awk '/>>Sequence Duplication Levels/{flag=1; next} />>END_MODULE/{flag=0} flag' \
+        "${fastqc_out_dir}/fastqc_data.txt" \
+        | sed -e 's/ /./g' \
+        > "${OUTDIR}/Dup_Stats/${SAMPLENM}_${read_no}_Dups.txt"
+    head -n 1 "${OUTDIR}/Dup_Stats/${SAMPLENM}_${read_no}_Dups.txt" | cut -f 2 > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_${read_no}_overall_dup.txt"
     rm -rf "${fastqc_out_dir}.processed"
     mv -f "${fastqc_out_dir}" "${fastqc_out_dir}.processed"
 done
@@ -123,24 +197,46 @@ if [ "${TRIM}" = "yes" ]; then
         if [ "${PE}" = "true" ]
         then
             echo "# $(date '+%F %T'): Running trimmomatic on ${R1FILE} and ${R2FILE}." >> "${LOG_FNAME}"
-            echo "java -jar ${TRIMMOMATIC}/trimmomatic.jar PE -threads ${PBS_NUM_PPN} -basein "'"'"${R1FILE}"'"'" -baseout "'"'"${SAMPLENM}"'"'" ${TRIMOPTS} 2>trim.log" >> "${LOG_FNAME}"
-            java -jar "${TRIMMOMATIC}"/trimmomatic.jar PE -threads "${PBS_NUM_PPN}" -basein "${R1FILE}" -baseout "${SAMPLENM}" $(echo "${TRIMOPTS}" | envsubst) 2>trim.log && touch trimmomatic.done
+            java -jar "${TRIMMOMATIC}"/trimmomatic.jar \
+                PE \
+                -threads "${PBS_NUM_PPN}" \
+                -basein "${R1FILE}" \
+                -baseout "${SAMPLENM}" \
+                $(echo "${TRIMOPTS}" | envsubst) \
+                2>> "${LOG_FNAME}" \
+                && touch trimmomatic.done
         else
             echo "# $(date '+%F %T'): Running trimmomatic on ${R1FILE}." >> "${LOG_FNAME}"
-            echo "java -jar ${TRIMMOMATIC}/trimmomatic.jar SE -threads ${PBS_NUM_PPN} -basein "'"'"${R1FILE}"'"'" -baseout "'"'"${SAMPLENM}"'"'" ${TRIMOPTS} 2>trim.log" >> "${LOG_FNAME}"
-            java -jar "${TRIMMOMATIC}"/trimmomatic.jar SE -threads "${PBS_NUM_PPN}" "${R1FILE}" "${SAMPLENM}_trimmed" $(echo "${TRIMOPTS}" | envsubst) 2>trim.log && touch trimmomatic.done
+            java -jar "${TRIMMOMATIC}"/trimmomatic.jar \
+                SE \
+                -threads "${PBS_NUM_PPN}" \
+                "${R1FILE}" \
+                "${SAMPLENM}_trimmed" \
+                $(echo "${TRIMOPTS}" | envsubst) \
+                2>> "${LOG_FNAME}" \
+                && touch trimmomatic.done
         fi
     fi
     if [ ! -f fastqc.trim.done ]; then
         if [ "${PE}" = "true" ]
         then
             echo "# $(date '+%F %T'): Running fastqc on trimmed fastq files." >> "${LOG_FNAME}"
-            echo "fastqc -t 2 --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"'" "'"'"${SAMPLENM}_2P"'"' >> "${LOG_FNAME}"
-            fastqc -t 2 --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_1P" "${SAMPLENM}_2P" && touch fastqc.trim.done
+            fastqc \
+                -t 2 \
+                --extract \
+                --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" \
+                "${SAMPLENM}_1P" \
+                "${SAMPLENM}_2P" \
+                2>> "${LOG_FNAME}" \
+                && touch fastqc.trim.done
         else
             echo "# $(date '+%F %T'): Running fastqc on trimmed fastq file." >> "${LOG_FNAME}"
-            echo "fastqc --outdir="'"'"${WORKDIR}"'"'" "'"'"${SAMPLENM}_1P"'"' >> "${LOG_FNAME}"
-            fastqc --extract --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" "${SAMPLENM}_trimmed" && touch fastqc.trim.done
+            fastqc \
+                --extract \
+                --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" \
+                "${SAMPLENM}_trimmed" \
+                2>> "${LOG_FNAME}" \
+                && touch fastqc.trim.done
         fi
     fi
 fi
@@ -155,7 +251,10 @@ do
     fi
     out_pref="${SAMPLENM}_${read_no}.trimmed_readcount.txt"
     echo "${SAMPLENM} $(grep '^Total Sequences' ${fastqc_out_dir}/fastqc_data.txt | cut -f 2)" > "${out_pref}"
-    awk '/>>Per base sequence quality/{flag=1; next} />>END_MODULE/{flag=0} flag' "${fastqc_out_dir}/fastqc_data.txt" | sed -e 's/ /./g' > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_R${read_no}_trim_quals.txt"
+    awk '/>>Per base sequence quality/{flag=1; next} />>END_MODULE/{flag=0} flag' \
+        "${fastqc_out_dir}/fastqc_data.txt" \
+        | sed -e 's/ /./g' \
+        > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_R${read_no}_trim_quals.txt"
     rm -rf "${fastqc_out_dir}.processed"
     mv -f "${fastqc_out_dir}" "${fastqc_out_dir}.processed"
 done
@@ -166,12 +265,23 @@ if [ ! -f hisat2.done ]; then
         then
             echo "# $(date '+%F %T'): Aligning trimmed reads with HISAT2." >> "${LOG_FNAME}"
             # This string is so ugly because we we have to quote the arguments to hisat2 in a weird way to protect them from splitting
-            echo "hisat2 ${HISAT2OPTS} -x "'"'"'${HISAT2INDEX}'"'"'" -1 "'"'"'${SAMPLENM}_1P'"'"'" -2 "'"'"'${SAMPLENM}_2P'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
-            hisat2 ${HISAT2OPTS} -x "'${HISAT2INDEX}'" -1 "'${SAMPLENM}_1P'" -2 "'${SAMPLENM}_2P'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+            hisat2 \
+                ${HISAT2OPTS} \
+                -x "'${HISAT2INDEX}'" \
+                -1 "'${SAMPLENM}_1P'" \
+                -2 "'${SAMPLENM}_2P'" \
+                -S "${SAMPLENM}.sam" \
+                2> alignment.summary \
+                && touch hisat2.done
         else
             echo "# $(date '+%F %T'): Aligning trimmed reads with HISAT2." >> "${LOG_FNAME}"
-            echo "hisat2 ${HISAT2OPTS} -x "'"'"'${HISAT2INDEX}'"'"'" -U "'"'"'${SAMPLENM}_1P'"'"'" -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
-            hisat2 ${HISAT2OPTS} -x "'${HISAT2INDEX}'" -U "'${SAMPLENM}_trimmed'" -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+            hisat2 \
+                ${HISAT2OPTS} \
+                -x "'${HISAT2INDEX}'" \
+                -U "'${SAMPLENM}_trimmed'" \
+                -S "${SAMPLENM}.sam" \
+                2> alignment.summary \
+                && touch hisat2.done
         fi
     else
         # Hisat2 chokes on our quoted reads files if they are gzipped. This is
@@ -180,59 +290,177 @@ if [ ! -f hisat2.done ]; then
         if [ "${PE}" = "true" ]
         then
             echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
-            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" <(gzip -cd "${R1FILE}" || cat "${R1FILE}") -2 <(gzip -cd "${R2FILE}" || cat "${R2FILE}") -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
-            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -1 <(gzip -cd "${R1FILE}" || cat "${R1FILE}") -2 <(gzip -cd "${R2FILE}" || cat "${R2FILE}") -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+            hisat2 \
+                ${HISAT2OPTS} \
+                -x "'${HISAT2INDEX}'" \
+                -1 <(gzip -cd "${R1FILE}" || cat "${R1FILE}") \
+                -2 <(gzip -cd "${R2FILE}" || cat "${R2FILE}") \
+                -S "${SAMPLENM}.sam" \
+                2> alignment.summary \
+                && touch hisat2.done
         else
             echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
-            echo "hisat2 ${HISAT2OPTS} -x "'"'"${HISAT2INDEX}"'"'" -U <(gzip -cd "${R1FILE}" || cat "${R1FILE}") -S "'"'"${SAMPLENM}.sam"'"'" 2>alignment.summary" >> "${LOG_FNAME}"
-            hisat2 $HISAT2OPTS -x "${HISAT2INDEX}" -U <(gzip -cd "${R1FILE}" || cat "${R1FILE}") -S "${SAMPLENM}.sam" 2>alignment.summary && touch hisat2.done
+            hisat2 \
+                ${HISAT2OPTS} \
+                -x "'${HISAT2INDEX}'" \
+                -U <(gzip -cd "${R1FILE}" || cat "${R1FILE}") \
+                -S "${SAMPLENM}.sam" \
+                2> alignment.summary \
+                && touch hisat2.done
         fi
     fi
+    # Stick the alignment summary onto the analysis log
+    cat alignment.summary >> "${LOG_FNAME}"
 fi
 
-# use samtools to remove unmapped reads, could be done in picard too.
+
+# Process the alignments with samtools
 if [ ! -f samtools.done ]; then
+    echo "# $(date '+%F %T'): Sorting raw HISAT2 SAM by read name." >> "${LOG_FNAME}"
+    samtools sort \
+        -n \
+        -O bam \
+        -@ "${PBS_NUM_PPN}" \
+        -T temp \
+        -o "${SAMPLENM}_Raw_NameSort.bam" \
+        "${SAMPLENM}.sam"
+    echo "# $(date '+%F %T'): Running fixmate on name-sorted BAM." >> "${LOG_FNAME}"
+    samtools fixmate \
+        -m \
+        -O bam \
+        -@ "${PBS_NUM_PPN}" \
+        "${SAMPLENM}_Raw_NameSort.bam" \
+        "${SAMPLENM}_Raw_FixMate.bam"
+    echo "# $(date '+%F %T'): Sorting fixmate BAM by coordinate." >> "${LOG_FNAME}"
+    samtools sort \
+        -O bam \
+        -@ "${PBS_NUM_PPN}" \
+        -T temp \
+        -o "${SAMPLENM}_Raw_CoordSort.bam" \
+        "${SAMPLENM}_Raw_FixMate.bam"
+    # If rmdup, then remove them. Else, mark them.
     if [ "${RMDUP}" = "yes" ]; then
-        echo "# $(date '+%F %T'): Sorting by read name and removing duplicates from HISAT2 alignment." >> "${LOG_FNAME}"
-        echo "samtools view -bh -F 4 -@ ${PBS_NUM_PPN} "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
-        echo "samtools rmdup "'"'"${SAMPLENM}.sorted.bam"'"'" "'"'"${SAMPLENM}.sorted.rmdup.bam"'"' >> "${LOG_FNAME}"
-        samtools view -bh -F 4 -q 60 -@ ${PBS_NUM_PPN} "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
-        samtools rmdup "${SAMPLENM}.sorted.bam" "${SAMPLENM}.sorted.rmdup.bam"
-        # Sort the bam by coordinate, too
-        samtools sort -o "${SAMPLENM}_Coord.sorted.rmdup.bam" -@ ${PBS_NUM_PPN} -O bam -T temp "${SAMPLENM}.sorted.rmdup.bam"
-        samtools index "${SAMPLENM}_Coord.sorted.rmdup.bam"
-        # Generate some summaries of the bam here
-        samtools stats "${SAMPLENM}_Coord.sorted.rmdup.bam" > "${SAMPLENM}_bamstats.txt"
-        FINAL_BAM="${SAMPLENM}.sorted.rmdup.bam"
-        COORD_BAM="${SAMPLENM}_Coord.sorted.rmdup.bam"
-        COORD_BAI="${SAMPLENM}_Coord.sorted.rmdup.bam.bai"
-        touch samtools.done
+        echo "# $(date '+%F %T'): Removing duplicates from sorted fixmate BAM." >> "${LOG_FNAME}"
+        samtools markdup \
+            -r \
+            -s \
+            "${SAMPLENM}_Raw_CoordSort.bam" \
+            "${SAMPLENM}_rmdup.bam" \
+            2> markdup.stats
+            cat markdup.stats >> "${LOG_FNAME}"
+        TO_FLT="${SAMPLENM}_rmdup.bam"
     else
-        echo "# $(date '+%F %T'): Sorting by read name" >> "${LOG_FNAME}"
-        echo "samtools view -bh -F 4 -@ ${PBS_NUM_PPN} "'"'"${SAMPLENM}"'"'".sam | samtools sort -n -o "'"'"${SAMPLENM}.sorted.bam"'"'" -@ 8 -O bam -T temp " >> "${LOG_FNAME}"
-        samtools view -bh -F 4 -q 60 -@ ${PBS_NUM_PPN} "${SAMPLENM}.sam" | samtools sort -n -o "${SAMPLENM}.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp
-        # Sort the bam by coordinate, too
-        samtools sort -o "${SAMPLENM}_Coord.sorted.bam" -@ ${PBS_NUM_PPN} -O bam -T temp "${SAMPLENM}.sorted.bam"
-        samtools index "${SAMPLENM}_Coord.sorted.bam"
-        samtools stats "${SAMPLENM}_Coord.sorted.bam" > "${SAMPLENM}_bamstats.txt"
-        FINAL_BAM="${SAMPLENM}.sorted.bam"
-        COORD_BAM="${SAMPLENM}_Coord.sorted.bam"
-        COORD_BAI="${SAMPLENM}_Coord.sorted.bam.bai"
-        touch samtools.done
+        echo "# $(date '+%F %T'): Marking (not removing) duplicates in sorted fixmate BAM." >> "${LOG_FNAME}"
+        samtools markdup \
+            -s \
+            "${SAMPLENM}_Raw_CoordSort.bam" \
+            "${SAMPLENM}_markdup.bam" \
+            2> markdup.stats
+            cat markdup.stats >> "${LOG_FNAME}"
+        TO_FLT="${SAMPLENM}_markdup.bam"
     fi
+    # Now, we remove unmapped and mulitply-mapped reads
+    echo "# $(date '+%F %T'): Removing unmapped and MAPQ<60 reads and sorting by name." >> "${LOG_FNAME}"
+    samtools view \
+        -bhu \
+        -@ "${PBS_NUM_PPN}" \
+        -F 4 \
+        -q 60 \
+        "${TO_FLT}" \
+        | samtools sort \
+        -n \
+        -O bam \
+        -o "${SAMPLENM}_Filtered.bam" \
+        -T temp \
+        -@ "${PBS_NUM_PPN}"
+    echo "# $(date '+%F %T'): Making coordinate-sorted filtered BAM." >> "${LOG_FNAME}"
+    samtools sort \
+        -O bam \
+        -@ "${PBS_NUM_PPN}" \
+        -T temp \
+        -o "${SAMPLENM}_Filtered_CoordSort.bam" \
+        "${SAMPLENM}_Filtered.bam"
+    # Make indices for coordinate sorted BAMs
+    echo "# $(date '+%F %T'): Generating indices for coordinate-sorted BAMs." >> "${LOG_FNAME}"
+    samtools index "${TO_FLT}"
+    samtools index "${SAMPLENM}_Filtered_CoordSort.bam"
+    # Set some variables to link the files into the output directory
+    FOR_COUNTS="${SAMPLENM}_Filtered.bam"
+    RAW_COORD="${TO_FLT}"
+    RAW_COORD_IDX="${TO_FLT}.bai"
+    FLT_COORD="${SAMPLENM}_Filtered_CoordSort.bam"
+    FLT_COORD_IDX="${SAMPLENM}_Filtered_CoordSort.bam.bai"
+    # Generate some stats for the report
+    echo "# $(date '+%F %T'): Generating alignment stats based on raw BAM." >> "${LOG_FNAME}"
+    samtools stats "${RAW_COORD}" > "${SAMPLENM}_bamstats.txt"
+    touch samtools.done
 fi
+
+# Use picard to collect RNAseq metrics
+if [ "${STRAND}" = "2" ]; then
+    PICARD_STRAND="SECOND_READ_TRANSCRIPTION_STRAND"
+elif [ "${STRAND}" = "1" ]; then
+    PICARD_STRAND="FIRST_READ_TRANSCRIPTION_STRAND"
+else
+    PICARD_STRAND="NONE"
+fi
+echo "# $(date '+%F %T'): Converting the GTF to a refFlat file for Picard CollectRnaSeqMetrics." >> "${LOG_FNAME}"
+${GTFTOGENEPRED} -genePredExt -geneNameAsName2 <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt"
+paste \
+    <(cut -f 12 "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt") \
+    <(cut -f 1-10 "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt") \
+    | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat.txt.gz"
+echo "# $(date '+%F %T'): Generating rRNA interval list file from GTF and raw BAM." >> "${LOG_FNAME}"
+samtools view \
+    -H \
+    "${WORKDIR}/singlesamples/${SAMPLENM}/${RAW_COORD}" \
+    > "${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list"
+# We have to do this weird grep call because grep returns 1 on nomatch, which should not kill the script
+(grep 'gene_biotype "rRNA"' <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") || test $? = 1 )\
+    | awk '$3 == "gene"' \
+    | cut -f 1,4,5,7,9 \
+    >> "${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list"
+mkdir -p "${OUTDIR}/RNASeqMetrics"
+mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"
+echo "# $(date '+%F %T'): Collecting RNAseq Metrics for ${SAMPLENM}" >> "${LOG_FNAME}"
+_JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar \
+    CollectRnaSeqMetrics \
+    I="${WORKDIR}/singlesamples/${SAMPLENM}/${RAW_COORD}" \
+    O="${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Metrics.txt" \
+    REF_FLAT="${WORKDIR}/singlesamples/${SAMPLENM}/refFlat.txt.gz" \
+    RIBOSOMAL_INTERVALS="${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list" \
+    MINIMUM_LENGTH="0" \
+    CHART_OUTPUT="${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Coverage_Bias.pdf" \
+    STRAND_SPECIFICITY="${PICARD_STRAND}" \
+    2>> "${LOG_FNAME}"
+# Collect the relevant parts out of the metrics file. The fields that are of the
+# most import are duplication, rRNA pct, PCT_USABLE, PCT_CODING, PCT_INTRONIC
+# and the bias into a file
+grep -A 1 '^PF_BASES' "${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Metrics.txt" \
+    | tail -n 1 \
+    | cut -f 3,4,5,6,7,9,10,16,17,18,19,20,22,23 \
+    > "${WORKDIR}/singlesamples/${SAMPLENM}/rnaseq_metrics.txt"
 
 # Use picard to collect the insert size metrics, but only if paired end
 if [ "${PE}" = "true" ]
 then
     echo "# $(date '+%F %T'): Collecting insert size metrics for ${SAMPLENM}" >> "${LOG_FNAME}"
-    echo "mkdir -o ${OUTDIR}/InsertSizeMetrics" >> "${LOG_FNAME}"
     mkdir -p "${OUTDIR}/InsertSizeMetrics"
     mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"
-    echo "_JAVA_OPTIONS="'"'"-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"'"'" ${PTOOL}/picard.jar CollectInsertSizeMetrics I="'"'"${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}"'"'" O="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt"'"'" H="'"'"${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"'"' >> "${LOG_FNAME}"
-    _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar CollectInsertSizeMetrics I="${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}" O="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" H="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf"
+    _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar \
+        CollectInsertSizeMetrics \
+        I="${WORKDIR}/singlesamples/${SAMPLENM}/${FOR_COUNTS}" \
+        O="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" \
+        H="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf" \
+        2>> "${LOG_FNAME}"
     # Extract the mean, median, standard deviation from the metrics file
-    grep -A 1 '^MEDIAN_INSERT_SIZE' "${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" | tail -n 1 | cut -f 1,5,6,9,11,15,17 > "${WORKDIR}/singlesamples/${SAMPLENM}/IS_Stats.txt"
+    grep \
+        -A 1 \
+        '^MEDIAN_INSERT_SIZE' \
+        "${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" \
+        | tail -n 1 \
+        | cut -f 1,5,6,9,11,15,17 \
+        > "${WORKDIR}/singlesamples/${SAMPLENM}/IS_Stats.txt"
 fi
 
 # Use awk to pick apart the alignment summary
@@ -256,15 +484,18 @@ echo "${SAMPLENM} ${TOTAL_READS} ${UNMAP} ${SINGLE_MAP} ${MULTI_MAP} ${DISCO_MAP
 # directory, as just the samplename. This is a bit of a hack to get featureCounts
 # to not print huge paths as samplenames
 echo "# $(date '+%F %T'): Linking ${SAMPLENM} into ${WORKDIR}/allsamples" >> "${LOG_FNAME}"
-echo "mkdir -p "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
-echo "ln -sf "'"'"${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}"'"'" "'"'"${WORKDIR}/allsamples/${SAMPLENM}"'"' >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/allsamples"
-ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FINAL_BAM}" "${WORKDIR}/allsamples/${SAMPLENM}"
+ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FOR_COUNTS}" "${WORKDIR}/allsamples/${SAMPLENM}"
 
-echo "$ $(date '+%F %T'): Linking coordinate-sorted BAMs into ${OUTDIR}/Coordinate_Sorted_BAMs/" >> "${LOG_FNAME}"
+echo "# $(date '+%F %T'): Linking coordinate-sorted BAMs into ${OUTDIR}/Coordinate_Sorted_BAMs/" >> "${LOG_FNAME}"
 mkdir -p "${OUTDIR}/Coordinate_Sorted_BAMs"
-ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${COORD_BAM}" "${OUTDIR}/Coordinate_Sorted_BAMs/${COORD_BAM}"
-ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${COORD_BAI}" "${OUTDIR}/Coordinate_Sorted_BAMs/${COORD_BAI}"
+ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${RAW_COORD}" "${OUTDIR}/Coordinate_Sorted_BAMs/${RAW_COORD}"
+ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${RAW_COORD_IDX}" "${OUTDIR}/Coordinate_Sorted_BAMs/${RAW_COORD_IDX}"
+ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FLT_COORD}" "${OUTDIR}/Coordinate_Sorted_BAMs/${FLT_COORD}"
+ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FLT_COORD_IDX}" "${OUTDIR}/Coordinate_Sorted_BAMs/${FLT_COORD_IDX}"
 
 echo "# $(date '+%F %T'): Finished processing ${SAMPLENM}." >> "${LOG_FNAME}"
 touch "${SAMPLENM}.done"
+
+# And close the file descriptor we were using for the trace
+exec 5>&-

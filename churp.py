@@ -7,8 +7,8 @@ supported:
     - group_template
     - bulk_rnaseq
 Questions should be directed to help@msi.umn.edu.
-Version: 0.0.1
-2018-11-04
+Version: 0.1.0
+2019-03-13
 """
 
 # Check the Python version

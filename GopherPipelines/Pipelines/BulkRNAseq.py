@@ -45,6 +45,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.min_gene_len = str(valid_args['mingene'])
         # And the minimum depth
         self.min_cpm = str(valid_args['mincpm'])
+        # Set the subsampling level
+        self.subsample = str(valid_args['subsample'])
 
         # And make a sample sheet from the args
         self.sheet = BulkRNASeqSampleSheet.BulkRNASeqSampleSheet(valid_args)
@@ -115,6 +117,21 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         except AssertionError:
             DieGracefully.die_gracefully(
                 DieGracefully.BAD_NUMBER, '--min-cpm')
+        try:
+            assert a['subsample'] >= 0
+        except AssertionError:
+            DieGracefully.die_gracefully(
+                DieGracefully.BAD_NUMBER, '--subsample')
+        try:
+            assert a['mem'] >= 12000
+        except AssertionError:
+            DieGracefully.die_gracefully(
+                DieGracefully.BAD_NUMBER, '--mem')
+        try:
+            assert a['walltime'] >= 2
+        except AssertionError:
+            DieGracefully.die_gracefully(
+                DieGracefully.BAD_NUMBER, '--walltime')
         self.pipe_logger.debug('GTF: %s', a['gtf'])
         self.pipe_logger.debug('Adapters: %s', a['adapters'])
         self.pipe_logger.debug('FASTQ Folder: %s', a['fq_folder'])
@@ -122,6 +139,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self.pipe_logger.debug('Working Dir: %s', a['workdir'])
         self.pipe_logger.debug('HISAT2 Idx: %s', a['hisat2_idx'])
         self.pipe_logger.debug('Expr Groups: %s', a['expr_groups'])
+        self.pipe_logger.debug('Strandedness: %s', a['strand'])
         # Check that the adapters and GTF file exist
         try:
             handle = open(a['gtf'], 'r')
@@ -243,7 +261,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         qsub_resources += ',walltime=' + str(self.walltime * 3600) + '"'
         # Set the group string here
         if self.group:
-            qsub_group = '-A' + ' ' + self.group
+            qsub_group = '-A ' + self.group + ' -W "group_list=' + self.group + '"'
         else:
             qsub_group = ''
         qsub_array = '1'
@@ -251,12 +269,14 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             qsub_array += '-' + str(len(self.sheet.final_sheet))
         # Write a few variables into the header of the script so they are
         # easy to find
+        handle.write('QSUB_ARRAY=' + '"' + qsub_array + '"\n')
         handle.write('OUTDIR=' + '"' + str(self.outdir) + '"\n')
         handle.write('WORKDIR=' + '"' + str(self.workdir) + '"\n')
         handle.write('DE_SCRIPT=' + '"' + self.de_script + '"\n')
         handle.write('REPORT_SCRIPT=' + '"' + self.report_script + '"\n')
         handle.write('SAMPLESHEET=' + '"' + ss + '"\n')
         handle.write('PURGE=' + '"' + self.purge + '"\n')
+        handle.write('SUBSAMP=' + '"' + self.subsample + '"\n')
         handle.write('PIPE_SCRIPT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )/$(basename $0)"\n')
         aln_cmd = [
             'qsub',
@@ -267,8 +287,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-o', '"${OUTDIR}"',
             '-e', '"${OUTDIR}"',
             '-l', qsub_resources,
-            '-t', qsub_array,
-            '-v', '"SampleSheet=${SAMPLESHEET},PURGE=${PURGE}"',
+            '-t', '"${QSUB_ARRAY}"',
+            '-v', '"SampleSheet=${SAMPLESHEET},PURGE=${PURGE},SUBSAMP=${SUBSAMP}"',
             self.single_sample_script,
             '||',
             'exit',

@@ -32,6 +32,19 @@ samplenames <- sheet$V1
 nsamp <- length(samplenames)
 hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
 names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
+dup_summary <- read.table(paste(params["workdir"], "allsamples", "Dup_Stats.txt", sep="/"), header=F)
+names(dup_summary) <- c("SampleName", "R1_Dup", "R2_Dup")
+bbduk_summary <- read.table(paste(params["workdir"], "allsamples", "rRNA_kmers.txt", sep="/"), header=F)
+names(bbduk_summary) <- c("SampleName", "rRNA_Fragments", "rRNA_Pct")
+picard_rnaseq_summary <- read.table(paste(params["workdir"], "allsamples", "RNASeq_Metrics.txt", sep="/"), header=F)
+names(picard_rnaseq_summary) <- c(
+    "SampleName",
+    "RIBOSOMAL_BASES", "CODING_BASES", "UTR_BASES", "INTRONIC_BASES", "INTERGENIC_BASES",
+    "CORRECT_STRAND_READS", "INCORRECT_STRAND_READS", "PCT_RIBOSOMAL_BASES", "PCT_CODING_BASES", "PCT_UTR_BASES",
+    "PCT_INTRONIC_BASES", "PCT_INTERGENIC_BASES", "PCT_USABLE_BASES", "PCT_CORRECT_STRAND_READS")
+# Assume that the first sample is part of the same dataset as the others
+first_samp <- as.character(sheet$V3[1])
+fastq_dir <- dirname(first_samp)
 ```
 
 CHURP was developed by the Research Informatics Solutions (RIS) group at MSI
@@ -44,6 +57,8 @@ with funding provided by the University of Minnesota Informatics Institute
 
 # Key Figures and Summaries
 ## Experiment Summary
+The location of the FASTQ files for this run is ``r fastq_dir``
+
 A tabular summary of the samples and reads that were analyzed is shown below:
 
 ```{r samplesheet_sum, echo=FALSE, message=FALSE}
@@ -71,13 +86,12 @@ names(sumsheet) <- c(
     "Trim?",
     "Remove Dups?",
     "Trim Options",
-    "Unstranded?")
+    "Strand")
 sumsheet
 ```
 
 ## Fragment Counts Plot
 ```{r counts_sum, echo=FALSE, message=FALSE}
-# read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.txt", sep="/"), header=F)
 read_dat <- matrix(
     c(read_summary$V2, read_summary$V4)/1000000,
     byrow=FALSE,
@@ -87,7 +101,7 @@ max_reads <- max(read_dat)
 at <- barplot(
     t(read_dat),
     beside=TRUE,
-    ylim=c(0, max_reads*1.15),
+    ylim=c(0, max_reads*1.2),
     axes=FALSE,
     col=c("#d95f02", "#1b9e77"),
     ylab="Fragment Count (Millions)",
@@ -322,7 +336,7 @@ at <- barplot(
     t(count_dat)/1000000,
     beside=FALSE,
     col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
-    ylim=c(0, max_reads*1.15),
+    ylim=c(0, max_reads*1.2),
     ylab="Fragment Count (Millions)",
     main="HISAT2 Count Plot",
     axes=FALSE)
@@ -346,7 +360,7 @@ barplot(
     beside=FALSE,
     col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
     ylim=c(0, 1.15),
-    ylab="Fraction",
+    ylab="Proportion",
     main="HISAT2 Proportion Plot",
     axes=FALSE)
 legend(
@@ -369,7 +383,7 @@ maxexpr <- max(num_expressed)
 at <- barplot(
     num_expressed,
     ylab="Number of Expressed Features",
-    ylim=c(0, maxexpr*1.15),
+    ylim=c(0, maxexpr*1.2),
     col="#1f78b4",
     axes=FALSE)
 axis(side=2)
@@ -433,18 +447,38 @@ if(!dir.exists(degdir)) {
 
 # Run Summary
 ## General Workflow
-Raw reads from individual samples are summarized with FastQC. If the `--no-trim`
-option was specified (see samplesheet, below), then raw reads are aligned to the
-reference genome with HISAT2. If `--no-trim` was not specified, then the reads
-are cleaned with Trimmomatic and re-assessed with FastQC, and trimmed reads are
-aligned to the reference genome with HISAT2. Reads aligning to genes are counted
-with featureCounts, from the subread package. Raw counts are transformed into
-counts-per-million with the edgeR package. Genes that are shorter than the
-specified minimum length (`--min-len` argument, default 200bp) are pruned from
-the counts matrix before any differential expression analysis. If experimental
-groups were supplied, then differential expression analysis is performed with a
-quasi-likelihood test in edgeR, with a 0.05 false discovery rate correction
-applied.
+### Read QC
+A subsample of 10,000 reads or read pairs were sampled from each sample's reads.
+This subsample of 10,000 reads was searched for contamination from ribosomal
+RNA using a representative rRNA sequence list from the SILVA database release
+132. Raw reads were summarized with FastQC, and optionally trimmed with
+Trimmomatic. If trimmed, the cleaned reads are re-assessed with FastQC. Length,
+quality, and duplication metrics were extracted from each FastQC run.
+
+### Alignment
+Trimmed reads (or raw reads, if `--no-trim` was specified) were aligned to the
+reference genome with HISAT2. Duplicate reads based on alignment position were
+marked with SAMTools. If `--rmdup` was specified, then the positional duplicates
+were removed instead of marked. Alignments with duplicates marked were
+summarized with Picard CollectRnaSeqMetrics to summarize the number of mapped
+bases that occur in off-target regions and in annotated ribosomal regions.
+Processed alignments were filtered of reads that have a mapping quality of less
+than 60, and sorted by query name rather than position.
+
+### Counts and Differential Expression testing
+Cleaned and name-sorted alignments were processed with the featureCounts tool
+from the subread package. Fragments were counted in a strand-specific manner,
+unless the `--strand U` option was passed for a library that was prepared in
+a strand-unspecific way. Both mates of a read pair were required to map to a
+feature to be counted, if the data were paired-end.
+
+Raw counts were imported into the `edgeR` package in R. Gnees that are shorter
+than the specified minimum length (`--min-len` argument, default 200bp) were
+pruned from the counts matrix before differential expression testing. If
+experimental groups were specified (`-e` argument), then the differential
+expression testing was peformed with a quasi-likelihood test in `edgeR` between
+all pairwise combinations of groups. A 0.05 false discovery rate correction
+was applied to the tests.
 
 ## Results and Intermediate Files
 ### Output Directory
@@ -471,6 +505,26 @@ following directories are of interest:
     will only have a header. Pairwise combinations of groups are tested for
     significance, so this directory may contain multiple files.
 
+- ``r paste(params["outdir"], "Coordinate_Sorted_BAMs", sep="/")``
+
+    Contains BAM alignments sorted on alignment coordinates and BAM index files
+    for loading into IGV or other alignment visualization tools. There are both
+    pre-filtered (`*markdup.bam` or `*rmdup.bam`) and post-filtered
+    (`*Filtered_CoordSort.bam`) files. In this case, the filtering is performed
+    on mapping quality.
+
+- ``r paste(params["outdir"], "Dup_Stats", sep="/")``
+
+    Contains per-read (2 files per sample for paired-end data) summaries of
+    duplication levels in *raw* reads. These are extracted directly from the
+    FastQC data file.
+
+- ``r paste(params["outdir"], "RNASeqMetrics", sep="/")``
+
+    Contains per-sample output files from Picard CollectRnaSeqMetrics from the
+    pre-filtering BAM file. There are also per-sample metaplots of coverage
+    bias across the transcripts.
+
 - ``r paste(params["outdir"], "InsertSizeMetrics", sep="/")``
 
     Contains per-sample insert size summaries from Picard tools. The mean,
@@ -485,7 +539,7 @@ following directories are of interest:
 
 - ``r paste(params["outdir"], "Plots", sep="/")``
 
-    Contains PDF vector images of expression summary plots. The plots are also
+    Contains PDF vector images of DEG testing summary plots. The plots are also
     embedded into the "Counts Summaries" subsection of the "Alignment Summaries"
     section of this report.
 
@@ -588,7 +642,7 @@ names(sheet) <- c(
     "Trimmomatic Options",
     "Reference Genome",
     "HISAT2 Options",
-    "Untranded Library?",
+    "Strand",
     "GTF Name")
 sheet
 ```
@@ -600,7 +654,7 @@ includes read trimming and read mapping.
 
 ```{bash single_sample_modules, echo=FALSE, comment=NA}
 first_sample=$(head -n 1 $samplesheet | cut -f 1 -d '|')
-log_name="${outdir}/Logs/${first_sample}_Log.txt"
+log_name="${outdir}/Logs/${first_sample}_Analysis.log"
 log_start=$(($(grep -n '^#BEGIN_MODULE' "${log_name}" | cut -f 1 -d ':') + 2))
 log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
 head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
@@ -610,13 +664,13 @@ This is the full list of loaded modules for the summary job, which includes
 counting and differential expression testing.
 
 ```{bash summary_modules, echo=FALSE, comment=NA}
-log_name="${outdir}/Logs/BulkRNASeq_Summary_Log.txt"
+log_name="${outdir}/Logs/BulkRNASeq_Summary.log"
 log_start=$(($(grep -n '^#BEGIN_MODULES' "${log_name}" | cut -f 1 -d ':') + 2))
 log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
 head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
 ```
 
-# Read Summaries
+# QC Metrics
 ## Read Counts
 ```{r read_counts, echo=FALSE, message=FALSE}
 library(knitr)
@@ -627,6 +681,262 @@ names(read_summary) <- c(
     "Trimmed R1 Count",
     "Trimmed R2 Count")
 kable(read_summary, caption="Read count summary.")
+```
+
+## rRNA Contamination (Based on Kmer Matching) {.tabset}
+These counts were based on searching a subset of the raw reads against a
+reference database of ribosomal K-mers. Click on the table headers to show the
+summaries of rRNA contamination.
+
+### Plot
+```{r bbduk_plot, echo=FALSE, message=FALSE}
+plt_dat <- as.numeric(gsub("%", "", as.character(bbduk_summary$rRNA_Pct)))
+at <- barplot(
+    plt_dat,
+    col="#e41a1c",
+    ylim=c(0, 110),
+    xlab="",
+    ylab="Percent rRNA",
+    main="K-mer Based rRNA Contamination",
+    axes=F)
+axis(side=1, at=at, labels=as.character(bbduk_summary$SampleName), las=2, cex.axis=0.6)
+axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+rect(
+    xleft=par("usr")[1],
+    xright=par("usr")[2],
+    ybottom=20,
+    ytop=35,
+    col=rgb(255/255, 237/255, 160/255, 0.5),
+    border=NA
+    )
+rect(
+    xleft=par("usr")[1],
+    xright=par("usr")[2],
+    ybottom=35,
+    ytop=100,
+    col=rgb(228/255, 26/255, 28/255, 0.25),
+    border=NA
+    )
+```
+
+### Table
+```{r bbduk_table, echo=FALSE, message=FALSE}
+library(knitr)
+kable(bbduk_summary, caption="Number of read pairs (from subsample) and percentage of library that is estimated to be derived from ribosomal RNA.")
+```
+
+## Sequence Duplication {.tabset}
+These plots show sequence duplication summaries, derived from FastQC output.
+Click on the tab headers to show the various summaries.
+
+### Overall Duplication
+```{r dup_overall, echo=FALSE, message=FALSE}
+plt_dat <- matrix(as.numeric(c(dup_summary$R1_Dup, dup_summary$R2_Dup)), nrow=2, byrow=TRUE)
+at <- barplot(
+    100-plt_dat,
+    beside=TRUE,
+    axes=F,
+    col=c("#d95f02", "#1b9e77"),
+    ylim=c(0, 110),
+    xlab="",
+    ylab="Percent Duplicated",
+    main="Total Duplication")
+axis(side=1, at=apply(at, 2, mean), labels=as.character(dup_summary$SampleName), las=2, cex.axis=0.6)
+axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+legend("top", c("R1", "R2"), fill=c("#d95f02", "#1b9e77"), ncol=2)
+```
+
+### Duplication Histograms
+```{r dup_hist, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.75*nrow(sheet)}
+par(mfrow=c(nrow(sheet), 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
+plot_dup <- function(sn) {
+    r1_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_R1_Dups.txt", sep=""), sep="/")
+    r1_dup <- read.table(r1_dfile, header=FALSE, stringsAsFactors=FALSE)
+    plt_dat <- as.matrix(r1_dup[, c(2, 3)])
+    at <- barplot(
+        t(plt_dat),
+        axes=F,
+        beside=TRUE,
+        col=c("#a6cee3", "#1f78b4"),
+        ylim=c(0, 110),
+        xlab="Duplication Level",
+        ylab="Percentage",
+        main=paste("Duplication in ", sn, " R1", sep=""))
+    axis(side=1, at=apply(at, 2, mean), labels=as.character(r1_dup$V1), las=2, cex.axis=0.6)
+    axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+    legend("top", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"), ncol=2)
+    r2_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_R2_Dups.txt", sep=""), sep="/")
+    if(!file.exists(r2_dfile)) {
+            plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+            text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
+        } else {
+            r2_dup <- read.table(r2_dfile, header=FALSE, stringsAsFactors=FALSE)
+            plt_dat <- as.matrix(r2_dup[, c(2, 3)])
+            at <- barplot(
+                t(plt_dat),
+                axes=F,
+                beside=TRUE,
+                col=c("#a6cee3", "#1f78b4"),
+                ylim=c(0, 110),
+                xlab="Duplication Level",
+                ylab="Percentage",
+                main=paste("Duplication in ", sn, " R2", sep=""))
+            axis(side=1, at=apply(at, 2, mean), labels=as.character(r2_dup$V1), las=2, cex.axis=0.6)
+            axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+            legend("top", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"), ncol=2)
+    }
+}
+dummy <- sapply(samplenames, plot_dup)
+```
+
+## Picard RNASeq Metrics {.tabset}
+These summaries are useful for identifying genomic DNA contamination, potential
+strandedness mismatches between the pipeline settings and the data, and coverage
+biases across transcripts. There is also another measure of ribosomal RNA
+contamination, based on alignment to annotated rRNA features.
+
+### gDNA Contamination Metrics
+This plot will show the percentage of bases that map to off-target regions
+(i.e., non-exon regions). Note that the counts and proportions here *exclude*
+ribosomal mapping.
+
+```{r gdna_plot, echo=FALSE, message=FALSE}
+par(mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
+cts_dat <- matrix(
+    c(
+        as.numeric(picard_rnaseq_summary$CODING_BASES),
+        as.numeric(picard_rnaseq_summary$UTR_BASES),
+        as.numeric(picard_rnaseq_summary$INTRONIC_BASES),
+        as.numeric(picard_rnaseq_summary$INTERGENIC_BASES)
+        )/1000000,
+    byrow=TRUE,
+    nrow=4)
+max_ct <- max(cts_dat)
+bar_cols <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c")
+at <- barplot(
+    cts_dat,
+    beside=TRUE,
+    axes=F,
+    ylim=c(0, max_ct*1.2),
+    ylab="Number of Bases in Primary Alignments (Millions)",
+    main="Base Positions",
+    xlab="",
+    col=bar_cols)
+axis(side=1, at=apply(at, 2, mean), labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
+axis(side=2)
+legend("top", c("Coding", "UTR", "Intron", "Intergenic"), fill=bar_cols, ncol=4)
+
+prop_dat <- matrix(
+    c(
+        as.numeric(picard_rnaseq_summary$PCT_CODING_BASES),
+        as.numeric(picard_rnaseq_summary$PCT_UTR_BASES),
+        as.numeric(picard_rnaseq_summary$PCT_INTRONIC_BASES),
+        as.numeric(picard_rnaseq_summary$PCT_INTERGENIC_BASES)
+        ),
+    byrow=TRUE,
+    nrow=4)
+at <- barplot(
+    prop_dat,
+    beside=FALSE,
+    axes=F,
+    ylim=c(0, 1.2),
+    ylab="Proportion of Bases in Primary Alignments",
+    main="Base Positions",
+    xlab="",
+    col=bar_cols)
+axis(side=1, at=at, labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
+axis(side=2, at=seq(0, 1, by=0.2), labels=seq(0, 1, by=0.2))
+legend("top", c("Coding", "UTR", "Intron", "Intergenic"), fill=bar_cols, ncol=4)
+```
+
+### Strand Summary
+This plot will summarize the mismatch between the observed and expected strand
+directionality in the samples. Note that for unstranded libraries, these values
+will all be 0.
+
+```{r strand_plot, echo=FALSE, message=FALSE}
+plot_dat <- as.numeric(picard_rnaseq_summary$PCT_CORRECT_STRAND_READS)
+par(mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
+at <- barplot(
+    plot_dat,
+    col="#1f78b4",
+    ylim=c(0, 1.1),
+    xlab="",
+    ylab="Proportion Correct Strand",
+    main="Strand Agreement",
+    axes=F)
+axis(side=1, at=at, labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
+axis(side=2)
+```
+
+### Mapping-based rRNA Contamination
+This plot will show the proportion fo bases that map to annotated rRNA features.
+
+```{r picard_rrna, echo=FALSE, message=FALSE}
+plot_dat <- as.numeric(picard_rnaseq_summary$PCT_RIBOSOMAL_BASES)
+par(mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
+at <- barplot(
+    plot_dat,
+    col="#e41a1c",
+    ylim=c(0, 1.1),
+    xlab="",
+    ylab="Proportion Ribosomal Bases",
+    main="rRNA Contamination (Mapping)",
+    axes=F)
+rect(
+    xleft=par("usr")[1],
+    xright=par("usr")[2],
+    ybottom=0.2,
+    ytop=0.35,
+    col=rgb(255/255, 237/255, 160/255, 0.5),
+    border=NA
+    )
+rect(
+    xleft=par("usr")[1],
+    xright=par("usr")[2],
+    ybottom=0.35,
+    ytop=1,
+    col=rgb(228/255, 26/255, 28/255, 0.25),
+    border=NA
+    )
+axis(side=1, at=at, labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
+axis(side=2)
+```
+
+### Coverage Bias
+This plot will show normalized coverage across all transcripts. Ideally, the
+curve is symmetrical, showing no bias toward one end of the transcripts.
+
+```{r coverage_bias, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.25*nrow(sheet)}
+samprow <- ceiling(nrow(sheet)/2)
+par(mfrow=c(samprow, 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
+plot_cov <- function(sn) {
+    cf <- paste(params["outdir"], "RNASeqMetrics", paste(sn, "_Metrics.txt", sep=""), sep="/")
+    # Wrap this read in a tryCatch for the cases where there are no normalized coverage numbers
+    cov_dat <- tryCatch(
+        {read.table(cf, header=FALSE, stringsAsFactors=FALSE, skip=11)},
+        error=function(x) {
+            return(data.frame())
+        }
+        )
+    if(length(cov_dat) > 0) {
+        plot(
+            cov_dat$V2 ~ cov_dat$V1,
+            type="l",
+            lwd=2,
+            col="#1f78b4",
+            xlab="Normalized Position",
+            ylab="Normalized Coverage",
+            main=sn,
+            ylim=c(0, 1.7)
+            )
+        abline(h=1, lwd=1, col="grey", lty=3)
+    } else {
+        plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+        text(x=0.5, y=0.5, "No Bias Metrics Found", cex=1, col="black")
+    }
+}
+dummy <- sapply(samplenames, plot_cov)
 ```
 
 ## Read Qualities {.tabset}
@@ -954,7 +1264,7 @@ at <- barplot(
     t(count_dat)/1000000,
     beside=FALSE,
     col=c("#1f78b4", "#a6cee3", "#b2df8a", "#999999"),
-    ylim=c(0, max_reads*1.15),
+    ylim=c(0, max_reads*1.2),
     ylab="Fragment Count (Millions)",
     main="HISAT2 Count Plot",
     axes=FALSE)
@@ -1022,6 +1332,7 @@ mapping_summary <- read.table(paste(params["workdir"], "allsamples", "Samtools_S
 names(mapping_summary) <- c(
     "Sample Name",
     "Reads Mapped*",
+    "PCR Duplicate",
     "MAPQ = 0",
     "Max Read Length",
     "Average Read Length",
@@ -1056,7 +1367,7 @@ if(!file.exists(insertsize_file)) {
         xlab="",
         ylab="Insert Size (bp)",
         main="Insert Size Distribution",
-        ylim=c(0, max_is*1.1),
+        ylim=c(0, max_is*1.2),
         axes=FALSE)
     segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V8)/2, y0=is_summary$V2+(is_summary$V8)/2, lwd=1, col="black")
     segments(x0=seq_along(is_summary$V1), y1=is_summary$V2-(is_summary$V6)/2, y0=is_summary$V2+(is_summary$V6)/2, lwd=8, col="grey")
@@ -1081,21 +1392,83 @@ if(!file.exists(insertsize_file)) {
 ```
 
 ## Counts Summaries {.tabset}
-These plots are available as PDF vector images at the following path:
+### Subread Assignment Summary
+These plots will show the breakdown of read assignment by `featureCounts`.
 
-``r paste(params["outdir"], "Plots", sep="/")``
+```{r subread_summary, echo=FALSE, message=FALSE}
+library(knitr)
+subread_sum <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt.summary", sep="/"), header=TRUE)
+plt_dat <- as.matrix(subread_sum[,-c(1)])
+colnames(plt_dat) <- NULL
+categories <- c(
+    "Assigned",
+    "Unmapped",
+    "MQ<10",
+    "Chimera",
+    "TooShort",
+    "Duplicate",
+    "MultiMap",
+    "Secondary",
+    "Nonjunction",
+    "NoFeatures",
+    "Overlapping",
+    "Ambiguity")
+bar_cols <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928")
+maxct <- max(plt_dat)/1000000
+at <- barplot(
+    plt_dat/1000000,
+    beside=TRUE,
+    col=bar_cols,
+    axes=FALSE,
+    ylim=c(0, maxct*1.4),
+    xlab="",
+    ylab="Fragment Count (Millions)",
+    main="Subread Summary")
+axis(side=1, at=apply(at, 2, mean), labels=colnames(subread_sum[-c(1)]), las=2, cex.axis=0.6)
+axis(side=2)
+legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
+
+plt_dat_prop <- t(plt_dat)
+plt_dat_prop <- plt_dat_prop/rowSums(plt_dat_prop)
+plt_dat_prop <- t(plt_dat_prop)
+at <- barplot(
+    plt_dat_prop,
+    beside=FALSE,
+    col=bar_cols,
+    axes=FALSE,
+    ylim=c(0, 1.4),
+    xlab="",
+    ylab="Fragment Proportions",
+    main="Subread Summary")
+axis(side=1, at=at, labels=colnames(subread_sum[-c(1)]), las=2, cex.axis=0.6)
+axis(side=2, at=seq(0, 1, by=0.2), labels=seq(0, 1, by=0.2))
+legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
+
+# We want to transpose this table so that it scales vertically with the number
+# of samples.
+hdr <- as.character(subread_sum$Status)
+samples <- colnames(subread_sum)[-c(1)]
+t_subread <- as.data.frame(t(subread_sum[,-c(1)]))
+rownames(t_subread) <- NULL
+colnames(t_subread) <- hdr
+t_subread <- cbind("Sample Name"=samples, t_subread)
+kable(t_subread, caption="Summary of subread featureCounts assignment.")
+```
 
 ### Number of Expressed Features
-This plot shows the number of features (genes) that have at least one read
+This plot shows the number of features (genes) that have at least one  fragment
 mapping to them.
 
 ```{r expressed_features, echo=FALSE, message=FALSE}
 subread_counts <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt", sep="/"), header=T, sep="\t", comment.char="#")
 subread_counts <- subread_counts[,-c(1:6)]
 num_expressed <- as.numeric(apply(subread_counts, 2, function(x) sum(x>0)))
+maxexpr <- max(num_expressed)
 at <- barplot(
     num_expressed,
     ylab="Number of Expressed Features",
+    ylim=c(0, maxexpr*1.2),
+    col="#1f78b4",
     axes=FALSE)
 axis(side=2)
 axis(side=1, at=at, labels=names(subread_counts), las=2, cex.axis=0.7)

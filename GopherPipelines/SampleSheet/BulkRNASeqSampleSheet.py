@@ -57,14 +57,19 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             self.useropts['rmdup'] = 'yes'
         else:
             self.useropts['rmdup'] = 'no'
-        if args['unstranded']:
-            self.useropts['unstranded'] = 'yes'
-        else:
-            self.useropts['unstranded'] = 'no'
         self.useropts['gtf'] = args['gtf']
         self.useropts['hisat2_idx'] = args['hisat2_idx']
         self.useropts['hisat2_threads'] = '-p ' + str(args['ppn'])
         self.useropts['hisat2_other'] = '--no-mixed --new-summary'
+        # Add flags to the HISAT2 options for strandness
+        if args['strand'] == 'RF':
+            self.useropts['strand'] = '2'
+            self.useropts['hisat2_other'] += ' --rna-strandness RF'
+        elif args['strand'] == 'FR':
+            self.useropts['strand'] = '1'
+            self.useropts['hisat2_other'] += ' --rna-strandness FR'
+        elif args['strand'] == 'U':
+            self.useropts['strand'] = '0'
         # Set the column order to be the columns of the sample sheet. This will
         # eventually become the header of the sheet.
         self.column_order.extend([
@@ -78,7 +83,7 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             'trimmomaticOpts',
             'Hisat2index',
             'Hisat2Options',
-            'Unstranded',
+            'Strand',
             'AnnotationGTF'])
         self._get_fq_paths(args['fq_folder'])
         self._resolve_options()
@@ -146,23 +151,48 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
         that were supplied by the user."""
         # For each sample...
         for s in self.samples:
-            # Key in the values based on the column names
-            self.final_sheet[s] = {
-                'Group': self.samples[s]['Group'],
-                'FastqR1files': self.samples[s]['R1'],
-                'FastqR2file': self.samples[s]['R2'],
-                'OutputDir': str(od),
-                'WorkingDir': str(wd),
-                'TRIM': self.useropts['trim'],
-                'RMDUP': self.useropts['rmdup'],
-                'trimmomaticOpts': self.finalopts['trimmomatic'],
-                'Hisat2index': self.useropts['hisat2_idx'],
-                'Hisat2Options': self.useropts['hisat2_threads'] + ' ' +
-                                 self.useropts['hisat2_other'] + ' ' +
-                                 self.finalopts['hisat2'],
-                'Unstranded': self.useropts['unstranded'],
-                'AnnotationGTF': self.useropts['gtf']
-                }
+            if self.samples[s]['R2'] == '':
+                pe = False
+            else:
+                pe = True
+            if pe:
+                # Key in the values based on the column names
+                self.final_sheet[s] = {
+                    'Group': self.samples[s]['Group'],
+                    'FastqR1files': self.samples[s]['R1'],
+                    'FastqR2file': self.samples[s]['R2'],
+                    'OutputDir': str(od),
+                    'WorkingDir': str(wd),
+                    'TRIM': self.useropts['trim'],
+                    'RMDUP': self.useropts['rmdup'],
+                    'trimmomaticOpts': self.finalopts['trimmomatic'],
+                    'Hisat2index': self.useropts['hisat2_idx'],
+                    'Hisat2Options': self.useropts['hisat2_threads'] + ' ' +
+                                     self.useropts['hisat2_other'] + ' ' +
+                                     self.finalopts['hisat2'],
+                    'Strand': self.useropts['strand'],
+                    'AnnotationGTF': self.useropts['gtf']
+                    }
+            else:
+                se_hisat2_other = self.useropts['hisat2_other'].replace(
+                    '--rna-strandness RF', '--rna-strandness R').replace(
+                    '--rna-strandness FR', '--rna-strandness F')
+                self.final_sheet[s] = {
+                    'Group': self.samples[s]['Group'],
+                    'FastqR1files': self.samples[s]['R1'],
+                    'FastqR2file': self.samples[s]['R2'],
+                    'OutputDir': str(od),
+                    'WorkingDir': str(wd),
+                    'TRIM': self.useropts['trim'],
+                    'RMDUP': self.useropts['rmdup'],
+                    'trimmomaticOpts': self.finalopts['trimmomatic'],
+                    'Hisat2index': self.useropts['hisat2_idx'],
+                    'Hisat2Options': self.useropts['hisat2_threads'] + ' ' +
+                                     se_hisat2_other + ' ' +
+                                     self.finalopts['hisat2'],
+                    'Strand': self.useropts['strand'],
+                    'AnnotationGTF': self.useropts['gtf']
+                    }
         self.sheet_logger.debug(
             'Samplesheet:\n%s',
             pprint.pformat(self.final_sheet))

@@ -1,15 +1,21 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=8,mem=16gb,walltime=8:00:00
+
+set -v
 set -e
 set -u
 set -o pipefail
+
+# Export the PS4 variable for the trace
+# Taken from https://wiki.bash-hackers.org/scripting/debuggingtips
+export PS4='+(${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
 # Check for PBS/Samplesheet version agreement
 PIPELINE_VERSION="0"
 SAMPLESHEET_VERSION=$(tail -n 1 "${SampleSheet}" | sed -E 's/#//g')
 if [ "${SAMPLESHEET_VERSION}" -ne "${PIPELINE_VERSION}" ]
 then
-    echo "${SampleSheet} is incompatible with this version of gopher-pipelines."
+    echo "${SampleSheet} is incompatible with this version of CHURP."
     echo "${SampleSheet} was generated with version ${SAMPLESHEET_VERSION}, and this script requires ${PIPELINE_VERSION}."
     exit 100
 fi
@@ -33,14 +39,16 @@ while IFS="|" read -ra OPTS; do
     TRIMOPTS=${OPTS[8]}
     HISAT2INDEX=${OPTS[9]}
     HISAT2OPTS=${OPTS[10]}
-    UNSTRANDED=${OPTS[11]}
+    STRAND=${OPTS[11]}
     GTFFILE=${OPTS[12]}
 done <<< "$IN"
 
+# this is annoying to see in the verbose log
+set +v
 # load necessary modules
 module load R/3.5.0
 module load python/3.6.3
-
+set -v
 # Make directories for the output files. We want to keep the outdir organized
 LOGDIR="${OUTDIR}/Logs"
 COUNTSDIR="${OUTDIR}/Counts"
@@ -51,11 +59,16 @@ mkdir -p "${LOGDIR}" "${COUNTSDIR}" "${PLOTSDIR}" "${DEGDIR}"
 
 # Print the loaded modules to stderr and a log file
 module list -t
-LOG_FNAME="${LOGDIR}/BulkRNASeq_Summary_Log.txt"
+TRACE_FNAME="${LOGDIR}/BulkRNASeq_Trace.log"
+LOG_FNAME="${LOGDIR}/BulkRNASeq_Summary.log"
+exec 5> "${TRACE_FNAME}"
+export BASH_XTRACEFD=5
+set -x
 echo "# $(date '+%F %T'): Summary started" > "${LOG_FNAME}"
 echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 echo '#END_MODULES' >> "${LOG_FNAME}"
+
 
 if [ -z "${R2FILE}" ]
 then
@@ -72,50 +85,53 @@ fi
 
 # Set the R_LIBS_USER variable here. This is where packages will be loaded from
 # within R
-echo "export R_LIBS_USER="'"'"/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/R"'"' >> "${LOG_FNAME}"
-export R_LIBS_USER="/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/R"
+echo "# $(date '+%F %T'): Adding /home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}/R to R_LIBS_USER" >> "${LOG_FNAME}"
+export R_LIBS_USER="/home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}/R"
 
 # Set the path to the featureCounts executable.
-echo "# $(date '+%F %T'): Using featureCounts v. 1.6.2" >> "${LOG_FNAME}"
-echo "FEATURECOUNTS="'"'"/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/Supp/subread-1.6.2-Linux-x86_64/bin/featureCounts"'"' >> "${LOG_FNAME}"
-FEATURECOUNTS="/home/msistaff/public/gopher-pipelines/v${PIPELINE_VERSION}/Supp/subread-1.6.2-Linux-x86_64/bin/featureCounts"
-
-echo "mkdir -p "'"'"${WORKDIR}/allsamples"'"'" && cd "'"'"${WORKDIR}/allsamples"'"' >> "${LOG_FNAME}"
+echo "# $(date '+%F %T'): Using counting reads with featureCounts v. 1.6.2" >> "${LOG_FNAME}"
+FEATURECOUNTS="/home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}/Supp/subread-1.6.2-Linux-x86_64/bin/featureCounts"
 mkdir -p "${WORKDIR}/allsamples" && cd "${WORKDIR}/allsamples"
 
 # Use featureCounts to make a merged counts matrix
 echo "# $(date '+%F %T'): Making a counts matrix for all samples." >> "${LOG_FNAME}"
-echo "BAM_LIST=(\$(find . -type l -exec basename {} \\; | sort -V))" >> "${LOG_FNAME}"
 BAM_LIST=($(find . -type l -exec basename {} \\;| sort -V))
-if [ "${UNSTRANDED}" = "yes" ]
+if [ "${PE}" = "true" ]
 then
-    if [ "${PE}" = "true" ]
-    then
-        echo "# $(date '+%F %T'): Library is unstranded and paired-end" >> "${LOG_FNAME}"
-        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -T ${PBS_NUM_PPN} -B -p -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" -a "${GTFFILE}" -T ${PBS_NUM_PPN} -B -p -Q 10 -s 0 -o subread_counts.txt "${BAM_LIST[@]}"
-    else
-        echo "# $(date '+%F %T'): Library is unstranded and single-end" >> "${LOG_FNAME}"
-        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -T ${PBS_NUM_PPN} -Q 10 -s 0 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" -a "${GTFFILE}" -T ${PBS_NUM_PPN} -B -Q 10 -s 0 -o subread_counts.txt "${BAM_LIST[@]}"
-    fi
+    echo "# $(date '+%F %T'): Library is paired-end with strand ${STRAND}." >> "${LOG_FNAME}"
+    "${FEATURECOUNTS}" \
+        -a "${GTFFILE}" \
+        -T ${PBS_NUM_PPN} \
+        -B \
+        -p \
+        -Q 10 \
+        -s "${STRAND}" \
+        -R CORE \
+        -o subread_counts.txt \
+        "${BAM_LIST[@]}"
 else
-    if [ "${PE}" = "true" ]
-    then
-        echo "# $(date '+%F %T'): Library is stranded and paired-end." >> "${LOG_FNAME}"
-        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -T ${PBS_NUM_PPN} -B -p -Q 10 -s 2 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" -a "${GTFFILE}" -T ${PBS_NUM_PPN} -B -p -Q 10 -s 2 -o subread_counts.txt "${BAM_LIST[@]}"
-    else
-        echo "# $(date '+%F %T'): Library is stranded and single-end" >> "${LOG_FNAME}"
-        echo '"'"${FEATURECOUNTS}"'"'" -a "'"'"${GTFFILE}"'"'" -T ${PBS_NUM_PPN} -Q 10 -s 2 -o subread_counts.txt "'"'"${BAM_LIST[@]}"'"' >> "${LOG_FNAME}"
-        "${FEATURECOUNTS}" -a "${GTFFILE}" -T ${PBS_NUM_PPN} -Q 10 -s 2 -o subread_counts.txt "${BAM_LIST[@]}"
-    fi
+    echo "# $(date '+%F %T'): Library is single-end with strand ${STRAND}" >> "${LOG_FNAME}"
+    "${FEATURECOUNTS}" \
+        -a "${GTFFILE}" \
+        -T ${PBS_NUM_PPN} \
+        -Q 10 \
+        -s "${STRAND}" \
+        -R CORE \
+        -o subread_counts.txt \
+        "${BAM_LIST[@]}"
 fi
 
 # Summarize the merged count data, including descriptive summaries and differential expression tests if >1 group present.
 echo "# $(date '+%F %T'): Running edgeR analysis on counts" >> "${LOG_FNAME}"
-echo "Rscript "'"'"${RSUMMARY}"'"'" "'"'"${OUTDIR}"'"'" "'"'"${WORKDIR}"'"'" "'"'"${SampleSheet}"'"'" "'"'"${WORKDIR}/subread_counts.txt"'"' '"'"${MINLEN}"'"' " &> Rout.txt" >> "${LOG_FNAME}"
-Rscript "${RSUMMARY}" "${OUTDIR}" "${WORKDIR}" "${SampleSheet}" "${WORKDIR}/allsamples/subread_counts.txt" "${MINLEN}" "${MINCPM}" &> Rout.txt
+Rscript \
+    "${RSUMMARY}" \
+    "${OUTDIR}" \
+    "${WORKDIR}" \
+    "${SampleSheet}" \
+    "${WORKDIR}/allsamples/subread_counts.txt" \
+    "${MINLEN}" \
+    "${MINCPM}" \
+    &> Rout.txt
 
 echo "# ----- Output from ${RSUMMARY} below" >> "${LOG_FNAME}"
 cat Rout.txt >> "${LOG_FNAME}"
@@ -125,15 +141,12 @@ echo "# ----- End output from ${RSUMMARY}" >> "${LOG_FNAME}"
 # the copy to happen only if the source file is newer than the destination file
 # or if the destination does not exist.
 echo "# $(date '+%F %T'): Copying merged counts matrix and summary into ${COUNTSDIR}" >> "${LOG_FNAME}"
-echo "cp -u subread_counts.txt "'"'"${COUNTSDIR}/subread_counts.txt"'"' >> "${LOG_FNAME}"
-echo "cp -u subread_counts.txt.summary "'"'"${COUNTSDIR}/subread_counts.txt.summary"'"' >> "${LOG_FNAME}"
 cp -u subread_counts.txt "${COUNTSDIR}/subread_counts.txt"
 cp -u subread_counts.txt.summary "${COUNTSDIR}/subread_counts.txt.summary"
 
 # We also want to keep the sorted BAM files and the GTF used for counts, in
 # case the user wants to go back to it
 echo "# $(date '+%F %T'): Copying GTF into ${OUTDIR}." >> "${LOG_FNAME}"
-echo "cp -u "'"'"${GTFFILE}"'"'" "'"'"${OUTDIR}"'"' >> "${LOG_FNAME}"
 cp -u "${GTFFILE}" "${OUTDIR}"
 
 # AWK command from S. Munro to make a translation table fo Ensembl IDs and
@@ -143,9 +156,20 @@ awk -F '\\t' '$3 == "gene" { print $9 }' <(gzip -cd "${GTFFILE}" || cat "${GTFFI
 # This is a slower but more general command to get gene_id and gene_name
 # awk -F'\t' '$3 == "gene" {print $9}' | awk -F';' '{for(i = 1; i <= NF; i++) { if( $i ~ /gene_id/ ) {split($i,GI," ")}; if( $i ~ /gene_name/ ) {split($i,GN," ")} }; print GI[2]"\t"GN[2]}' | sed -e 's/"//g'
 
+# Chop up the subread_counts.txt file a little bit to make it easier to import
+# into other tools like CLC Genomics Workbench
+echo "# $(date '+%F %T'): Linking gene symbol with Ensembl ID for subread_counts.txt" >> "${LOG_FNAME}"
+echo -e "GeneName\\t$(head -n 2 ${COUNTSDIR}/subread_counts.txt | tail -n 1 | cut -f 7-)" > "${COUNTSDIR}/subread_counts_gene_symbol.txt"
+join \
+    -e "NA" \
+    -a 2 \
+    <(sort -k 1,1 "${OUTDIR}/gene_id_gene_name_map.txt") \
+    <(tail -n +3 "${COUNTSDIR}/subread_counts.txt" | cut -f 1,7- | sort -k 1,1) \
+    | cut -f 2- -d ' ' \
+    | tr ' ' '\\t' \
+    >> "${COUNTSDIR}/subread_counts_gene_symbol.txt"
+
 # Link the work directories to the output directory
-echo "ln -sf "'"'"${WORKDIR}/singlesamples"'"'" "'"'"${OUTDIR}/singlesamples_work_directory"'"' >> "${LOG_FNAME}"
-echo "ln -sf "'"'"${WORKDIR}/allsamples"'"'" "'"'"${OUTDIR}/allsamples_work_directory"'"' >> "${LOG_FNAME}"
 rm -f "${OUTDIR}/singlesamples_work_directory" "${OUTDIR}/allsamples_work_directory"
 ln -sf "${WORKDIR}/singlesamples" "${OUTDIR}/singlesamples_work_directory"
 ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
@@ -153,7 +177,14 @@ ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
 # Prepare to generate HTML report by making unified files for everything. We
 # will have to iterate over every sample
 # Remove old summary files
-rm -f "${WORKDIR}/allsamples/Read_Counts.txt" "${WORKDIR}/allsamples/Samtools_Stats.txt" "${WORKDIR}/allsamples/HISAT_Stats.txt" "${WORKDIR}/allsamples/IS_Stats.txt"
+rm -f \
+    "${WORKDIR}/allsamples/Read_Counts.txt" \
+    "${WORKDIR}/allsamples/Samtools_Stats.txt" \
+    "${WORKDIR}/allsamples/HISAT_Stats.txt" \
+    "${WORKDIR}/allsamples/IS_Stats.txt" \
+    "${WORKDIR}/allsamples/Dup_Stats.txt" \
+    "${WORKDIR}/allsamples/RNASeq_Metrics.txt" \
+    "${WORKDIR}/allsamples/rRNA_kmers.txt"
 # Remove from the instance of the first blank line to the end of the file
 OFFSET=$(cut -f 1 -d '|' "${SampleSheet}" | grep -nE '^$' | head -n 1 | sed -e 's/://g')
 SNAMES=($(cut -f 1 -d '|' "${SampleSheet}" | sed -e "${OFFSET},\\$d"))
@@ -185,25 +216,43 @@ do
         TR2_COUNT=$(awk '{print $NF}' "${TRIMMED_R2}")
     fi
     echo -e "${sample}\\t${R1_COUNT}\\t${R2_COUNT}\\t${TR1_COUNT}\\t${TR2_COUNT}" >> "${WORKDIR}/allsamples/Read_Counts.txt"
+    # Get overall duplication stats
+    R1_DUP=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R1*_overall_dup.txt')
+    R2_DUP=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R2*_overall_dup.txt')
+    TOT_R1_DUP=$(awk '{print $NF}' "${R1_DUP}")
+    if [ -z "${R2_DUP}" ]
+    then
+        TOT_R2_DUP="NA"
+    else
+        TOT_R2_DUP=$(awk '{print $NF}' "${R2_DUP}")
+    fi
+    echo -e "${sample}\\t${TOT_R1_DUP}\\t${TOT_R2_DUP}" >> "${WORKDIR}/allsamples/Dup_Stats.txt"
     cat "${WORKDIR}/singlesamples/${sample}/hisat_map_summary.txt" >> "${WORKDIR}/allsamples/HISAT_Stats.txt"
     # Then, get alignment summary files
     BAMSTAT="${WORKDIR}/singlesamples/${sample}/${sample}_bamstats.txt"
     NMAPPED=$(grep '^SN' "${BAMSTAT}" | grep 'raw total sequences' | cut -f 3)
+    DUPLICATED=$(grep '^SN' "${BAMSTAT}" | grep 'reads duplicated' | cut -f 3)
     MQ0=$(grep '^SN' "${BAMSTAT}" | grep 'reads MQ0' | cut -f 3)
     MAXLEN=$(grep '^SN' "${BAMSTAT}" | grep 'maximum length' | cut -f 3)
     AVGLEN=$(grep '^SN' "${BAMSTAT}" | grep 'average length' | cut -f 3)
     AVGQUAL=$(grep '^SN' "${BAMSTAT}" | grep 'average quality' | cut -f 3)
-    echo -e "${sample}\\t${NMAPPED}\\t${MQ0}\\t${MAXLEN}\\t${AVGLEN}\\t${AVGQUAL}" >> "${WORKDIR}/allsamples/Samtools_Stats.txt"
+    echo -e "${sample}\\t${NMAPPED}\\t${DUPLICATED}\\t${MQ0}\\t${MAXLEN}\\t${AVGLEN}\\t${AVGQUAL}" >> "${WORKDIR}/allsamples/Samtools_Stats.txt"
+    # Get the BBDuk rRNA screen stats
+    echo -e "${sample}\\t$(grep '#Matched' ${WORKDIR}/singlesamples/${sample}/BBDuk_rRNA_Stats.txt | cut -f 2-3)" >> "${WORKDIR}/allsamples/rRNA_kmers.txt"
     # Then, get the insert size summaries. These are really simple.
     if [ -f "${WORKDIR}/singlesamples/${sample}/IS_Stats.txt" ]
     then
         echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/IS_Stats.txt)" >> "${WORKDIR}/allsamples/IS_Stats.txt"
     fi
+    # And collect the RNAseq metrics into a single file for summarization
+    echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/rnaseq_metrics.txt)" >> "${WORKDIR}/allsamples/RNASeq_Metrics.txt"
 done
 
 # We will generate an HTML report
 # This is an ugly workaround, but sidesteps the problem of write-locked public dirs for Rmarkdown/knitr
 cp -u "${BULK_RNASEQ_REPORT}" "./Report.Rmd"
-PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/gopher-pipelines/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('./Report.Rmd', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRIPT}"', samplesheet='"${SampleSheet}"'))"
+PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/CHURP_Deps/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('./Report.Rmd', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRIPT}"', samplesheet='"${SampleSheet}"'))"
 
 echo "# $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
+# Close the trace file descriptor
+exec 5>&-
