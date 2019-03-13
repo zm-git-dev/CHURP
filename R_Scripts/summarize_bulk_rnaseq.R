@@ -87,7 +87,7 @@ edge_mat <- calcNormFactors(edge_mat)
 #pal <- c('#e41a1c','#377eb8','#4daf4a','#984ea3') Nice colors but they're not colorblind friendly
 
 
-# This is THE ONLY colorblind acceptable palette from colorbrewer: http://colorbrewer2.org/#type=qualitative&scheme=Paired&n=4
+# This is THE ONLY colorblind acceptable palette with 4 colors from colorbrewer: http://colorbrewer2.org/#type=qualitative&scheme=Paired&n=4
 pal <- c('#a6cee3','#1f78b4','#b2df8a','#33a02c')
 col_vec <- pal[match(groups,uniq_groups)]
 
