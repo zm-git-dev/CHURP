@@ -38,6 +38,7 @@ setwd(work_dir)
 
 # Get the sample sheet to grab group membership downstream 
 sheet <- read.table(samp_sheet, sep = "|", header = F, comment.char = "#")
+sheet$V1 <- make.names(sheet$V1)
 
 # Because there may be cases where a subset of individuals in the samplesheet are run. We'll pull in the featureCounts matrix early and grab the relevant IDs
 raw_mat <- read.table(fc_mat, header = T, sep = '\t', comment.char = '#')
