@@ -4,6 +4,7 @@ a huge function, so we will isolate it into this script for ease of development
 and maintenance."""
 
 import argparse
+import GopherPipelines
 from GopherPipelines.ArgHandling import group_template_args
 from GopherPipelines.ArgHandling import bulk_rnaseq_args
 from GopherPipelines.ArgHandling import sc_rnaseq_args
@@ -39,9 +40,12 @@ Currently, the following subcommands are supported:
     - bulk_rnaseq
 
 For issues, contact help@msi.umn.edu.
-Version: 0.0.1
-2018-11-04"""
-    print(msg)
+Version: {version}
+{date}"""
+    print(
+        msg.format(
+            version=GopherPipelines.__version__,
+            date=GopherPipelines.__date__))
     return
 
 
