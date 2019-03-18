@@ -2,7 +2,7 @@
 # Gopher pipelines version 0.1.0 bulk RNA-seq summary script
 # R version 3.5.0
 # All relevant R libraries are installed at /panfs/roc/groups/14/msistaff/public/gopher-pipelines/v0/R/
-# Usage: Rscript summarize_counts.R <out_dir> <work_dir> <sample sheet path> <merged_counts_path> <min_feature_length> <min_cpm> &> Rout.txt
+# Usage: Rscript summarize_counts.R <out_dir> <work_dir> <sample sheet path> <merged_counts_path> <min_feature_length> <min_count> &> Rout.txt
 # See run_summary_stats.pbs for additional run context.
 # See https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf for the edgeR user manual.
 # Contact help@msi.umn.edu for questions
@@ -28,7 +28,7 @@ work_dir <- args[2]
 samp_sheet <- args[3]
 fc_mat <- args[4]
 min_len <- args[5]
-min_cpm <- args[6]
+min_cts <- args[6]
 
 setwd(work_dir)
 
@@ -38,7 +38,6 @@ setwd(work_dir)
 
 # Get the sample sheet to grab group membership downstream 
 sheet <- read.table(samp_sheet, sep = "|", header = F, comment.char = "#")
-sheet$V1 <- make.names(sheet$V1)
 
 # Because there may be cases where a subset of individuals in the samplesheet are run. We'll pull in the featureCounts matrix early and grab the relevant IDs
 raw_mat <- read.table(fc_mat, header = T, sep = '\t', comment.char = '#')
@@ -82,6 +81,7 @@ edge_mat <- calcNormFactors(edge_mat)
 
 ############################
 # Generate descriptive accounts of the data (MDS, Normalized Counts, Counts Distributions, and a Heatmap) 
+# Note that we DO NOT apply the minimum count filters prior to these descriptive summaries.
 ############################
 
 # set a diverging color palette. From http://colorbrewer2.org/#type=qualitative&scheme=Set1&n=6
@@ -105,7 +105,7 @@ dev.off()
 ## set par back to original
 #par(opar)
 
-# Set a variable holding the log(1+CPM) counts.
+# Set a variable holding the log2(1+CPM) counts.
 cpm_counts <- cpm(edge_mat, log = T, prior.count = 1)
 
 # Create a dataframe of cpm_counts and gene IDs in 'wide' format. Melt into 'long' format for ggplot
@@ -124,7 +124,7 @@ dev.off()
 
 
 # Calculate count variance across samples and select the top 500 variance features.
-cpm_counts <- cpm(edge_mat, log = T, prior.count = 1)
+#cpm_counts <- cpm(edge_mat, log = T, prior.count = 1)
 gene_var <- apply(cpm_counts, 1, var)
 select_var <- names(sort(gene_var, decreasing=TRUE))[1:500]
 high_var <- cpm_counts[select_var,]
@@ -146,14 +146,19 @@ write("Only 1 grouping present, skipping differential expression tests.", stderr
 quit(status = 0, save = "no")
 } 
 
-#Check if group IDS are numbers and if so, modify them
+# Check if group IDs are numbers and if so, modify them
 if (is.numeric(uniq_groups)){
 write("Group IDs are numeric, prepending 'group' to group ID for compatibility with edgeR tools", stderr())
 uniq_groups <- sub('^', 'group', uniq_groups)
 }
 
-#Subset the data object to get rid of samples with a 'NULL' group
+# Subset the data object to get rid of samples with a 'NULL' group
 edge_mat <- edge_mat[,which(edge_mat$samples$group != 'NULL')]
+
+# Filter out lowly expressed features. To do so we define what the minimum CPM would be for our minimum count cut-off in the smallest library. We keep only those features that have at least as many samples with the minimum CPM as there are samples in the smallest group.
+min_cpm <- log2((1+min_cts) / min(edge_mat$samples$lib.size) * 1e6)
+keep <- rowSums(cpm(edge_mat, log = T, prior.count = 1)) >= min(table(true_groups))
+edge_mat <- edge_mat[keep, ,keep.lib.sizes = F]
 
 #Redefine these variables
 uniq_groups <- as.vector(unique(edge_mat$samples$group))
