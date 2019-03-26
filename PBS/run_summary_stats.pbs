@@ -59,16 +59,17 @@ mkdir -p "${LOGDIR}" "${COUNTSDIR}" "${PLOTSDIR}" "${DEGDIR}"
 
 # Print the loaded modules to stderr and a log file
 module list -t
-TRACE_FNAME="${LOGDIR}/BulkRNASeq_Trace.log"
 LOG_FNAME="${LOGDIR}/BulkRNASeq_Summary.log"
-exec 5> "${TRACE_FNAME}"
-export BASH_XTRACEFD=5
 set -x
 echo "# $(date '+%F %T'): Summary started" > "${LOG_FNAME}"
 echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 echo '#END_MODULES' >> "${LOG_FNAME}"
 
+# Set up trace logging after loading modules to avoid dumping tons of module-related messages to the log
+TRACE_FNAME="${LOGDIR}/BulkRNASeq_Trace.log"
+exec 5> "${TRACE_FNAME}"
+export BASH_XTRACEFD=5
 
 if [ -z "${R2FILE}" ]
 then

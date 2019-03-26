@@ -42,7 +42,7 @@ sheet <- read.table(samp_sheet, sep = "|", header = F, comment.char = "#")
 # Because there may be cases where a subset of individuals in the samplesheet are run. We'll pull in the featureCounts matrix early and grab the relevant IDs
 raw_mat <- read.table(fc_mat, header = T, sep = '\t', comment.char = '#')
 samp_ids <- names(raw_mat)[-(1:6)]
-sheet <- sheet[which(sheet$V1 %in% samp_ids),]
+sheet <- sheet[which(make.names(sheet$V1) %in% samp_ids),]
 
 # Now we can proceed with group determinations.
 groups <- as.vector(sheet$V2)
