@@ -281,7 +281,7 @@ if [ ! -f hisat2.done ]; then
                 -1 "'${SAMPLENM}_1P'" \
                 -2 "'${SAMPLENM}_2P'" \
                 2> alignment.summary \
-                | samtools view -hb -o "${SAMPLENM}.bam" -
+                | samtools view -hb -o "${SAMPLENM}.bam" - \
                 && touch hisat2.done
         else
             echo "# $(date '+%F %T'): Aligning trimmed reads with HISAT2." >> "${LOG_FNAME}"
@@ -290,7 +290,7 @@ if [ ! -f hisat2.done ]; then
                 -x "'${HISAT2INDEX}'" \
                 -U "'${SAMPLENM}_trimmed'" \
                 2> alignment.summary \
-                | samtools view -hb -o "${SAMPLENM}.bam" -
+                | samtools view -hb -o "${SAMPLENM}.bam" - \
                 && touch hisat2.done
         fi
     else
@@ -306,7 +306,7 @@ if [ ! -f hisat2.done ]; then
                 -1 <(gzip -cd "${R1FILE}" || cat "${R1FILE}") \
                 -2 <(gzip -cd "${R2FILE}" || cat "${R2FILE}") \
                 2> alignment.summary \
-                | samtools view -hb -o "${SAMPLENM}.bam" -
+                | samtools view -hb -o "${SAMPLENM}.bam" - \
                 && touch hisat2.done
         else
             echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
@@ -315,7 +315,7 @@ if [ ! -f hisat2.done ]; then
                 -x "'${HISAT2INDEX}'" \
                 -U <(gzip -cd "${R1FILE}" || cat "${R1FILE}") \
                 2> alignment.summary \
-                | samtools view -hb -o "${SAMPLENM}.bam" -
+                | samtools view -hb -o "${SAMPLENM}.bam" - \
                 && touch hisat2.done
         fi
     fi
