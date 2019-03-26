@@ -280,8 +280,8 @@ if [ ! -f hisat2.done ]; then
                 -x "'${HISAT2INDEX}'" \
                 -1 "'${SAMPLENM}_1P'" \
                 -2 "'${SAMPLENM}_2P'" \
-                -S "${SAMPLENM}.sam" \
                 2> alignment.summary \
+                | samtools view -hb -o "${SAMPLENM}.bam" -
                 && touch hisat2.done
         else
             echo "# $(date '+%F %T'): Aligning trimmed reads with HISAT2." >> "${LOG_FNAME}"
@@ -289,8 +289,8 @@ if [ ! -f hisat2.done ]; then
                 ${HISAT2OPTS} \
                 -x "'${HISAT2INDEX}'" \
                 -U "'${SAMPLENM}_trimmed'" \
-                -S "${SAMPLENM}.sam" \
                 2> alignment.summary \
+                | samtools view -hb -o "${SAMPLENM}.bam" -
                 && touch hisat2.done
         fi
     else
@@ -305,8 +305,8 @@ if [ ! -f hisat2.done ]; then
                 -x "'${HISAT2INDEX}'" \
                 -1 <(gzip -cd "${R1FILE}" || cat "${R1FILE}") \
                 -2 <(gzip -cd "${R2FILE}" || cat "${R2FILE}") \
-                -S "${SAMPLENM}.sam" \
                 2> alignment.summary \
+                | samtools view -hb -o "${SAMPLENM}.bam" -
                 && touch hisat2.done
         else
             echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
@@ -314,8 +314,8 @@ if [ ! -f hisat2.done ]; then
                 ${HISAT2OPTS} \
                 -x "'${HISAT2INDEX}'" \
                 -U <(gzip -cd "${R1FILE}" || cat "${R1FILE}") \
-                -S "${SAMPLENM}.sam" \
                 2> alignment.summary \
+                | samtools view -hb -o "${SAMPLENM}.bam" -
                 && touch hisat2.done
         fi
     fi
@@ -333,7 +333,7 @@ if [ ! -f samtools.done ]; then
         -@ "${PBS_NUM_PPN}" \
         -T temp \
         -o "${SAMPLENM}_Raw_NameSort.bam" \
-        "${SAMPLENM}.sam"
+        "${SAMPLENM}.bam"
     echo "# $(date '+%F %T'): Running fixmate on name-sorted BAM." >> "${LOG_FNAME}"
     samtools fixmate \
         -m \
