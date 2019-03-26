@@ -117,30 +117,36 @@ fi
 
 which java >> "${LOG_FNAME}"
 
-echo "# $(date '+%F %T'): Using BBDuk to search for rRNA contamination in subsampled reads." >> "${LOG_FNAME}"
-if [ "${PE}" = "true" ]; then
-    ${BBDUK} \
-        in="${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq" \
-        in2="${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsamp.fastq" \
-        ref="${SILVA_REF}" \
-        stats="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_rRNA_Stats.txt" \
-        k=25 \
-        editdistance=1 \
-        prealloc=t \
-        threads="${PBS_NUM_PPN}" \
-        -Xmx10g \
-        2>> "${LOG_FNAME}"
+# Check if the BBDuk analysis has been finished
+if [ ! -f bbduk.done ]; then
+    echo "# $(date '+%F %T'): Using BBDuk to search for rRNA contamination in subsampled reads." >> "${LOG_FNAME}"
+    if [ "${PE}" = "true" ]; then
+        ${BBDUK} \
+            in="${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq" \
+            in2="${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsamp.fastq" \
+            ref="${SILVA_REF}" \
+            stats="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_rRNA_Stats.txt" \
+            k=25 \
+            editdistance=1 \
+            prealloc=t \
+            threads="${PBS_NUM_PPN}" \
+            -Xmx10g \
+            2>> "${LOG_FNAME}"
+    else
+        ${BBDUK} \
+            in="${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq" \
+            ref="${SILVA_REF}" \
+            stats="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_rRNA_Stats.txt" \
+            k=25 \
+            editdistance=1 \
+            prealloc=t \
+            threads="${PBS_NUM_PPN}" \
+            -Xmx10g \
+            2>> "${LOG_FNAME}"
+    fi
+    touch bbduk.done
 else
-    ${BBDUK} \
-        in="${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsamp.fastq" \
-        ref="${SILVA_REF}" \
-        stats="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_rRNA_Stats.txt" \
-        k=25 \
-        editdistance=1 \
-        prealloc=t \
-        threads="${PBS_NUM_PPN}" \
-        -Xmx10g \
-        2>> "${LOG_FNAME}"
+    echo "# $(date '+%F %T'): Found complete BBDuk analysis." >> "${LOG_FNAME}"
 fi
 
 if [ ! -f fastqc.done ]; then
