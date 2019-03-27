@@ -326,13 +326,12 @@ fi
 # Next, mark or remove duplicates
 if [ ! -f dup.done ]; then
     echo "# $(date '+%F %T'): Soring raw HISAT2 BAM by query in prep for deduplication." >> "${LOG_FNAME}"
-    samtools sort \
-        -n \
-        -O bam \
-        -@ "${PBS_NUM_PPN}" \
-        -T temp \
-        -o "${SAMPLENM}_Raw_QuerySort.bam" \
-        "${SAMPLENM}.bam"
+    _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar \
+        SortSam \
+        I="${SAMPLENM}.bam" \
+        O="${SAMPLENM}_Raw_QuerySort.bam" \
+        SORT_ORDER="queryname" \
+        2>> "${LOG_FNAME}"
     if [ "${RMDUP}" = "yes" ]; then 
         echo "# $(date '+%F %T'): Removing duplicate reads with Picard MarkDuplicates." >> "${LOG_FNAME}"
         _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar \
@@ -340,7 +339,9 @@ if [ ! -f dup.done ]; then
             I="${SAMPLENM}_Raw_QuerySort.bam" \
             O="${SAMPLENM}_DeDup.bam" \
             REMOVE_DUPLICATES="true" \
-            M="${SAMPLENM}_MarkDup_Metrics.txt"
+            ASSUME_SORT_ORDER="queryname" \
+            M="${SAMPLENM}_MarkDup_Metrics.txt" \
+            2>> "${LOG_FNAME}"
         # Set the name of the bam to filter
         TO_FLT="${SAMPLENM}_DeDup.bam"
     else
@@ -350,7 +351,9 @@ if [ ! -f dup.done ]; then
             I="${SAMPLENM}_Raw_QuerySort.bam" \
             O="${SAMPLENM}_MarkDup.bam" \
             REMOVE_DUPLICATES="false" \
-            M="${SAMPLENM}_MarkDup_Metrics.txt"
+            ASSUME_SORT_ORDER="queryname" \
+            M="${SAMPLENM}_MarkDup_Metrics.txt" \
+            2>> "${LOG_FNAME}"
         TO_FLT="${SAMPLENM}_MarkDup.bam"
     fi
     touch dup.done
