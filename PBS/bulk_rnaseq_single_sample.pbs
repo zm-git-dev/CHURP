@@ -211,7 +211,7 @@ if [ "${TRIM}" = "yes" ]; then
                 PE \
                 -threads "${PBS_NUM_PPN}" \
                 -basein "${R1FILE}" \
-                -baseout "${SAMPLENM}.gz" \
+                -baseout "${SAMPLENM}.fq.gz" \
                 $(echo "${TRIMOPTS}" | envsubst) \
                 2>> "${LOG_FNAME}" \
                 && touch trimmomatic.done
