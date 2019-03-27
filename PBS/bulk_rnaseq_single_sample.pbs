@@ -211,7 +211,7 @@ if [ "${TRIM}" = "yes" ]; then
                 PE \
                 -threads "${PBS_NUM_PPN}" \
                 -basein "${R1FILE}" \
-                -baseout "${SAMPLENM}" \
+                -baseout "${SAMPLENM}.gz" \
                 $(echo "${TRIMOPTS}" | envsubst) \
                 2>> "${LOG_FNAME}" \
                 && touch trimmomatic.done
@@ -221,7 +221,7 @@ if [ "${TRIM}" = "yes" ]; then
                 SE \
                 -threads "${PBS_NUM_PPN}" \
                 "${R1FILE}" \
-                "${SAMPLENM}_trimmed" \
+                "${SAMPLENM}_trimmed.fq.gz" \
                 $(echo "${TRIMOPTS}" | envsubst) \
                 2>> "${LOG_FNAME}" \
                 && touch trimmomatic.done
@@ -235,8 +235,8 @@ if [ "${TRIM}" = "yes" ]; then
                 -t 2 \
                 --extract \
                 --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" \
-                "${SAMPLENM}_1P" \
-                "${SAMPLENM}_2P" \
+                "${SAMPLENM}_1P.fq.gz" \
+                "${SAMPLENM}_2P.fq.gz" \
                 2>> "${LOG_FNAME}" \
                 && touch fastqc.trim.done
         else
@@ -244,7 +244,7 @@ if [ "${TRIM}" = "yes" ]; then
             fastqc \
                 --extract \
                 --outdir="${WORKDIR}/singlesamples/${SAMPLENM}" \
-                "${SAMPLENM}_trimmed" \
+                "${SAMPLENM}_trimmed.fq.gz" \
                 2>> "${LOG_FNAME}" \
                 && touch fastqc.trim.done
         fi
@@ -253,7 +253,7 @@ fi
 
 for fastqc_out_dir in $(find "${WORKDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '*_fastqc')
 do
-    read_no=$(basename "${fastqc_out_dir}" | sed -nr 's/.*([1|2])P_fastqc/\\1/p')
+    read_no=$(basename "${fastqc_out_dir}" | sed -nr 's/.*([1|2])P.fq.gz_fastqc/\\1/p')
     # If the files are single-end, then $read_no is empty
     if [ -z "${read_no}" ]
     then
@@ -278,8 +278,8 @@ if [ ! -f hisat2.done ]; then
             hisat2 \
                 ${HISAT2OPTS} \
                 -x "'${HISAT2INDEX}'" \
-                -1 "'${SAMPLENM}_1P'" \
-                -2 "'${SAMPLENM}_2P'" \
+                -1 "'${SAMPLENM}_1P.fq.gz'" \
+                -2 "'${SAMPLENM}_2P.fq.gz'" \
                 2> alignment.summary \
                 | samtools view -hb -o "${SAMPLENM}.bam" - \
                 && touch hisat2.done
@@ -288,7 +288,7 @@ if [ ! -f hisat2.done ]; then
             hisat2 \
                 ${HISAT2OPTS} \
                 -x "'${HISAT2INDEX}'" \
-                -U "'${SAMPLENM}_trimmed'" \
+                -U "'${SAMPLENM}_trimmed.fq.gz'" \
                 2> alignment.summary \
                 | samtools view -hb -o "${SAMPLENM}.bam" - \
                 && touch hisat2.done
@@ -530,3 +530,6 @@ touch "${SAMPLENM}.done"
 
 # And close the file descriptor we were using for the trace
 exec 5>&-
+
+# Finally, let's clean up
+echo "# $(date '+%F %T'): Removing " >> "${LOG_FNAME}"
