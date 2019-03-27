@@ -107,7 +107,6 @@ then
         -p \
         -Q 10 \
         -s "${STRAND}" \
-        -R CORE \
         -o subread_counts.txt \
         "${BAM_LIST[@]}"
 else
@@ -117,7 +116,6 @@ else
         -T ${PBS_NUM_PPN} \
         -Q 10 \
         -s "${STRAND}" \
-        -R CORE \
         -o subread_counts.txt \
         "${BAM_LIST[@]}"
 fi
