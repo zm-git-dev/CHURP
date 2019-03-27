@@ -269,6 +269,9 @@ do
     mv -f "${fastqc_out_dir}" "${fastqc_out_dir}.processed"
 done
 
+# HISAT2 chokes on quoted reads. We have to do this dumb quoting strategy because
+# some filenames may have spaces in them, and this protects it. My thought is that
+# the Perl wrapper script splits arguments with spaces in them
 if [ ! -f hisat2.done ]; then
     if [ "${TRIM}" = "yes" ]; then
         if [ "${PE}" = "true" ]
@@ -278,8 +281,8 @@ if [ ! -f hisat2.done ]; then
             hisat2 \
                 ${HISAT2OPTS} \
                 -x "'${HISAT2INDEX}'" \
-                -1 "'${SAMPLENM}_1P.fq.gz'" \
-                -2 "'${SAMPLENM}_2P.fq.gz'" \
+                -1 <(gzip -cd "${SAMPLENM}_1P.fq.gz" || cat "${SAMPLENM}_1P.fq.gz") \
+                -2 <(gzip -cd "${SAMPLENM}_2P.fq.gz" || cat "${SAMPLENM}_2P.fq.gz") \
                 2> alignment.summary \
                 | samtools view -hb -o "${SAMPLENM}.bam" - \
                 && touch hisat2.done
@@ -288,15 +291,12 @@ if [ ! -f hisat2.done ]; then
             hisat2 \
                 ${HISAT2OPTS} \
                 -x "'${HISAT2INDEX}'" \
-                -U "'${SAMPLENM}_trimmed.fq.gz'" \
+                -U <(gzip -cd "${SAMPLENM}_trimmed.fq.gz" || cat "${SAMPLENM}_trimmed.fq.gz") \
                 2> alignment.summary \
                 | samtools view -hb -o "${SAMPLENM}.bam" - \
                 && touch hisat2.done
         fi
     else
-        # Hisat2 chokes on our quoted reads files if they are gzipped. This is
-        # only an issue if we are not trimming because by default we are not
-        # gzipping the trimmed reads.
         if [ "${PE}" = "true" ]
         then
             echo "# $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
