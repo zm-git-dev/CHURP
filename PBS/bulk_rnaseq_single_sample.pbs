@@ -8,7 +8,8 @@ set -o pipefail
 
 # Export the PS4 variable for the trace
 # Taken from https://wiki.bash-hackers.org/scripting/debuggingtips
-export PS4='+($(date "+%F %T"): Line ${LINENO}: '
+LOG_SECTION="General"
+export PS4='+[$(date "+%F %T")] ${LOG_SECTION}: '
 
 # Check the major version of the pipeline. If they mismatch, then quit with an error
 PIPELINE_VERSION="0"
@@ -67,6 +68,9 @@ echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 echo '#END_MODULES' >> "${LOG_FNAME}"
 
+# For future debugging, print which java we are using
+echo "# $(date '+%F %T'): Using $(which java)" >> "${LOG_FNAME}"
+
 # And re-enable verbosity and trace debugging here
 set -v
 exec 5> "${TRACE_FNAME}"
@@ -102,6 +106,7 @@ fi
 # start workflow with check point
 [ -f "${SAMPLENM}.done" ] && echo "found done analysis, exit" && exit $?
 
+LOG_SECTION="Subsampling"
 if [ ! -f subsamp.done ]; then
     # subsample the FASTQ and assay for rRNA contamination
     echo "# $(date '+%F %T'): Subsampling reads to ${SUBSAMP} fragments." >> "${LOG_FNAME}"
@@ -114,8 +119,7 @@ else
     echo "# $(date '+%F %T'): Found subsampled reads" >> "${LOG_FNAME}"
 fi
 
-which java >> "${LOG_FNAME}"
-
+LOG_SECTION="BBDuk"
 # Check if the BBDuk analysis has been finished
 if [ ! -f bbduk.done ]; then
     echo "# $(date '+%F %T'): Using BBDuk to search for rRNA contamination in subsampled reads." >> "${LOG_FNAME}"
@@ -148,6 +152,7 @@ else
     echo "# $(date '+%F %T'): Found complete BBDuk analysis." >> "${LOG_FNAME}"
 fi
 
+LOG_SECTION="FastQC Raw"
 if [ ! -f fastqc.done ]; then
     if [ "${PE}" = "true" ]
     then
@@ -201,6 +206,7 @@ done
 # To use -basein option, fastq file must be in format *_R1_*.fastq and *_R2_*.fastq
 # trimmomatic can handle the -basein and -baseout options if there is only one
 # read (single end).
+LOG_SECTION="Trimmomatic"
 if [ "${TRIM}" = "yes" ]; then
     if [ ! -f trimmomatic.done ]; then
         if [ "${PE}" = "true" ]
@@ -226,6 +232,7 @@ if [ "${TRIM}" = "yes" ]; then
                 && touch trimmomatic.done
         fi
     fi
+    LOG_SECTION="FastQC Trimmed"
     if [ ! -f fastqc.trim.done ]; then
         if [ "${PE}" = "true" ]
         then
@@ -271,6 +278,7 @@ done
 # HISAT2 chokes on quoted reads. We have to do this dumb quoting strategy because
 # some filenames may have spaces in them, and this protects it. My thought is that
 # the Perl wrapper script splits arguments with spaces in them
+LOG_SECTION="HISAT2"
 if [ ! -f hisat2.done ]; then
     if [ "${TRIM}" = "yes" ]; then
         if [ "${PE}" = "true" ]
@@ -323,6 +331,7 @@ if [ ! -f hisat2.done ]; then
 fi
 
 # Next, mark or remove duplicates
+LOG_SECTION="Picard MarkDuplicates"
 if [ ! -f dup.done ]; then
     echo "# $(date '+%F %T'): Soring raw HISAT2 BAM by query in prep for deduplication." >> "${LOG_FNAME}"
     _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar \
@@ -361,6 +370,7 @@ else
 fi
 
 # Next, remove unmapped reads and reads with MAPQ<60
+LOG_SECTION="BAM Filtering"
 if [ ! -f mapq_flt.done ]; then
     echo "# $(date '+%F %T'): Removing unmapped and MAPQ<60 reads for counting." >> "${LOG_FNAME}"
     samtools view \
@@ -376,6 +386,7 @@ else
 fi
 
 # Next, sort by coord for IGV purposes
+LOG_SECTION="BAM Coord Sort"
 if [ ! -f coord_sort.done ]; then
     echo "# $(date '+%F %T'): Sorting filtered BAM file by coordinate." >> "${LOG_FNAME}"
     samtools sort \
@@ -407,6 +418,7 @@ FLT_COORD="${SAMPLENM}_Filtered_CoordSort.bam"
 FLT_COORD_IDX="${SAMPLENM}_Filtered_CoordSort.bam.bai"
 
 # Generate some stats on the raw BAM for the report
+LOG_SECTION="BAM Stats"
 if [ ! -f bamstats.done ]; then
     echo "# $(date '+%F %T'): Generating alignment stats based on raw BAM." >> "${LOG_FNAME}"
     samtools stats "${RAW_COORD}" > "${SAMPLENM}_bamstats.txt"
@@ -416,6 +428,7 @@ else
 fi
 
 # Use picard to collect RNAseq metrics
+LOG_SECTION="Picard RNASeq Metrics"
 if [ ! -f rnaseq_metrics.done ]; then
     echo "# $(date '+%F %T'): Collecting RNAseq metrics with Picard CollectRnaSeqMetrics." >> "${LOG_FNAME}"
     if [ "${STRAND}" = "2" ]; then
@@ -467,6 +480,7 @@ else
 fi
 
 # Use picard to collect the insert size metrics, but only if paired end
+LOG_SECTION="Picard InsertSizeMetrics"
 if [ ! -f is_stats.done ]; then
     if [ "${PE}" = "true" ]; then
         echo "# $(date '+%F %T'): Collecting insert size metrics with Picard InsertSizeMetrics." >> "${LOG_FNAME}"
@@ -494,6 +508,7 @@ else
 fi
 
 # Use awk to pick apart the alignment summary
+LOG_SECTION="Alignment Summary"
 if [ "${PE}" = "true" ]
 then
     TOTAL_READS=$(awk '/Total pairs:/ {print $NF}' alignment.summary)
@@ -513,6 +528,7 @@ echo "${SAMPLENM} ${TOTAL_READS} ${UNMAP} ${SINGLE_MAP} ${MULTI_MAP} ${DISCO_MAP
 # the final step is to link the sorted.rmdup.bam file to the allsamples/
 # directory, as just the samplename. This is a bit of a hack to get featureCounts
 # to not print huge paths as samplenames
+LOG_SECTION="Linking and Cleanup"
 echo "# $(date '+%F %T'): Linking ${SAMPLENM} into ${WORKDIR}/allsamples" >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/allsamples"
 ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FOR_COUNTS}" "${WORKDIR}/allsamples/${SAMPLENM}"
