@@ -8,7 +8,7 @@ set -o pipefail
 
 # Export the PS4 variable for the trace
 # Taken from https://wiki.bash-hackers.org/scripting/debuggingtips
-export PS4='+(${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+export PS4='+($(date "+%F %T"): Line ${LINENO}: '
 
 # Check the major version of the pipeline. If they mismatch, then quit with an error
 PIPELINE_VERSION="0"
@@ -51,10 +51,6 @@ mkdir -p "${LOGDIR}"
 TRACE_FNAME="${LOGDIR}/${SAMPLENM}_Trace.log"
 LOG_FNAME="${LOGDIR}/${SAMPLENM}_Analysis.log"
 echo "# $(date '+%F %T'): Analysis started for ${SAMPLENM}" > "${LOG_FNAME}"
-exec 5> "${TRACE_FNAME}"
-export BASH_XTRACEFD=5
-set -x
-
 # This is annoying to see, so we will exclude it from verbose outout
 set +v
 # load necessary modules
@@ -71,8 +67,11 @@ echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 echo '#END_MODULES' >> "${LOG_FNAME}"
 
-# And re-enable verbosity here
+# And re-enable verbosity and trace debugging here
 set -v
+exec 5> "${TRACE_FNAME}"
+export BASH_XTRACEFD=5
+set -x
 
 # Set paths to BBDuk, seqtk, and the SILVA databases
 DEPS_DIR="/home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}"
