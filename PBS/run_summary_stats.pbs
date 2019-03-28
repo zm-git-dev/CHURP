@@ -8,7 +8,8 @@ set -o pipefail
 
 # Export the PS4 variable for the trace
 # Taken from https://wiki.bash-hackers.org/scripting/debuggingtips
-export PS4='+(${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+LOG_SECTION="General"
+export PS4='+[$(date "+%F %T")] ${LOG_SECTION}: '
 
 # Check for PBS/Samplesheet version agreement
 PIPELINE_VERSION="0"
@@ -48,7 +49,6 @@ set +v
 # load necessary modules
 module load R/3.5.0
 module load python/3.6.3
-set -v
 # Make directories for the output files. We want to keep the outdir organized
 LOGDIR="${OUTDIR}/Logs"
 COUNTSDIR="${OUTDIR}/Counts"
@@ -60,16 +60,17 @@ mkdir -p "${LOGDIR}" "${COUNTSDIR}" "${PLOTSDIR}" "${DEGDIR}"
 # Print the loaded modules to stderr and a log file
 module list -t
 LOG_FNAME="${LOGDIR}/BulkRNASeq_Summary.log"
-set -x
 echo "# $(date '+%F %T'): Summary started" > "${LOG_FNAME}"
 echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 echo '#END_MODULES' >> "${LOG_FNAME}"
 
 # Set up trace logging after loading modules to avoid dumping tons of module-related messages to the log
+set -v
 TRACE_FNAME="${LOGDIR}/BulkRNASeq_Trace.log"
 exec 5> "${TRACE_FNAME}"
 export BASH_XTRACEFD=5
+set -x
 
 if [ -z "${R2FILE}" ]
 then
@@ -95,6 +96,7 @@ FEATURECOUNTS="/home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}/Supp/subrea
 mkdir -p "${WORKDIR}/allsamples" && cd "${WORKDIR}/allsamples"
 
 # Use featureCounts to make a merged counts matrix
+LOG_SECTION="featureCounts"
 echo "# $(date '+%F %T'): Making a counts matrix for all samples." >> "${LOG_FNAME}"
 BAM_LIST=($(find . -type l -exec basename {} \\;| sort -V))
 if [ "${PE}" = "true" ]
@@ -121,6 +123,7 @@ else
 fi
 
 # Summarize the merged count data, including descriptive summaries and differential expression tests if >1 group present.
+LOG_SECTION="edgeR"
 echo "# $(date '+%F %T'): Running edgeR analysis on counts" >> "${LOG_FNAME}"
 Rscript \
     "${RSUMMARY}" \
@@ -139,6 +142,7 @@ echo "# ----- End output from ${RSUMMARY}" >> "${LOG_FNAME}"
 # Copy the merged counts into the output directory. The -u option to cp causes
 # the copy to happen only if the source file is newer than the destination file
 # or if the destination does not exist.
+LOG_SECTION="Subread/GTF Summary"
 echo "# $(date '+%F %T'): Copying merged counts matrix and summary into ${COUNTSDIR}" >> "${LOG_FNAME}"
 cp -u subread_counts.txt "${COUNTSDIR}/subread_counts.txt"
 cp -u subread_counts.txt.summary "${COUNTSDIR}/subread_counts.txt.summary"
@@ -169,6 +173,7 @@ join \
     >> "${COUNTSDIR}/subread_counts_gene_symbol.txt"
 
 # Link the work directories to the output directory
+LOG_SECTION="Link Directories"
 rm -f "${OUTDIR}/singlesamples_work_directory" "${OUTDIR}/allsamples_work_directory"
 ln -sf "${WORKDIR}/singlesamples" "${OUTDIR}/singlesamples_work_directory"
 ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
@@ -176,6 +181,7 @@ ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
 # Prepare to generate HTML report by making unified files for everything. We
 # will have to iterate over every sample
 # Remove old summary files
+LOG_SECTION="Collate single samples"
 rm -f \
     "${WORKDIR}/allsamples/Read_Counts.txt" \
     "${WORKDIR}/allsamples/Samtools_Stats.txt" \
@@ -249,6 +255,7 @@ done
 
 # We will generate an HTML report
 # This is an ugly workaround, but sidesteps the problem of write-locked public dirs for Rmarkdown/knitr
+LOG_SECTION="HTML report"
 cp -u "${BULK_RNASEQ_REPORT}" "./Report.Rmd"
 PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/CHURP_Deps/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('./Report.Rmd', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRIPT}"', samplesheet='"${SampleSheet}"'))"
 
