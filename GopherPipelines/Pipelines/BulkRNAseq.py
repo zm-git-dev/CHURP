@@ -230,6 +230,23 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         than in the main Pipeline class because the exact form of the qsub
         command depends on which pipeline we are running."""
         ss = self._prepare_samplesheet()
+        # Make the qsub array key
+        keyname = default_files.default_array_key(self.pipe_name)
+        keyname = os.path.join(self.outdir, keyname)
+        if os.path.isfile(keyname):
+            self.pipe_logger.warnining(
+                'Qsub key file %s exists. Overwriting!', keyname)
+        try:
+            handle = open(keyname, 'w')
+        except OSError:
+            DieGracefully.die_gracefully(DieGracefully.BAD_OUTDIR)
+        # The sheet is sorted in this way before it is written to disk, so it
+        # should be safe to sort it this way
+        handle.write('Qsub.Index\tSampleName\n')
+        for index, samplename in enumerate(sorted(self.sheet.final_sheet)):
+            handle.write(str(index+1) + '\t' + samplename + '\n')
+        handle.flush()
+        handle.close()
         # Make the script filename
         pname = default_files.default_pipeline(self.pipe_name)
         pname = os.path.join(self.outdir, pname)
@@ -269,6 +286,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             qsub_array += '-' + str(len(self.sheet.final_sheet))
         # Write a few variables into the header of the script so they are
         # easy to find
+        handle.write('KEYFILE=' + '"' + keyname + '"\n')
         handle.write('QSUB_ARRAY=' + '"' + qsub_array + '"\n')
         handle.write('OUTDIR=' + '"' + str(self.outdir) + '"\n')
         handle.write('WORKDIR=' + '"' + str(self.workdir) + '"\n')
@@ -324,6 +342,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Write some echo statements for users' information
         handle.write('echo "Output and logs will be written to ${OUTDIR}"\n')
         handle.write('echo "Emails will be sent to ${user_email}"\n')
+        handle.write('echo "Qsub array to samplename key: ${KEYFILE}\n')
         handle.write('echo "Single samples job array ID: ${single_id}"\n')
         handle.write('echo "Summary job ID: ${summary_id}"\n')
         self.pipe_logger.debug('qsub:\n%s', ' '.join(aln_cmd))
