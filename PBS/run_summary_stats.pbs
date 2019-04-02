@@ -52,11 +52,12 @@ COUNTSDIR="${OUTDIR}/Counts"
 PLOTSDIR="${OUTDIR}/Plots"
 DEGDIR="${OUTDIR}/DEGs"
 LOG_FNAME="${LOGDIR}/BulkRNASeq_Analysis.log"
+TRACE_FNAME="${LOGDIR}/BulkRNASeq_Trace.log"
 
 mkdir -p "${LOGDIR}" "${COUNTSDIR}" "${PLOTSDIR}" "${DEGDIR}"
 
 # Write the samplename to the .e PBS file
-echo "# $(date '+%F %T') PBS error file for ${SAMPLENM}" >> /dev/stderr
+echo "# $(date '+%F %T') PBS error file for summary job" >> /dev/stderr
 echo "# $(date '+%F %T'): For a human-readable log, see ${LOG_FNAME}" >> /dev/stderr
 echo "# $(date '+%F %T'): For a debugging trace, see ${TRACE_FNAME}" >> /dev/stderr
 echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
@@ -71,7 +72,6 @@ module list -t 2>> "${LOG_FNAME}"
 echo '#END_MODULES' >> "${LOG_FNAME}"
 
 # Set up trace logging after loading modules to avoid dumping tons of module-related messages to the log
-TRACE_FNAME="${LOGDIR}/BulkRNASeq_Trace.log"
 exec 5>> "${TRACE_FNAME}"
 echo "##### BEGIN TRACE FOR ${PBS_JOBID} #####" >> "${TRACE_FNAME}"
 export BASH_XTRACEFD=5
@@ -276,6 +276,5 @@ cp -u "${BULK_RNASEQ_REPORT}" "./Report.Rmd"
 PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/CHURP_Deps/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('./Report.Rmd', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRIPT}"', samplesheet='"${SampleSheet}"'))"
 
 echo "# ${PBS_JOBID} $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
-echo "##### END TRACE FOR ${PBS_JOBID} #####" >> "${TRACE_FNAME}"
 # Close the trace file descriptor
 exec 5>&-
