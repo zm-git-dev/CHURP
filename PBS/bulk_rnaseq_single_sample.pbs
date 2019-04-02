@@ -51,10 +51,10 @@ mkdir -p "${LOGDIR}"
 TRACE_FNAME="${LOGDIR}/${SAMPLENM}_Trace.log"
 LOG_FNAME="${LOGDIR}/${SAMPLENM}_Analysis.log"
 # Write the samplename to the .e PBS file
-echo "# $(date '+%F %T') PBS error file for ${SAMPLENM}" > /dev/stderr
-echo "# $(date '+%F %T'): For a human-readable log, see ${LOG_FNAME}" > /dev/stderr
-echo "# $(date '+%F %T'): For a debugging trace, see ${TRACE_FNAME}" > /dev/stderr
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T') PBS error file for ${SAMPLENM}" >> /dev/stderr
+echo "# $(date '+%F %T'): For a human-readable log, see ${LOG_FNAME}" >> /dev/stderr
+echo "# $(date '+%F %T'): For a debugging trace, see ${TRACE_FNAME}" >> /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 # We don't want to clobber the old files; just append to them
 echo "###############################################################################" >> "${LOG_FNAME}"
 echo "# $(date '+%F %T'): Analysis started for ${SAMPLENM}" >> "${LOG_FNAME}"
@@ -79,7 +79,7 @@ echo "# ${PBS_JOBID} $(date '+%F %T'): Using $(which java)" >> "${LOG_FNAME}"
 
 # Enable trace debugging here
 exec 5>> "${TRACE_FNAME}"
-echo "##### BEGIN TRACE FOR ${PBS_JOBID} #####" 5>> "${TRACE_FNAME}"
+echo "##### BEGIN TRACE FOR ${PBS_JOBID} #####" >> "${TRACE_FNAME}"
 export BASH_XTRACEFD=5
 set -x
 
@@ -94,10 +94,10 @@ GTFTOGENEPRED="${DEPS_DIR}/Supp/UCSC/gtfToGenePred"
 if [ -z "${R2FILE}" ]
 then
     PE="false"
-    echo "# No R2 file detected; running ${SAMPLENM} as single-end" >> "${LOG_FNAME}"
+    echo "# ${PBS_JOBID} $(date '+%F %T'): No R2 file detected; running ${SAMPLENM} as single-end" >> "${LOG_FNAME}"
 else
     PE="true"
-    echo "# R2 file detected; running ${SAMPLENM} as paired-end" >> "${LOG_FNAME}"
+    echo "# ${PBS_JOBID} $(date '+%F %T'): R2 file detected; running ${SAMPLENM} as paired-end" >> "${LOG_FNAME}"
 fi
 
 # set working directory
@@ -112,9 +112,9 @@ fi
 # start workflow with check point
 [ -f "${SAMPLENM}.done" ] && echo "found done analysis, exit" && exit $?
 
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="Subsampling"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ ! -f subsamp.done ]; then
     # subsample the FASTQ and assay for rRNA contamination
     echo "# ${PBS_JOBID} $(date '+%F %T'): Subsampling reads to ${SUBSAMP} fragments." >> "${LOG_FNAME}"
@@ -127,9 +127,9 @@ else
     echo "# ${PBS_JOBID} $(date '+%F %T'): Found subsampled reads" >> "${LOG_FNAME}"
 fi
 
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="BBDuk"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 # Check if the BBDuk analysis has been finished
 if [ ! -f bbduk.done ]; then
     echo "# ${PBS_JOBID} $(date '+%F %T'): Using BBDuk to search for rRNA contamination in subsampled reads." >> "${LOG_FNAME}"
@@ -162,9 +162,9 @@ else
     echo "# ${PBS_JOBID} $(date '+%F %T'): Found complete BBDuk analysis." >> "${LOG_FNAME}"
 fi
 
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="FastQC.Raw"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ ! -f fastqc.done ]; then
     if [ "${PE}" = "true" ]
     then
@@ -218,9 +218,9 @@ done
 # To use -basein option, fastq file must be in format *_R1_*.fastq and *_R2_*.fastq
 # trimmomatic can handle the -basein and -baseout options if there is only one
 # read (single end).
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="Trimmomatic"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ "${TRIM}" = "yes" ]; then
     if [ ! -f trimmomatic.done ]; then
         if [ "${PE}" = "true" ]
@@ -246,9 +246,9 @@ if [ "${TRIM}" = "yes" ]; then
                 && touch trimmomatic.done
         fi
     fi
-    echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+    echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
     LOG_SECTION="FastQC.Trimmed"
-    echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+    echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
     if [ ! -f fastqc.trim.done ]; then
         if [ "${PE}" = "true" ]
         then
@@ -294,9 +294,9 @@ done
 # HISAT2 chokes on quoted reads. We have to do this dumb quoting strategy because
 # some filenames may have spaces in them, and this protects it. My thought is that
 # the Perl wrapper script splits arguments with spaces in them
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="HISAT2"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ ! -f hisat2.done ]; then
     if [ "${TRIM}" = "yes" ]; then
         if [ "${PE}" = "true" ]
@@ -349,9 +349,9 @@ if [ ! -f hisat2.done ]; then
 fi
 
 # Next, mark or remove duplicates
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="MarkDuplicates"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ ! -f dup.done ]; then
     echo "# ${PBS_JOBID} $(date '+%F %T'): Soring raw HISAT2 BAM by query in prep for deduplication." >> "${LOG_FNAME}"
     _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar \
@@ -390,9 +390,9 @@ else
 fi
 
 # Next, remove unmapped reads and reads with MAPQ<60
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="BAM.Filtering"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ ! -f mapq_flt.done ]; then
     echo "# ${PBS_JOBID} $(date '+%F %T'): Removing unmapped and MAPQ<60 reads for counting." >> "${LOG_FNAME}"
     samtools view \
@@ -408,9 +408,9 @@ else
 fi
 
 # Next, sort by coord for IGV purposes
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="BAM.Coord.Sort"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ ! -f coord_sort.done ]; then
     echo "# ${PBS_JOBID} $(date '+%F %T'): Sorting filtered BAM file by coordinate." >> "${LOG_FNAME}"
     samtools sort \
@@ -442,9 +442,9 @@ FLT_COORD="${SAMPLENM}_Filtered_CoordSort.bam"
 FLT_COORD_IDX="${SAMPLENM}_Filtered_CoordSort.bam.bai"
 
 # Generate some stats on the raw BAM for the report
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="BAM.Stats"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ ! -f bamstats.done ]; then
     echo "# ${PBS_JOBID} $(date '+%F %T'): Generating alignment stats based on raw BAM." >> "${LOG_FNAME}"
     samtools stats "${RAW_COORD}" > "${SAMPLENM}_bamstats.txt"
@@ -454,9 +454,9 @@ else
 fi
 
 # Use picard to collect RNAseq metrics
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="RNASeqMetrics"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ ! -f rnaseq_metrics.done ]; then
     echo "# ${PBS_JOBID} $(date '+%F %T'): Collecting RNAseq metrics with Picard CollectRnaSeqMetrics." >> "${LOG_FNAME}"
     if [ "${STRAND}" = "2" ]; then
@@ -508,9 +508,9 @@ else
 fi
 
 # Use picard to collect the insert size metrics, but only if paired end
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="InsertSizeMetrics"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ ! -f is_stats.done ]; then
     if [ "${PE}" = "true" ]; then
         echo "# ${PBS_JOBID} $(date '+%F %T'): Collecting insert size metrics with Picard InsertSizeMetrics." >> "${LOG_FNAME}"
@@ -538,9 +538,9 @@ else
 fi
 
 # Use awk to pick apart the alignment summary
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="Alignment.Summary"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ "${PE}" = "true" ]
 then
     TOTAL_READS=$(awk '/Total pairs:/ {print $NF}' alignment.summary)
@@ -560,9 +560,9 @@ echo "${SAMPLENM} ${TOTAL_READS} ${UNMAP} ${SINGLE_MAP} ${MULTI_MAP} ${DISCO_MAP
 # the final step is to link the sorted.rmdup.bam file to the allsamples/
 # directory, as just the samplename. This is a bit of a hack to get featureCounts
 # to not print huge paths as samplenames
-echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="Cleanup"
-echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" > /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 echo "# ${PBS_JOBID} $(date '+%F %T'): Linking ${SAMPLENM} into ${WORKDIR}/allsamples" >> "${LOG_FNAME}"
 mkdir -p "${WORKDIR}/allsamples"
 ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FOR_COUNTS}" "${WORKDIR}/allsamples/${SAMPLENM}"
@@ -578,7 +578,7 @@ echo "# ${PBS_JOBID} $(date '+%F %T'): Finished processing ${SAMPLENM}." >> "${L
 touch "${SAMPLENM}.done"
 
 # And close the file descriptor we were using for the trace
-echo "##### END TRACE FOR ${PBS_JOBID} #####" 5>> "${TRACE_FNAME}"
+echo "##### END TRACE FOR ${PBS_JOBID} #####" >> "${TRACE_FNAME}"
 exec 5>&-
 
 # Finally, let's clean up
