@@ -234,7 +234,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         keyname = default_files.default_array_key(self.pipe_name)
         keyname = os.path.join(self.outdir, keyname)
         if os.path.isfile(keyname):
-            self.pipe_logger.warnining(
+            self.pipe_logger.warning(
                 'Qsub key file %s exists. Overwriting!', keyname)
         try:
             handle = open(keyname, 'w')
