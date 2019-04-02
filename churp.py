@@ -72,7 +72,7 @@ def brnaseq(args):
     from GopherPipelines.Pipelines import BulkRNAseq
     p = BulkRNAseq.BulkRNAseqPipeline(args)
     p.setup(args)
-    pipeline_fname, samplesheet_fname, , key_name, qsub_dat = p.qsub()
+    pipeline_fname, samplesheet_fname, key_name, qsub_dat = p.qsub()
     if not qsub_dat:
         DieGracefully.die_gracefully(
             DieGracefully.BRNASEQ_SUCCESS,
