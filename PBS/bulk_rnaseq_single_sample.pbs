@@ -419,7 +419,7 @@ if [ ! -f coord_sort.done ]; then
         -T temp \
         -o "${SAMPLENM}_Filtered_CoordSort.bam" \
         "${SAMPLENM}_Filtered.bam" \
-        2> "${LOG_FNAME}"
+        2>> "${LOG_FNAME}"
     echo "# ${PBS_JOBID} $(date '+%F %T'): Sorting raw BAM file by coordinate." >> "${LOG_FNAME}"
     samtools sort \
         -O bam \
@@ -427,7 +427,7 @@ if [ ! -f coord_sort.done ]; then
         -T temp \
         -o "${SAMPLENM}_Raw_CoordSort.bam" \
         "${TO_FLT}" \
-        2> "${LOG_FNAME}"
+        2>> "${LOG_FNAME}"
     echo "# ${PBS_JOBID} $(date '+%F %T'): Indexing coordinate-sorted BAM files." >> "${LOG_FNAME}"
     samtools index "${SAMPLENM}_Filtered_CoordSort.bam"
     samtools index "${SAMPLENM}_Raw_CoordSort.bam"
