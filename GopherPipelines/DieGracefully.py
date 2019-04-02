@@ -96,7 +96,7 @@ and 62000. The walltime should be specified in hours as an integer between 1 and
     return
 
 
-def brnaseq_success(pipe_script, samplesheet):
+def brnaseq_success(pipe_script, samplesheet, qsubkey):
     """Call this function when the bulk RNAseq pipeline finishes successfully.
     It will include the pipeline script and the samplesheet paths in the
     output message."""
@@ -108,13 +108,14 @@ below:
 
 Pipeline script: {pn}
 Samplesheet: {ss}
+Qsub array key: {kn}
 
 Verify the information in the samplesheet, and run the pipeline script with
 bash while logged into Mesabi. You will recieve email notifications of job
 start/completion/error at your UMN X500 email address. If you need to submit
 an error report, please contact help[at]msi.umn.edu. Please include the
 samplesheet, pipeline script, and the error message with your report.\n"""
-    sys.stderr.write(msg.format(pn=pipe_script, ss=samplesheet))
+    sys.stderr.write(msg.format(pn=pipe_script, ss=samplesheet, kn=qsubkey))
     return
 
 

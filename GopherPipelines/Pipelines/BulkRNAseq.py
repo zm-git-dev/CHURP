@@ -362,4 +362,4 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             qsub_dat = (qsub_stdout, qsub_stderr, qsub_proc)
         else:
             qsub_dat = None
-        return (pname, ss, qsub_dat)
+        return (pname, ss, keyname, qsub_dat)
