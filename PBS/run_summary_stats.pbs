@@ -51,6 +51,7 @@ LOGDIR="${OUTDIR}/Logs"
 COUNTSDIR="${OUTDIR}/Counts"
 PLOTSDIR="${OUTDIR}/Plots"
 DEGDIR="${OUTDIR}/DEGs"
+LOG_FNAME="${LOGDIR}/BulkRNASeq_Analysis.log"
 
 mkdir -p "${LOGDIR}" "${COUNTSDIR}" "${PLOTSDIR}" "${DEGDIR}"
 
@@ -62,7 +63,6 @@ echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 # Print the loaded modules to stderr and a log file
 module list -t
 # We don't want to clobber the old files; just append to them
-LOG_FNAME="${LOGDIR}/BulkRNASeq_Analysis.log"
 echo "###############################################################################" >> "${LOG_FNAME}"
 echo "# $(date '+%F %T'): Analysis started for ${SAMPLENM}" >> "${LOG_FNAME}"
 echo "# $(date '+%F %T'): Job ID: ${PBS_JOBID}" >> "${LOG_FNAME}"
