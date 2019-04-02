@@ -418,14 +418,16 @@ if [ ! -f coord_sort.done ]; then
         -@ "${PBS_NUM_PPN}" \
         -T temp \
         -o "${SAMPLENM}_Filtered_CoordSort.bam" \
-        "${SAMPLENM}_Filtered.bam"
+        "${SAMPLENM}_Filtered.bam" \
+        2> "${LOG_FNAME}"
     echo "# ${PBS_JOBID} $(date '+%F %T'): Sorting raw BAM file by coordinate." >> "${LOG_FNAME}"
     samtools sort \
         -O bam \
         -@ "${PBS_NUM_PPN}" \
         -T temp \
         -o "${SAMPLENM}_Raw_CoordSort.bam" \
-        "${TO_FLT}"
+        "${TO_FLT}" \
+        2> "${LOG_FNAME}"
     echo "# ${PBS_JOBID} $(date '+%F %T'): Indexing coordinate-sorted BAM files." >> "${LOG_FNAME}"
     samtools index "${SAMPLENM}_Filtered_CoordSort.bam"
     samtools index "${SAMPLENM}_Raw_CoordSort.bam"
@@ -577,10 +579,10 @@ ln -sf "${WORKDIR}/singlesamples/${SAMPLENM}/${FLT_COORD_IDX}" "${OUTDIR}/Coordi
 echo "# ${PBS_JOBID} $(date '+%F %T'): Finished processing ${SAMPLENM}." >> "${LOG_FNAME}"
 touch "${SAMPLENM}.done"
 
-# And close the file descriptor we were using for the trace
-echo "##### END TRACE FOR ${PBS_JOBID} #####" >> "${TRACE_FNAME}"
-exec 5>&-
-
 # Finally, let's clean up
 echo "# ${PBS_JOBID} $(date '+%F %T'): Removing HISAT2 bam, markdup/dedup bam, and raw querysort bam to reduce disk usage." >> "${LOG_FNAME}"
 rm -f "${SAMPLENM}.bam" "${SAMPLENM}_MarkDup.bam" "${SAMPLENM}_DeDup.bam" "${SAMPLENM}_Raw_QuerySort.bam"
+
+# And close the file descriptor we were using for the trace
+echo "##### END TRACE FOR ${PBS_JOBID} #####" >> "${TRACE_FNAME}"
+exec 5>&-

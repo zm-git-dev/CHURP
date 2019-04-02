@@ -1,7 +1,6 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=8,mem=16gb,walltime=8:00:00
 
-set -v
 set -e
 set -u
 set -o pipefail
@@ -9,7 +8,7 @@ set -o pipefail
 # Export the PS4 variable for the trace
 # Taken from https://wiki.bash-hackers.org/scripting/debuggingtips
 LOG_SECTION="General"
-export PS4='+[$(date "+%F %T")] ${LOG_SECTION}: '
+export PS4='+[$(date "+%F %T")] [${PBS_JOBID}] [${LOG_SECTION}]: '
 
 # Check for PBS/Samplesheet version agreement
 PIPELINE_VERSION="0"
@@ -44,8 +43,6 @@ while IFS="|" read -ra OPTS; do
     GTFFILE=${OPTS[12]}
 done <<< "$IN"
 
-# this is annoying to see in the verbose log
-set +v
 # load necessary modules
 module load R/3.5.0
 module load python/3.6.3
@@ -57,18 +54,25 @@ DEGDIR="${OUTDIR}/DEGs"
 
 mkdir -p "${LOGDIR}" "${COUNTSDIR}" "${PLOTSDIR}" "${DEGDIR}"
 
+# Write the samplename to the .e PBS file
+echo "# $(date '+%F %T') PBS error file for ${SAMPLENM}" >> /dev/stderr
+echo "# $(date '+%F %T'): For a human-readable log, see ${LOG_FNAME}" >> /dev/stderr
+echo "# $(date '+%F %T'): For a debugging trace, see ${TRACE_FNAME}" >> /dev/stderr
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 # Print the loaded modules to stderr and a log file
 module list -t
-LOG_FNAME="${LOGDIR}/BulkRNASeq_Summary.log"
-echo "# $(date '+%F %T'): Summary started" > "${LOG_FNAME}"
+# We don't want to clobber the old files; just append to them
+echo "###############################################################################" >> "${LOG_FNAME}"
+echo "# $(date '+%F %T'): Analysis started for ${SAMPLENM}" >> "${LOG_FNAME}"
+echo "# $(date '+%F %T'): Job ID: ${PBS_JOBID}" >> "${LOG_FNAME}"
 echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
 echo '#END_MODULES' >> "${LOG_FNAME}"
 
 # Set up trace logging after loading modules to avoid dumping tons of module-related messages to the log
-set -v
 TRACE_FNAME="${LOGDIR}/BulkRNASeq_Trace.log"
-exec 5> "${TRACE_FNAME}"
+exec 5>> "${TRACE_FNAME}"
+echo "##### BEGIN TRACE FOR ${PBS_JOBID} #####" >> "${TRACE_FNAME}"
 export BASH_XTRACEFD=5
 set -x
 
@@ -87,21 +91,23 @@ fi
 
 # Set the R_LIBS_USER variable here. This is where packages will be loaded from
 # within R
-echo "# $(date '+%F %T'): Adding /home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}/R to R_LIBS_USER" >> "${LOG_FNAME}"
+echo "# ${PBS_JOBID} $(date '+%F %T'): Adding /home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}/R to R_LIBS_USER" >> "${LOG_FNAME}"
 export R_LIBS_USER="/home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}/R"
 
 # Set the path to the featureCounts executable.
-echo "# $(date '+%F %T'): Using counting reads with featureCounts v. 1.6.2" >> "${LOG_FNAME}"
+echo "# ${PBS_JOBID} $(date '+%F %T'): Using counting reads with featureCounts v. 1.6.2" >> "${LOG_FNAME}"
 FEATURECOUNTS="/home/msistaff/public/CHURP_Deps/v${PIPELINE_VERSION}/Supp/subread-1.6.2-Linux-x86_64/bin/featureCounts"
 mkdir -p "${WORKDIR}/allsamples" && cd "${WORKDIR}/allsamples"
 
 # Use featureCounts to make a merged counts matrix
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="featureCounts"
-echo "# $(date '+%F %T'): Making a counts matrix for all samples." >> "${LOG_FNAME}"
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
+echo "# ${PBS_JOBID} $(date '+%F %T'): Making a counts matrix for all samples." >> "${LOG_FNAME}"
 BAM_LIST=($(find . -type l -exec basename {} \\;| sort -V))
 if [ "${PE}" = "true" ]
 then
-    echo "# $(date '+%F %T'): Library is paired-end with strand ${STRAND}." >> "${LOG_FNAME}"
+    echo "# ${PBS_JOBID} $(date '+%F %T'): Library is paired-end with strand ${STRAND}." >> "${LOG_FNAME}"
     "${FEATURECOUNTS}" \
         -a "${GTFFILE}" \
         -T ${PBS_NUM_PPN} \
@@ -112,7 +118,7 @@ then
         -o subread_counts.txt \
         "${BAM_LIST[@]}"
 else
-    echo "# $(date '+%F %T'): Library is single-end with strand ${STRAND}" >> "${LOG_FNAME}"
+    echo "# ${PBS_JOBID} $(date '+%F %T'): Library is single-end with strand ${STRAND}" >> "${LOG_FNAME}"
     "${FEATURECOUNTS}" \
         -a "${GTFFILE}" \
         -T ${PBS_NUM_PPN} \
@@ -123,8 +129,10 @@ else
 fi
 
 # Summarize the merged count data, including descriptive summaries and differential expression tests if >1 group present.
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
 LOG_SECTION="edgeR"
-echo "# $(date '+%F %T'): Running edgeR analysis on counts" >> "${LOG_FNAME}"
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
+echo "# ${PBS_JOBID} $(date '+%F %T'): Running edgeR analysis on counts" >> "${LOG_FNAME}"
 Rscript \
     "${RSUMMARY}" \
     "${OUTDIR}" \
@@ -142,26 +150,28 @@ echo "# ----- End output from ${RSUMMARY}" >> "${LOG_FNAME}"
 # Copy the merged counts into the output directory. The -u option to cp causes
 # the copy to happen only if the source file is newer than the destination file
 # or if the destination does not exist.
-LOG_SECTION="Subread/GTF Summary"
-echo "# $(date '+%F %T'): Copying merged counts matrix and summary into ${COUNTSDIR}" >> "${LOG_FNAME}"
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
+LOG_SECTION="GTF.Summary"
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
+echo "# ${PBS_JOBID} $(date '+%F %T'): Copying merged counts matrix and summary into ${COUNTSDIR}" >> "${LOG_FNAME}"
 cp -u subread_counts.txt "${COUNTSDIR}/subread_counts.txt"
 cp -u subread_counts.txt.summary "${COUNTSDIR}/subread_counts.txt.summary"
 
 # We also want to keep the sorted BAM files and the GTF used for counts, in
 # case the user wants to go back to it
-echo "# $(date '+%F %T'): Copying GTF into ${OUTDIR}." >> "${LOG_FNAME}"
+echo "# ${PBS_JOBID} $(date '+%F %T'): Copying GTF into ${OUTDIR}." >> "${LOG_FNAME}"
 cp -u "${GTFFILE}" "${OUTDIR}"
 
 # AWK command from S. Munro to make a translation table fo Ensembl IDs and
 # gene names
-echo "# $(date '+%F %T'): Generating translation table of gene name and Ensembl ID." >> "${LOG_FNAME}"
+echo "# ${PBS_JOBID} $(date '+%F %T'): Generating translation table of gene name and Ensembl ID." >> "${LOG_FNAME}"
 awk -F '\\t' '$3 == "gene" { print $9 }' <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") | tr -d ';"' | awk -F ' ' -v OFS='\\t' '{print $2,$6}' > "${OUTDIR}/gene_id_gene_name_map.txt"
 # This is a slower but more general command to get gene_id and gene_name
 # awk -F'\t' '$3 == "gene" {print $9}' | awk -F';' '{for(i = 1; i <= NF; i++) { if( $i ~ /gene_id/ ) {split($i,GI," ")}; if( $i ~ /gene_name/ ) {split($i,GN," ")} }; print GI[2]"\t"GN[2]}' | sed -e 's/"//g'
 
 # Chop up the subread_counts.txt file a little bit to make it easier to import
 # into other tools like CLC Genomics Workbench
-echo "# $(date '+%F %T'): Linking gene symbol with Ensembl ID for subread_counts.txt" >> "${LOG_FNAME}"
+echo "# ${PBS_JOBID} $(date '+%F %T'): Linking gene symbol with Ensembl ID for subread_counts.txt" >> "${LOG_FNAME}"
 echo -e "GeneName\\t$(head -n 2 ${COUNTSDIR}/subread_counts.txt | tail -n 1 | cut -f 7-)" > "${COUNTSDIR}/subread_counts_gene_symbol.txt"
 join \
     -e "NA" \
@@ -173,7 +183,9 @@ join \
     >> "${COUNTSDIR}/subread_counts_gene_symbol.txt"
 
 # Link the work directories to the output directory
-LOG_SECTION="Link Directories"
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
+LOG_SECTION="Linking"
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 rm -f "${OUTDIR}/singlesamples_work_directory" "${OUTDIR}/allsamples_work_directory"
 ln -sf "${WORKDIR}/singlesamples" "${OUTDIR}/singlesamples_work_directory"
 ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
@@ -181,7 +193,8 @@ ln -sf "${WORKDIR}/allsamples" "${OUTDIR}/allsamples_work_directory"
 # Prepare to generate HTML report by making unified files for everything. We
 # will have to iterate over every sample
 # Remove old summary files
-LOG_SECTION="Collate single samples"
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
+LOG_SECTION="Collate.Samples"
 rm -f \
     "${WORKDIR}/allsamples/Read_Counts.txt" \
     "${WORKDIR}/allsamples/Samtools_Stats.txt" \
@@ -195,7 +208,7 @@ OFFSET=$(cut -f 1 -d '|' "${SampleSheet}" | grep -nE '^$' | head -n 1 | sed -e '
 SNAMES=($(cut -f 1 -d '|' "${SampleSheet}" | sed -e "${OFFSET},\\$d"))
 for sample in "${SNAMES[@]}"
 do
-    echo "# $(date '+%F %T'): Collecting summaries for ${sample}" >> "${LOG_FNAME}"
+    echo "# ${PBS_JOBID} $(date '+%F %T'): Collecting summaries for ${sample}" >> "${LOG_FNAME}"
     # Make the read counts files
     RAW_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R1*.raw_readcount.txt')
     RAW_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R2*.raw_readcount.txt')
@@ -255,10 +268,13 @@ done
 
 # We will generate an HTML report
 # This is an ugly workaround, but sidesteps the problem of write-locked public dirs for Rmarkdown/knitr
-LOG_SECTION="HTML report"
+echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
+LOG_SECTION="HTML.Report"
+echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 cp -u "${BULK_RNASEQ_REPORT}" "./Report.Rmd"
 PATH=${PATH}:/panfs/roc/groups/14/msistaff/public/CHURP_Deps/v0/Supp/pandoc-2.3.1/bin Rscript -e "library(rmarkdown); rmarkdown::render('./Report.Rmd', output_file='"${OUTDIR}/Bulk_RNAseq_Report.html"', params=list(outdir='"${OUTDIR}"', workdir='"${WORKDIR}"', pipeline='"${PIPE_SCRIPT}"', samplesheet='"${SampleSheet}"'))"
 
-echo "# $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
+echo "# ${PBS_JOBID} $(date '+%F %T'): Done summarizing bulk RNAseq run" >> "${LOG_FNAME}"
+echo "##### END TRACE FOR ${PBS_JOBID} #####" >> "${TRACE_FNAME}"
 # Close the trace file descriptor
 exec 5>&-
