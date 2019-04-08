@@ -65,7 +65,7 @@ echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 module list -t
 # We don't want to clobber the old files; just append to them
 echo "###############################################################################" >> "${LOG_FNAME}"
-echo "# $(date '+%F %T'): Analysis started for ${SAMPLENM}" >> "${LOG_FNAME}"
+echo "# $(date '+%F %T'): Summary job started" >> "${LOG_FNAME}"
 echo "# $(date '+%F %T'): Job ID: ${PBS_JOBID}" >> "${LOG_FNAME}"
 echo '#BEGIN_MODULES' >> "${LOG_FNAME}"
 module list -t 2>> "${LOG_FNAME}"
@@ -80,12 +80,12 @@ set -x
 if [ -z "${R2FILE}" ]
 then
     PE="false"
-    echo "# No R2 file detected; running ${SAMPLENM} as single-end" >> "${LOG_FNAME}"
+    echo "# No R2 file detected; running as single-end" >> "${LOG_FNAME}"
     echo "# NOTE! We are assuming that all samples were subject to the same preparation and sequencing protocols." >> "${LOG_FNAME}"
     echo "# NOTE! We do not support mixing of single-end and paired-end samples for counts and differential expression testing." >> "${LOG_FNAME}"
 else
     PE="true"
-    echo "# R2 file detected; running ${SAMPLENM} as paired-end" >> "${LOG_FNAME}"
+    echo "# R2 file detected; running as paired-end" >> "${LOG_FNAME}"
     echo "# NOTE! We are assuming that all samples were subject to the same preparation and sequencing protocols." >> "${LOG_FNAME}"
     echo "# NOTE! We do not support mixing of single-end and paired-end samples for counts and differential expression testing." >> "${LOG_FNAME}"
 fi
@@ -222,11 +222,15 @@ rm -f \
     "${WORKDIR}/allsamples/Dup_Stats.txt" \
     "${WORKDIR}/allsamples/RNASeq_Metrics.txt" \
     "${WORKDIR}/allsamples/rRNA_kmers.txt"
-# Remove from the instance of the first blank line to the end of the file
-OFFSET=$(cut -f 1 -d '|' "${SampleSheet}" | grep -nE '^$' | head -n 1 | sed -e 's/://g')
-SNAMES=($(cut -f 1 -d '|' "${SampleSheet}" | sed -e "${OFFSET},\\$d"))
-for sample in "${SNAMES[@]}"
+# Use find to dig up all singlesample directories in the work director
+SDIRS=($(find "${WORKDIR}/singlesamples" -maxdepth 1 -mindepth 1 -type d | sort -V))
+for sampledir in "${SDIRS[@]}"
 do
+    sample=$(basename "${sampledir}")
+    if [ ! -f "${sampledir}/${sample}.done" ]; then
+        echo "# $(date '+%F %T'): No .done file for ${sample}, skipping." >> "${LOG_FNAME}"
+        continue
+    fi
     echo "# ${PBS_JOBID} $(date '+%F %T'): Collecting summaries for ${sample}" >> "${LOG_FNAME}"
     # Make the read counts files
     RAW_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R1*.raw_readcount.txt')
