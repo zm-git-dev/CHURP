@@ -28,6 +28,8 @@ read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.t
 # Set NAs in read summary to 0
 read_summary[is.na(read_summary)] <- 0
 sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+# Subset the sheet for those that were run - these are the rows in the read count summary
+sheet <- sheet[sheet$V1 %in% read_summary$V1,]
 samplenames <- sheet$V1
 nsamp <- length(samplenames)
 hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
