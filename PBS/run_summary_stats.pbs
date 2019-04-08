@@ -186,7 +186,8 @@ awk -F '\\t' '$3 == "gene" {print $9}' <(gzip -cd "${GTFFILE}" || cat "${GTFFILE
         print GI[2],GI[2]
     }
 }' \
-    | sed -e 's/"//g'
+    | sed -e 's/"//g' \
+    > "${OUTDIR}/gene_id_gene_name_map.txt"
 
 # Chop up the subread_counts.txt file a little bit to make it easier to import
 # into other tools like CLC Genomics Workbench
