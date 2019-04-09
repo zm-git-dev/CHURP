@@ -924,7 +924,7 @@ axis(side=2)
 barplot(
     plot_dat,
     col="#e41a1c",
-    ylim==c(0, 0.75),
+    ylim=c(0, 0.75),
     xlab="",
     ylab="Proportion Ribosomal Bases",
     main="rRNA Contamination (Mapping)",
