@@ -305,7 +305,7 @@ if [ ! -f hisat2.done ]; then
             # This string is so ugly because we we have to quote the arguments to hisat2 in a weird way to protect them from splitting
             hisat2 \
                 ${HISAT2OPTS} \
-                -x "'${HISAT2INDEX}'" \
+                -x "${HISAT2INDEX}" \
                 -1 <(gzip -cd "${SAMPLENM}_1P.fq.gz" || cat "${SAMPLENM}_1P.fq.gz") \
                 -2 <(gzip -cd "${SAMPLENM}_2P.fq.gz" || cat "${SAMPLENM}_2P.fq.gz") \
                 2> alignment.summary \
@@ -315,7 +315,7 @@ if [ ! -f hisat2.done ]; then
             echo "# ${PBS_JOBID} $(date '+%F %T'): Aligning trimmed reads with HISAT2." >> "${LOG_FNAME}"
             hisat2 \
                 ${HISAT2OPTS} \
-                -x "'${HISAT2INDEX}'" \
+                -x "${HISAT2INDEX}" \
                 -U <(gzip -cd "${SAMPLENM}_trimmed.fq.gz" || cat "${SAMPLENM}_trimmed.fq.gz") \
                 2> alignment.summary \
                 | samtools view -hb -o "${SAMPLENM}.bam" - \
@@ -327,7 +327,7 @@ if [ ! -f hisat2.done ]; then
             echo "# ${PBS_JOBID} $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
             hisat2 \
                 ${HISAT2OPTS} \
-                -x "'${HISAT2INDEX}'" \
+                -x "${HISAT2INDEX}" \
                 -1 <(gzip -cd "${R1FILE}" || cat "${R1FILE}") \
                 -2 <(gzip -cd "${R2FILE}" || cat "${R2FILE}") \
                 2> alignment.summary \
@@ -337,7 +337,7 @@ if [ ! -f hisat2.done ]; then
             echo "# ${PBS_JOBID} $(date '+%F %T'): Aligning reads with HISAT2." >> "${LOG_FNAME}"
             hisat2 \
                 ${HISAT2OPTS} \
-                -x "'${HISAT2INDEX}'" \
+                -x "${HISAT2INDEX}" \
                 -U <(gzip -cd "${R1FILE}" || cat "${R1FILE}") \
                 2> alignment.summary \
                 | samtools view -hb -o "${SAMPLENM}.bam" - \
