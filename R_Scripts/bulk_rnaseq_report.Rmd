@@ -1424,7 +1424,7 @@ if(!file.exists(insertsize_file)) {
 ### Subread Assignment Summary
 These plots will show the breakdown of read assignment by `featureCounts`.
 
-```{r subread_summary, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.75*nrow(sheet)}
+```{r subread_summary, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.8*nrow(sheet)}
 library(knitr)
 subread_sum <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt.summary", sep="/"), header=TRUE)
 plt_dat <- as.matrix(subread_sum[,-c(1)])
@@ -1449,14 +1449,14 @@ at <- barplot(
     beside=TRUE,
     col=bar_cols,
     axes=FALSE,
-    xlim=c(0, maxct*1.4),
+    xlim=c(0, maxct*1.5),
     ylab="",
     xlab="Fragment Count (Millions)",
     main="Subread Summary",
     horiz=TRUE)
 axis(side=2, at=apply(at, 2, mean), labels=colnames(subread_sum[-c(1)]), las=2, cex.axis=0.6, lty=0)
 axis(side=1)
-legend("top", categories, fill=bar_cols, cex=0.65, ncol=6, inset=c(0, -0.025), xpd=TRUE)
+legend("right", categories, fill=bar_cols, cex=0.65, ncol=2, xpd=TRUE)
 ```
 
 
@@ -1475,7 +1475,7 @@ at <- barplot(
     main="Subread Summary")
 axis(side=1, at=at, labels=colnames(subread_sum[-c(1)]), las=2, cex.axis=0.6)
 axis(side=2, at=seq(0, 1, by=0.2), labels=seq(0, 1, by=0.2))
-legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
+legend("top", categories, fill=bar_cols, cex=0.65, ncol=6)
 
 # We want to transpose this table so that it scales vertically with the number
 # of samples.
