@@ -820,7 +820,7 @@ This plot will show the percentage of bases that map to off-target regions
 (i.e., non-exon regions). Note that the counts and proportions here *exclude*
 ribosomal mapping.
 
-```{r gdna_plot, echo=FALSE, message=FALSE}
+```{r gdna_plot, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.8*nrow(sheet)}
 par(mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 cts_dat <- matrix(
     c(
@@ -836,16 +836,19 @@ bar_cols <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c")
 at <- barplot(
     cts_dat,
     beside=TRUE,
-    axes=F,
-    ylim=c(0, max_ct*1.2),
-    ylab="Number of Bases in Primary Alignments (Millions)",
+    axes=FALSE,
+    horz=TRUE,
+    xlim=c(0, max_ct*1.25),
+    xlab="Number of Bases in Primary Alignments (Millions)",
     main="Base Positions",
-    xlab="",
+    ylab="",
     col=bar_cols)
-axis(side=1, at=apply(at, 2, mean), labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
-axis(side=2)
-legend("top", c("Coding", "UTR", "Intron", "Intergenic"), fill=bar_cols, ncol=4)
+axis(side=2, at=apply(at, 2, mean), labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6, lty=0)
+axis(side=1)
+legend("right", c("Coding", "UTR", "Intron", "Intergenic"), fill=bar_cols, ncol=1)
+```
 
+```{r gdna_plot_prop, echo=FALSE, message=FALSE}
 prop_dat <- matrix(
     c(
         as.numeric(picard_rnaseq_summary$PCT_CODING_BASES),
