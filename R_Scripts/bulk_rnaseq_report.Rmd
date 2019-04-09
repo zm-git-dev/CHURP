@@ -33,7 +33,7 @@ sheet <- sheet[sheet$V1 %in% read_summary$V1,]
 samplenames <- sheet$V1
 # Export the first sample in the read summary
 firstrun <- samplenames[1]
-Sys.setenv(firstrun)
+Sys.setenv(firstrun=firstrun)
 nsamp <- length(samplenames)
 hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
 names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
