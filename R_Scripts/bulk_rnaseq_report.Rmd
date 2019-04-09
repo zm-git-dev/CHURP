@@ -837,7 +837,7 @@ at <- barplot(
     cts_dat,
     beside=TRUE,
     axes=FALSE,
-    horz=TRUE,
+    horiz=TRUE,
     xlim=c(0, max_ct*1.25),
     xlab="Number of Bases in Primary Alignments (Millions)",
     main="Base Positions",
