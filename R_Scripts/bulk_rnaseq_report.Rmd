@@ -1432,7 +1432,7 @@ if(!file.exists(insertsize_file)) {
 ### Subread Assignment Summary
 These plots will show the breakdown of read assignment by `featureCounts`.
 
-```{r subread_summary, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.8*nrow(sheet)}
+```{r subread_summary, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.15*nrow(sheet)}
 library(knitr)
 par(mar=c(5.1, 5, 4.1, 2.1))
 subread_sum <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt.summary", sep="/"), header=TRUE)
