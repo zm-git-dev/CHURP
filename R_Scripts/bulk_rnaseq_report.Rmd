@@ -925,7 +925,7 @@ rect(
     border=NA
     )
 axis(side=1, at=at, labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
-axis(side=2)
+axis(side=2, at=seq(0, 0.6, by=0.05), labels=seq(0, 0.6, by=0.05))
 barplot(
     plot_dat,
     col="#e41a1c",
