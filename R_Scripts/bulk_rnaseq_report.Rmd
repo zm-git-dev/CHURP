@@ -31,6 +31,9 @@ sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, 
 # Subset the sheet for those that were run - these are the rows in the read count summary
 sheet <- sheet[sheet$V1 %in% read_summary$V1,]
 samplenames <- sheet$V1
+# Export the first sample in the read summary
+firstrun <- samplenames[1]
+Sys.setenv(firstrun)
 nsamp <- length(samplenames)
 hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
 names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
@@ -45,8 +48,8 @@ names(picard_rnaseq_summary) <- c(
     "CORRECT_STRAND_READS", "INCORRECT_STRAND_READS", "PCT_RIBOSOMAL_BASES", "PCT_CODING_BASES", "PCT_UTR_BASES",
     "PCT_INTRONIC_BASES", "PCT_INTERGENIC_BASES", "PCT_USABLE_BASES", "PCT_CORRECT_STRAND_READS")
 # Assume that the first sample is part of the same dataset as the others
-first_samp <- as.character(sheet$V3[1])
-fastq_dir <- dirname(first_samp)
+first_read <- as.character(sheet$V3[1])
+fastq_dir <- dirname(first_read)
 ```
 
 CHURP was developed by the Research Informatics Solutions (RIS) group at MSI
@@ -655,8 +658,7 @@ This is the full list of loaded modules for each single-sample job, which
 includes read trimming and read mapping.
 
 ```{bash single_sample_modules, echo=FALSE, comment=NA}
-first_sample=$(head -n 1 $samplesheet | cut -f 1 -d '|')
-log_name="${outdir}/Logs/${first_sample}_Analysis.log"
+log_name="${outdir}/Logs/${firstrun}_Analysis.log"
 log_start=$(($(grep -m 1-n '^#BEGIN_MODULE' "${log_name}" | head -n 1 | cut -f 1 -d ':') + 2))
 log_end=$(($(grep -m 1 -n '^#END_MODULES' "${log_name}" | head -n 1 | cut -f 1 -d ':') - 1))
 head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
@@ -666,7 +668,7 @@ This is the full list of loaded modules for the summary job, which includes
 counting and differential expression testing.
 
 ```{bash summary_modules, echo=FALSE, comment=NA}
-log_name="${outdir}/Logs/BulkRNASeq_Summary.log"
+log_name="${outdir}/Logs/BulkRNASeq_Analysis.log"
 log_start=$(($(grep -n -m 1 '^#BEGIN_MODULES' "${log_name}" | head -n 1 | cut -f 1 -d ':') + 2))
 log_end=$(($(grep -n -m 1 '^#END_MODULES' "${log_name}" | head -n 1 | cut -f 1 -d ':') - 1))
 head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
