@@ -877,16 +877,21 @@ will all be 0.
 ```{r strand_plot, echo=FALSE, message=FALSE}
 plot_dat <- as.numeric(picard_rnaseq_summary$PCT_CORRECT_STRAND_READS)
 par(mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
-at <- barplot(
-    plot_dat,
-    col="#1f78b4",
-    ylim=c(0, 1.1),
-    xlab="",
-    ylab="Proportion Correct Strand",
-    main="Strand Agreement",
-    axes=F)
-axis(side=1, at=at, labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
-axis(side=2)
+if(all(plot_dat == 0)) {
+    plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+    text(x=0.5, y=0.5, "All strand agreement is 0:\nunstranded lib", cex=2, col="black")
+} else {
+    at <- barplot(
+        plot_dat,
+        col="#1f78b4",
+        ylim=c(0, 1.1),
+        xlab="",
+        ylab="Proportion Correct Strand",
+        main="Strand Agreement",
+        axes=F)
+    axis(side=1, at=at, labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
+    axis(side=2)
+}
 ```
 
 ### Mapping-based rRNA Contamination
