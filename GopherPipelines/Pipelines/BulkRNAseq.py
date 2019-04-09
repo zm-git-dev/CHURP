@@ -100,10 +100,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         a['fq_folder'] = os.path.realpath(
             os.path.expanduser(str(a['fq_folder'])))
         a['hisat2_idx'] = os.path.realpath(
-            dir_funcs.sanitize_path(
-                os.path.expanduser(str(a['hisat2_idx'])),
-                self.pipe_logger)
-                )
+            os.path.expanduser(str(a['hisat2_idx'])))
         a['gtf'] = os.path.realpath(os.path.expanduser(str(a['gtf'])))
         a['outdir'] = dir_funcs.sanitize_path(
             os.path.realpath(os.path.expanduser(str(a['outdir']))),
@@ -174,6 +171,9 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self._validate_fastq_folder(a['fq_folder'])
         # Validate the hisat2 index
         self._validate_hisat_idx(a['hisat2_idx'])
+        # Sanitize the hisat2 index path
+        a['hisat2_idx'] = dir_funcs.sanitize_path(
+            a['hisat2_idx'], self.pipe_logger)
         return a
 
     def _validate_fastq_folder(self, d):
