@@ -348,8 +348,8 @@ ERROR
 You provided a file or an option that has illegal characters in it. These
 characters can either be used to execute processes maliciously, or will break
 the formatting of CHURP internal files. Please rename your files with
-appropriate characters. The offending character found is: {badchar}\n"""
-    sys.stderr.write(msg.format(badchar=c))
+appropriate characters. The offending string found is: '{badstr}'\n"""
+    sys.stderr.write(msg.format(badstr=c))
     return
 
 

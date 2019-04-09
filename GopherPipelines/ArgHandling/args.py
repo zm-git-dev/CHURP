@@ -63,7 +63,7 @@ def check_for_bad(a):
             for bc in bad_chars:
                 if bc in str(v[option]):
                     DieGracefully.die_gracefully(
-                        DieGracefully.NEFARIOUS_CHAR, bc)
+                        DieGracefully.NEFARIOUS_CHAR, str(v[option]))
     return
 
 
