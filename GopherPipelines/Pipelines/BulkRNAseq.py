@@ -102,12 +102,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         a['hisat2_idx'] = os.path.realpath(
             os.path.expanduser(str(a['hisat2_idx'])))
         a['gtf'] = os.path.realpath(os.path.expanduser(str(a['gtf'])))
-        a['outdir'] = dir_funcs.sanitize_path(
-            os.path.realpath(os.path.expanduser(str(a['outdir']))),
-            self.pipe_logger)
-        a['workdir'] = dir_funcs.sanitize_path(
-            os.path.realpath(os.path.expanduser(str(a['workdir']))),
-            self.pipe_logger)
+        a['outdir'] = os.path.realpath(os.path.expanduser(str(a['outdir'])))
+        a['workdir'] = os.path.realpath(os.path.expanduser(str(a['workdir'])))
         if a['expr_groups']:
             a['expr_groups'] = os.path.realpath(os.path.expanduser(str(
                 a['expr_groups'])))
@@ -148,7 +144,6 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         try:
             handle = open(a['gtf'], 'r')
             handle.close()
-            a['gtf'] = dir_funcs.sanitize_path(a['gtf'], self.pipe_logger)
         except OSError:
             DieGracefully.die_gracefully(DieGracefully.BAD_GTF)
         if not a['adapters']:
