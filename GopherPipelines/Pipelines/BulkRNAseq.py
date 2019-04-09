@@ -104,9 +104,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
                 os.path.expanduser(str(a['hisat2_idx'])),
                 self.pipe_logger)
                 )
-        a['gtf'] = dir_funcs.sanitize_path(
-            os.path.realpath(os.path.expanduser(str(a['gtf']))),
-            self.pipe_logger)
+        a['gtf'] = os.path.realpath(os.path.expanduser(str(a['gtf'])))
         a['outdir'] = dir_funcs.sanitize_path(
             os.path.realpath(os.path.expanduser(str(a['outdir']))),
             self.pipe_logger)
@@ -153,6 +151,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         try:
             handle = open(a['gtf'], 'r')
             handle.close()
+            a['gtf'] = dir_funcs.sanitize_path(a['gtf'], self.pipe_logger)
         except OSError:
             DieGracefully.die_gracefully(DieGracefully.BAD_GTF)
         if not a['adapters']:
