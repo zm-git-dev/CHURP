@@ -100,10 +100,19 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         a['fq_folder'] = os.path.realpath(
             os.path.expanduser(str(a['fq_folder'])))
         a['hisat2_idx'] = os.path.realpath(
-            os.path.expanduser(str(a['hisat2_idx'])))
-        a['gtf'] = os.path.realpath(os.path.expanduser(str(a['gtf'])))
-        a['outdir'] = os.path.realpath(os.path.expanduser(str(a['outdir'])))
-        a['workdir'] = os.path.realpath(os.path.expanduser(str(a['workdir'])))
+            dir_funcs.sanitize_path(
+                os.path.expanduser(str(a['hisat2_idx'])),
+                self.pipe_logger)
+                )
+        a['gtf'] = dir_funcs.sanitize_path(
+            os.path.realpath(os.path.expanduser(str(a['gtf']))),
+            self.pipe_logger)
+        a['outdir'] = dir_funcs.sanitize_path(
+            os.path.realpath(os.path.expanduser(str(a['outdir']))),
+            self.pipe_logger)
+        a['workdir'] = dir_funcs.sanitize_path(
+            os.path.realpath(os.path.expanduser(str(a['workdir']))),
+            self.pipe_logger)
         if a['expr_groups']:
             a['expr_groups'] = os.path.realpath(os.path.expanduser(str(
                 a['expr_groups'])))
