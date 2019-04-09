@@ -1469,7 +1469,7 @@ at <- barplot(
     beside=FALSE,
     col=bar_cols,
     axes=FALSE,
-    ylim=c(0, 1.4),
+    ylim=c(0, 1.2),
     xlab="",
     ylab="Fragment Proportions",
     main="Subread Summary")
