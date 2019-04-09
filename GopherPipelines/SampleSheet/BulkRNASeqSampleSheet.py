@@ -9,6 +9,7 @@ import pprint
 from GopherPipelines import DieGracefully
 from GopherPipelines.SampleSheet import SampleSheet
 from GopherPipelines.ArgHandling import set_verbosity
+from GopherPipelines.FileOps import dir_funcs
 
 
 class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
@@ -57,8 +58,11 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
             self.useropts['rmdup'] = 'yes'
         else:
             self.useropts['rmdup'] = 'no'
-        self.useropts['gtf'] = args['gtf']
-        self.useropts['hisat2_idx'] = args['hisat2_idx']
+        self.useropts['gtf'] = dir_funcs.sanitize_path(
+            args['gtf'], self.sheet_logger)
+        self.useropts['hisat2_idx'] = dir_funcs.sanitize_path(
+            args['hisat2_idx'],
+            self.sheet_logger)
         self.useropts['hisat2_threads'] = '-p ' + str(args['ppn'])
         self.useropts['hisat2_other'] = '--no-mixed --new-summary'
         # Add flags to the HISAT2 options for strandness

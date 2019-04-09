@@ -26,6 +26,7 @@ BRNASEQ_SUBMIT_FAIL = 29
 GROUP_NO_PIPE = 50
 GROUP_BAD_COL = 51
 BRNASEQ_GROUP_SUCCESS = 52
+NEFARIOUS_CHAR = 99
 
 # We will prepend a little message to the end that says the pipelines were
 # developed by RIS and funded by UMII
@@ -338,6 +339,20 @@ The output from qsub is shown below:\n"""
     return
 
 
+def nefarious_cmd(c):
+    """Call this function when the user sends an input file with some nasty
+    characters written into it."""
+    msg = CREDITS + """----------
+ERROR
+
+You provided a file or an option that has illegal characters in it. These
+characters can either be used to execute processes maliciously, or will break
+the formatting of CHURP internal files. Please rename your files with
+appropriate characters. The offending character found is: {badchar}\n"""
+    sys.stderr.write(msg.format(badchar=c))
+    return
+
+
 def bad_number(op):
     """Call this function if the user provides an invalid value to an option
     that expects a numerical value."""
@@ -372,7 +387,8 @@ def die_gracefully(e, *args):
         BRNASEQ_GROUP_SUCCESS: brnaseq_group_success,
         BRNASEQ_SUCCESS: brnaseq_success,
         BRNASEQ_SUBMIT_OK: brnaseq_auto_submit_ok,
-        BRNASEQ_SUBMIT_FAIL: brnaseq_auto_submit_fail
+        BRNASEQ_SUBMIT_FAIL: brnaseq_auto_submit_fail,
+        NEFARIOUS_CHAR: nefarious_cmd,
         }
     try:
         err_dict[e](*args)

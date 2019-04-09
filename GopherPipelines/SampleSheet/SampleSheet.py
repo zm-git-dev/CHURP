@@ -10,6 +10,7 @@ import re
 import GopherPipelines
 from GopherPipelines.FileOps import default_files
 from GopherPipelines.FileOps import default_dirs
+from GopherPipelines.FileOps import dir_funcs
 from GopherPipelines.ArgHandling import bulk_rnaseq_args
 from GopherPipelines.ArgHandling import sc_rnaseq_args
 
@@ -95,7 +96,9 @@ class Samplesheet(object):
                 sn = re.sub(samp_re, '', f)
                 # Tack it onto the samples dictionary
                 self.samples[sn] = {}
-                self.samples[sn]['R1'] = os.path.join(d, f)
+                self.samples[sn]['R1'] = dir_funcs.sanitize_path(
+                    os.path.join(d, f),
+                    self.sheet_logger)
                 # Look for the R2. This is really dumb-looking but:
                 #   Reverse the R1 filename ([::-1])
                 #   Replace 1R with 2R, with at most 1 replacement
@@ -111,7 +114,9 @@ class Samplesheet(object):
                 elif r2 not in cont or r2 == f:
                     self.samples[sn]['R2'] = ''
                 elif r2 in cont and r2 != f:
-                    self.samples[sn]['R2'] = os.path.join(d, r2)
+                    self.samples[sn]['R2'] = dir_funcs.sanitize_path(
+                        os.path.join(d, r2),
+                        self.sheet_logger)
                 else:
                     self.samples[sn]['R2'] = ''
         self.sheet_logger.debug(
