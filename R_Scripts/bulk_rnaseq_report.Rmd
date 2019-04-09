@@ -1,5 +1,5 @@
 ---
-title: "CHURP: Bulk RNAseq Pipeline Summary"
+title: "PURR Summary"
 output:
     html_document:
         smart: false
@@ -52,8 +52,14 @@ first_read <- as.character(sheet$V3[1])
 fastq_dir <- dirname(first_read)
 ```
 
-CHURP was developed by the Research Informatics Solutions (RIS) group at MSI
-with funding provided by the University of Minnesota Informatics Institute
+# PURR: Pipeline for UMII/RIS RNASeq Analysis
+
+![UMII graphic](/home/msistaff/public/CHURP_Deps/Assets/UMII_Graphic_rs.png)
+
+PURR is the RNASeq analysis pipeline that is housed within CHURP, the
+**C**ollection of **H**ierarchical **U**MII/**R**IS **P**ipelines. CHURP is
+developed and maintained by the Research Informatics Solutions (RIS) group at
+MSI with funding provided by the University of Minnesota Informatics Institute
 (UMII).
 
 <https://www.msi.umn.edu/>
