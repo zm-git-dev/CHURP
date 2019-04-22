@@ -126,7 +126,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         try:
             assert a['subsample'] >= 0
             if a['subsample'] > 0:
-                assert a['subsample'] <= a['rrna_screen']
+                assert a['subsample'] >= a['rrna_screen']
         except AssertionError:
             DieGracefully.die_gracefully(
                 DieGracefully.BAD_NUMBER, '--subsample')
