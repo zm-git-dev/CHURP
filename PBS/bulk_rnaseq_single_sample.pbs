@@ -100,14 +100,14 @@ else
     echo "# ${PBS_JOBID} $(date '+%F %T'): R2 file detected; running ${SAMPLENM} as paired-end" >> "${LOG_FNAME}"
 fi
 
-# set working directory
-mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}" && cd "${WORKDIR}/singlesamples/${SAMPLENM}"
-
 # check whether to purge files or not. $PURGE will be parsed by command line
 if [ "${PURGE}" = "true" ]; then
-    echo "# ${PBS_JOBID} $(date '+%F %T'): PURGE=true; re-running all analyses." >> "${LOG_FNAME}"
-    find . -name '*.done' -delete
+    echo "# ${PBS_JOBID} $(date '+%F %T'): PURGE=true; deleting work directory for ${SAMPLENM} and re-running all analyses." >> "${LOG_FNAME}"
+    rm -rf "${WORKDIR}/singlesamples/${SAMPLENM}"
 fi
+
+# set working directory
+mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}" && cd "${WORKDIR}/singlesamples/${SAMPLENM}"
 
 # start workflow with check point
 [ -f "${SAMPLENM}.done" ] && echo "found done analysis, exit" && exit $?
