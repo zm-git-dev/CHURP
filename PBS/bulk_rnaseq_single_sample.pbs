@@ -119,24 +119,24 @@ if [ "${SUBSAMPLE}" = 0 ]; then
     echo "# $(date '+%F %T'): Not subsampling reads for sample ${SAMPLENM} for analysis" >> "${LOG_FNAME}"
 else
     echo "# $(date '+%F %T'): Subsampling ${SAMPLENM} to ${SUBSAMPLE} fragments for analysis" >> "${LOG_FNAME}"
-    ${SEQTK} sample -s123 -2 "${R1FILE}" "${SUBSAMPLE}" | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsample.fastq.gz"
-    R1FILE="${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsample.fastq.gz"
+    ${SEQTK} sample -s123 -2 "${R1FILE}" "${SUBSAMPLE}" | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/Subsample_R1.fastq.gz"
+    R1FILE="${WORKDIR}/singlesamples/${SAMPLENM}/Subsample_R1.fastq.gz"
     if [ "${PE}" = "true" ]; then
-        ${SEQTK} sample -s123 -2 "${R2FILE}" "${SUBSAMPLE}" | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsample.fastq.gz"
-        R2FILE="${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsample.fastq.gz"
+        ${SEQTK} sample -s123 -2 "${R2FILE}" "${SUBSAMPLE}" | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/Subsample_R2.fastq.gz"
+        R2FILE="${WORKDIR}/singlesamples/${SAMPLENM}/Subsample_R2.fastq.gz"
     fi
 fi
 
 
 echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
-LOG_SECTION="rRNA_Subsampling"
+LOG_SECTION="rRNA.Subsampling"
 echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
 if [ ! -f subsamp.done ]; then
     # subsample the FASTQ and assay for rRNA contamination
     echo "# ${PBS_JOBID} $(date '+%F %T'): Subsampling reads to ${RRNA_SCREEN} fragments." >> "${LOG_FNAME}"
-    ${SEQTK} sample -s123 -2 "${R1FILE}" "${RRNA_SCREEN}" > "${WORKDIR}/singlesamples/${SAMPLENM}/R1_BBDuk.fastq"
+    ${SEQTK} sample -s123 -2 "${R1FILE}" "${RRNA_SCREEN}" > "${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_R1.fastq"
     if [ "${PE}" = "true" ]; then
-        ${SEQTK} sample -s123 -2 "${R2FILE}" "${RRNA_SCREEN}" > "${WORKDIR}/singlesamples/${SAMPLENM}/R2_BBDuk.fastq"
+        ${SEQTK} sample -s123 -2 "${R2FILE}" "${RRNA_SCREEN}" > "${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_R2.fastq"
     fi
     touch subsamp.done
 else
@@ -151,8 +151,8 @@ if [ ! -f bbduk.done ]; then
     echo "# ${PBS_JOBID} $(date '+%F %T'): Using BBDuk to search for rRNA contamination in subsampled reads." >> "${LOG_FNAME}"
     if [ "${PE}" = "true" ]; then
         ${BBDUK} \
-            in="${WORKDIR}/singlesamples/${SAMPLENM}/R1_BBDuk.fastq" \
-            in2="${WORKDIR}/singlesamples/${SAMPLENM}/R2_BBDuk.fastq" \
+            in="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_R1.fastq" \
+            in2="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_R2.fastq" \
             ref="${SILVA_REF}" \
             stats="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_rRNA_Stats.txt" \
             k=25 \
@@ -163,7 +163,7 @@ if [ ! -f bbduk.done ]; then
             2>> "${LOG_FNAME}"
     else
         ${BBDUK} \
-            in="${WORKDIR}/singlesamples/${SAMPLENM}/R1_BBDuk.fastq" \
+            in="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_R1.fastq" \
             ref="${SILVA_REF}" \
             stats="${WORKDIR}/singlesamples/${SAMPLENM}/BBDuk_rRNA_Stats.txt" \
             k=25 \
