@@ -525,13 +525,19 @@ if [ ! -f is_stats.done ]; then
             H="${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_hist.pdf" \
             2>> "${LOG_FNAME}"
         # Extract the mean, median, standard deviation from the metrics file
-        grep \
-            -A 1 \
-            '^MEDIAN_INSERT_SIZE' \
-            "${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" \
-            | tail -n 1 \
-            | cut -f 1,5,6,9,11,15,17 \
+        if [ -s "${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" ]; then
+            grep \
+                -A 1 \
+                '^MEDIAN_INSERT_SIZE' \
+                "${OUTDIR}/InsertSizeMetrics/${SAMPLENM}_metrics.txt" \
+                | tail -n 1 \
+                | cut -f 1,5,6,9,11,15,17 \
+                > "${WORKDIR}/singlesamples/${SAMPLENM}/IS_Stats.txt"
+        else
+            # Echo seven NA into the IS stats file
+            echo -e 'NA\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA' \
             > "${WORKDIR}/singlesamples/${SAMPLENM}/IS_Stats.txt"
+        fi
     else
         echo "# ${PBS_JOBID} $(date '+%F %T'): Sample is single-read. No insert size metrics possible." >> "${LOG_FNAME}"
     fi
