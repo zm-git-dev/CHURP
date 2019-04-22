@@ -124,6 +124,7 @@ else
     if [ "${PE}" = "true" ]; then
         ${SEQTK} sample -s 123 2 "${R2FILE}" "${SUBSAMPLE}" | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsample.fastq.gz"
         R2FILE="${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsample.fastq.gz"
+    fi
 fi
 
 
