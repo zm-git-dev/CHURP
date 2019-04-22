@@ -119,10 +119,10 @@ if [ "${SUBSAMPLE}" = 0 ]; then
     echo "# $(date '+%F %T'): Not subsampling reads for sample ${SAMPLENM} for analysis" >> "${LOG_FNAME}"
 else
     echo "# $(date '+%F %T'): Subsampling ${SAMPLENM} to ${SUBSAMPLE} fragments for analysis" >> "${LOG_FNAME}"
-    ${SEQTK} sample -s 123 -2 "${R1FILE}" "${SUBSAMPLE}" | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsample.fastq.gz"
-    R1FILE= "${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsample.fastq.gz"
+    ${SEQTK} sample -s123 -2 "${R1FILE}" "${SUBSAMPLE}" | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsample.fastq.gz"
+    R1FILE="${WORKDIR}/singlesamples/${SAMPLENM}/R1_Subsample.fastq.gz"
     if [ "${PE}" = "true" ]; then
-        ${SEQTK} sample -s 123 -2 "${R2FILE}" "${SUBSAMPLE}" | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsample.fastq.gz"
+        ${SEQTK} sample -s123 -2 "${R2FILE}" "${SUBSAMPLE}" | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsample.fastq.gz"
         R2FILE="${WORKDIR}/singlesamples/${SAMPLENM}/R2_Subsample.fastq.gz"
     fi
 fi
