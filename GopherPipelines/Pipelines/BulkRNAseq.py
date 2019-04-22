@@ -222,8 +222,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         dictionary that will hold all samplesheet data, and then write it into
         the output directory."""
         self._run_checks()
-        self.sheet.compile(self.outdir, self.workdir)
-        ss_path = self.sheet.write_sheet(self.outdir, self.pipe_name, '|')
+        self.sheet.compile(self.real_out, self.real_work)
+        ss_path = self.sheet.write_sheet(self.real_out, self.pipe_name, '|')
         return ss_path
 
     def qsub(self):
@@ -235,7 +235,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         ss = self._prepare_samplesheet()
         # Make the qsub array key
         keyname = default_files.default_array_key(self.pipe_name)
-        keyname = os.path.join(self.outdir, keyname)
+        keyname = os.path.join(self.real_out, keyname)
         if os.path.isfile(keyname):
             self.pipe_logger.warning(
                 'Qsub key file %s exists. Overwriting!', keyname)
@@ -252,7 +252,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         handle.close()
         # Make the script filename
         pname = default_files.default_pipeline(self.pipe_name)
-        pname = os.path.join(self.outdir, pname)
+        pname = os.path.join(self.real_out, pname)
         if os.path.isfile(pname):
             self.pipe_logger.warning(
                 'Submission script %s already exists. Overwriting!', pname)
@@ -291,8 +291,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # easy to find
         handle.write('KEYFILE=' + '"' + keyname + '"\n')
         handle.write('QSUB_ARRAY=' + '"' + qsub_array + '"\n')
-        handle.write('OUTDIR=' + '"' + str(self.outdir) + '"\n')
-        handle.write('WORKDIR=' + '"' + str(self.workdir) + '"\n')
+        handle.write('OUTDIR=' + '"' + str(self.real_out) + '"\n')
+        handle.write('WORKDIR=' + '"' + str(self.real_work) + '"\n')
         handle.write('DE_SCRIPT=' + '"' + self.de_script + '"\n')
         handle.write('REPORT_SCRIPT=' + '"' + self.report_script + '"\n')
         handle.write('SAMPLESHEET=' + '"' + ss + '"\n')
