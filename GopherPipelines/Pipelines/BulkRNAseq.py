@@ -46,6 +46,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # And the minimum depth
         self.min_cpm = str(valid_args['mincpm'])
         # Set the subsampling level
+        self.rrna_screen = str(valid_args['rrna_screen'])
         self.subsample = str(valid_args['subsample'])
 
         # And make a sample sheet from the args
@@ -118,7 +119,14 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             DieGracefully.die_gracefully(
                 DieGracefully.BAD_NUMBER, '--min-cpm')
         try:
+            assert a['rrna_screen'] >= 0
+        except AssertionError:
+            DieGracefully.die_gracefully(
+                DieGracefully.BAD_NUMBER, '--rrna_screen')
+        try:
             assert a['subsample'] >= 0
+            if a['subsample'] > 0:
+                assert a['subsample'] <= a['rrna_screen']
         except AssertionError:
             DieGracefully.die_gracefully(
                 DieGracefully.BAD_NUMBER, '--subsample')
@@ -297,7 +305,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         handle.write('REPORT_SCRIPT=' + '"' + self.report_script + '"\n')
         handle.write('SAMPLESHEET=' + '"' + ss + '"\n')
         handle.write('PURGE=' + '"' + self.purge + '"\n')
-        handle.write('SUBSAMP=' + '"' + self.subsample + '"\n')
+        handle.write('RRNA_SCREEN=' + '"' + self.rrna_screen + '"\n')
+        handle.write('SUBSAMPLE=' + '"' + self.subsample + '"\n')
         handle.write('PIPE_SCRIPT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )/$(basename $0)"\n')
         aln_cmd = [
             'qsub',
@@ -309,7 +318,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-e', '"${OUTDIR}"',
             '-l', qsub_resources,
             '-t', '"${QSUB_ARRAY}"',
-            '-v', '"SampleSheet=${SAMPLESHEET},PURGE=${PURGE},SUBSAMP=${SUBSAMP}"',
+            '-v', '"SampleSheet=${SAMPLESHEET},PURGE=${PURGE},RRNA_SCREEN=${RRNA_SCREEN},SUBSAMPLE=${SUBSAMPLE}"',
             self.single_sample_script,
             '||',
             'exit',

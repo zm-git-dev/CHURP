@@ -125,15 +125,24 @@ def add_args(ap):
         choices=['RF', 'FR', 'U'],
         default='RF')
     ap_opt.add_argument(
-        '--subsample',
-        metavar='<num pairs to sample>',
-        dest='subsample',
-        help=('Number of read pairs to subsample for rRNA and duplication '
-              'estimation. This does not affect how many reads are used in the '
-              'analysis; this is only for QC and diagnostic purposes. '
-              'Default: 10000'),
+        '--rrna_screen',
+        metavar='<num pairs for rRNA screen>',
+        dest='rrna_screen',
+        help=('Number of read pairs to subsample for rRNA estimation. This '
+              'does not affect how many reads are used in the analysis; this '
+              'is only for QC and diagnostic purposes. Default: 10000'),
         type=int,
         default=10000)
+    ap_opt.add_argument(
+        '--subsample',
+        metavar='<num pairs to subsample>',
+        dest='subsample',
+        help=('Number of read pairs to subsample to run a test of a large '
+              'dataset. This number must be at least as large as the value '
+              'given to the --rrna_screen option. If 0, then do not perform '
+              'any subsampling. Default: 0 (no subsampling).'),
+        type=int,
+        default=0)
     ap_opt.add_argument(
         '--headcrop',
         metavar='<num bp to crop>',
