@@ -87,6 +87,12 @@ class Samplesheet(object):
         # 001: Always 001.
         # This is similar to the UMGC filenames, which are split across lanes
         # and then concatenated.
+        # We will also define a regex for finding SRA-like samples. This should
+        # work alongside the default regex. This will just look for files that
+        # are named '*_1.fastq.gz' or similar. It is not great, but the SRA
+        # does not have a very specific format.
+        sra_re = re.compile(r'^.+_1\.((fq(\.gz)?$)|(fastq(\.gz)?$))')
+        sra_samp_re = re.compile(r'_(1|2)\.((fq(\.gz)?$)|(fastq(\.gz)?$))')
         # We will iterate through all files in the directory. If they look like
         # R1 fastq files, we will extract the samplename from them. We will
         # then build the R2 filename and ask if that exists in the directory
@@ -107,6 +113,20 @@ class Samplesheet(object):
                 # the part of the filename that we shouldn't have - the R2 does
                 # not exist for this sammple, and it is single-end
                 r2_sn = re.sub(samp_re, '', r2)
+                if r2_sn != sn:
+                    self.samples[sn]['R2'] = ''
+                elif r2 not in cont or r2 == f:
+                    self.samples[sn]['R2'] = ''
+                elif r2 in cont and r2 != f:
+                    self.samples[sn]['R2'] = os.path.join(d, r2)
+                else:
+                    self.samples[sn]['R2'] = ''
+            elif re.match(sra_re, f):
+                sn = re.sub(sra_samp_re, '', f)
+                self.samples[sn] = {}
+                self.samples[sn]['R1'] = os.path.join(d, f)
+                r2 = f[::-1].replace('1_', '2_', 1)[::-1]
+                r2_sn = re.sub(sra_samp_re, '', r2)
                 if r2_sn != sn:
                     self.samples[sn]['R2'] = ''
                 elif r2 not in cont or r2 == f:
