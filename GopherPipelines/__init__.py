@@ -3,8 +3,8 @@
 run analysis on the Minnesota Supercomputing Institute (MSI) cluster."""
 
 # set dunder (double-underscore) variables
-__version__ = '0.1.0'
-__date__ = '2019-03-13'
+__version__ = '0.2.0'
+__date__ = '2019-04-24'
 
 import datetime
 import getpass
