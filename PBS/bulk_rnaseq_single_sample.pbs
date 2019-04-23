@@ -245,7 +245,7 @@ if [ "${TRIM}" = "yes" ]; then
             java -jar "${TRIMMOMATIC}"/trimmomatic.jar \
                 PE \
                 -threads "${PBS_NUM_PPN}" \
-                -basein "${R1FILE}" \
+                "${R1FILE}" "${R2FILE}" \
                 -baseout "${SAMPLENM}.fq.gz" \
                 $(echo "${TRIMOPTS}" | envsubst) \
                 2>> "${LOG_FNAME}" \
