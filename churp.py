@@ -7,7 +7,7 @@ supported:
     - group_template
     - bulk_rnaseq
 Questions should be directed to help@msi.umn.edu.
-Version: 0.3.0
+Version: 0.2.0
 2019-04-24
 """
 

@@ -203,9 +203,11 @@ def add_args(ap):
         type=str,
         default='')
     ap_opt.add_argument(
-        '--submit',
-        help='Automatically submit pipeline jobs.',
-        dest='auto_submit',
+        '--no-submit',
+        help=('Do not automatically submit pipeline jobs. Use this when you '
+              'want to make changes to the pipeline script or samplesheet '
+              'before running.'),
+        dest='no_auto_submit',
         action='store_true',
         default=False)
 
