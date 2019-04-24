@@ -137,7 +137,7 @@ plotqual_first <- function(sn) {
     axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
 
     plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -148,7 +148,7 @@ plotqual_first <- function(sn) {
         axes=FALSE,
         main="Mean R1 Quality")
     mtext(side=2, font=2, cex=0.5, las=2, sn)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -165,7 +165,7 @@ plotqual_first <- function(sn) {
 }
 
 plotqual <- function(sn) {
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -175,7 +175,7 @@ plotqual <- function(sn) {
         col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
         axes=FALSE)
     mtext(side=2, font=2, cex=0.5, las=2, sn)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -191,7 +191,7 @@ plotqual <- function(sn) {
 }
 
 plotqual_last <- function(sn) {
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -202,7 +202,7 @@ plotqual_last <- function(sn) {
         axes=FALSE)
     mtext(side=2, font=2, cex=0.5, las=2, sn)
     axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -243,7 +243,7 @@ if(length(trim_samp) > 0) {
         axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
 
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -254,7 +254,7 @@ if(length(trim_samp) > 0) {
             axes=FALSE,
             main="Mean R1 Quality")
         mtext(side=2, font=2, cex=0.5, las=2, sn)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -271,7 +271,7 @@ if(length(trim_samp) > 0) {
     }
 
     plotqual <- function(sn) {
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -281,7 +281,7 @@ if(length(trim_samp) > 0) {
             col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
             axes=FALSE)
         mtext(side=2, font=2, cex=0.5, las=2, sn)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -297,7 +297,7 @@ if(length(trim_samp) > 0) {
     }
 
     plotqual_last <- function(sn) {
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -308,7 +308,7 @@ if(length(trim_samp) > 0) {
             axes=FALSE)
         mtext(side=2, font=2, cex=0.5, las=2, sn)
         axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -993,7 +993,7 @@ plotqual_first <- function(sn) {
     axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
 
     plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -1004,7 +1004,7 @@ plotqual_first <- function(sn) {
         axes=FALSE,
         main="Mean R1 Quality")
     mtext(side=2, font=2, cex=0.5, las=2, sn)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -1021,7 +1021,7 @@ plotqual_first <- function(sn) {
 }
 
 plotqual <- function(sn) {
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -1031,7 +1031,7 @@ plotqual <- function(sn) {
         col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
         axes=FALSE)
     mtext(side=2, font=2, cex=0.5, las=2, sn)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -1047,7 +1047,7 @@ plotqual <- function(sn) {
 }
 
 plotqual_last <- function(sn) {
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -1058,7 +1058,7 @@ plotqual_last <- function(sn) {
         axes=FALSE)
     mtext(side=2, font=2, cex=0.5, las=2, sn)
     axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -1099,7 +1099,7 @@ if(length(trim_samp) > 0) {
         axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
 
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -1110,7 +1110,7 @@ if(length(trim_samp) > 0) {
             axes=FALSE,
             main="Mean R1 Quality")
         mtext(side=2, font=2, cex=0.5, las=2, sn)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -1127,7 +1127,7 @@ if(length(trim_samp) > 0) {
     }
 
     plotqual <- function(sn) {
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -1137,7 +1137,7 @@ if(length(trim_samp) > 0) {
             col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
             axes=FALSE)
         mtext(side=2, font=2, cex=0.5, las=2, sn)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -1153,7 +1153,7 @@ if(length(trim_samp) > 0) {
     }
 
     plotqual_last <- function(sn) {
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -1164,7 +1164,7 @@ if(length(trim_samp) > 0) {
             axes=FALSE)
         mtext(side=2, font=2, cex=0.5, las=2, sn)
         axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -1202,7 +1202,7 @@ lines show the 10th-90th percentile range.
 
 ```{r raw_read_quals_fastqc, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.75*nrow(sheet)}
 plotqual <- function(sn) {
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a dummy variable for position because some of the classes are binned
@@ -1216,7 +1216,7 @@ plotqual <- function(sn) {
     axis(side=2)
     axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
     title(paste(sn, "R1", sep=" "))
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
@@ -1249,7 +1249,7 @@ lines show the 10th-90th percentile range.
 ```{r trim_read_quals_fastqc, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.75*nrow(sheet)}
 if(length(trim_samp) > 0) {
     plotqual <- function(sn) {
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a dummy variable for position because some of the classes are binned
@@ -1263,7 +1263,7 @@ if(length(trim_samp) > 0) {
         axis(side=2)
         axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
         title(paste(sn, "R1", sep=" "))
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
