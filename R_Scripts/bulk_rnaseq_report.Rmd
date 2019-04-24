@@ -1432,26 +1432,22 @@ if(!file.exists(insertsize_file)) {
 ### Subread Assignment Summary
 These plots will show the breakdown of read assignment by `featureCounts`.
 
-```{r subread_summary, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.15*nrow(sheet)}
+```{r subread_summary, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.9*nrow(sheet)}
 library(knitr)
 par(mar=c(5.1, 5, 4.1, 2.1))
 subread_sum <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt.summary", sep="/"), header=TRUE)
 plt_dat <- as.matrix(subread_sum[,-c(1)])
+# Combined the unassigned categories into one
+plt_dat_comb <- matrix(
+    c(plt_dat[,1]),
+    as.numeric(
+        apply(plt_dat[,-c(1)], 1, sum)
+        ),
+    byrow=FALSE,
+    ncol=2)
 colnames(plt_dat) <- NULL
-categories <- c(
-    "Assigned",
-    "Unmapped",
-    "MQ<10",
-    "Chimera",
-    "TooShort",
-    "Duplicate",
-    "MultiMap",
-    "Secondary",
-    "Nonjunction",
-    "NoFeatures",
-    "Overlapping",
-    "Ambiguity")
-bar_cols <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928")
+categories <- c("Assigned", "Unassigned")
+bar_cols <- c("#1f78b4", "#999999")
 maxct <- max(plt_dat)/1000000
 at <- barplot(
     plt_dat/1000000,
