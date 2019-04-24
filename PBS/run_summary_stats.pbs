@@ -234,8 +234,8 @@ do
     fi
     echo "# ${PBS_JOBID} $(date '+%F %T'): Collecting summaries for ${sample}" >> "${LOG_FNAME}"
     # Make the read counts files
-    RAW_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R1*.raw_readcount.txt')
-    RAW_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R2*.raw_readcount.txt')
+    RAW_R1=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*1.raw_readcount.txt')
+    RAW_R2=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*2.raw_readcount.txt')
     R1_COUNT=$(awk '{print $NF}' "${RAW_R1}")
     if [ -z "${RAW_R2}" ]
     then
@@ -259,8 +259,8 @@ do
     fi
     echo -e "${sample}\\t${R1_COUNT}\\t${R2_COUNT}\\t${TR1_COUNT}\\t${TR2_COUNT}" >> "${WORKDIR}/allsamples/Read_Counts.txt"
     # Get overall duplication stats
-    R1_DUP=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R1*_overall_dup.txt')
-    R2_DUP=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*R2*_overall_dup.txt')
+    R1_DUP=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*1.overall_dup.txt')
+    R2_DUP=$(find "${WORKDIR}/singlesamples/${sample}" -maxdepth 1 -type f -name '*2.overall_dup.txt')
     TOT_R1_DUP=$(awk '{print $NF}' "${R1_DUP}")
     if [ -z "${R2_DUP}" ]
     then

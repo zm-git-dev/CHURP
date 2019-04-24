@@ -226,7 +226,7 @@ do
         "${fastqc_out_dir}/fastqc_data.txt" \
         | sed -e 's/ /./g' \
         > "${OUTDIR}/Dup_Stats/${SAMPLENM}_${read_no}_Dups.txt"
-    head -n 1 "${OUTDIR}/Dup_Stats/${SAMPLENM}_${read_no}_Dups.txt" | cut -f 2 > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_${read_no}_overall_dup.txt"
+    head -n 1 "${OUTDIR}/Dup_Stats/${SAMPLENM}_${read_no}_Dups.txt" | cut -f 2 > "${WORKDIR}/singlesamples/${SAMPLENM}/${SAMPLENM}_${read_no}.overall_dup.txt"
     rm -rf "${fastqc_out_dir}.processed"
     mv -f "${fastqc_out_dir}" "${fastqc_out_dir}.processed"
 done
