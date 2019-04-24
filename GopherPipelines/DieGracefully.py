@@ -296,7 +296,7 @@ option to enable group testing.\n"""
     return
 
 
-def brnaseq_auto_submit_ok(pipe_script, samplesheet, qsub_msg):
+def brnaseq_auto_submit_ok(pipe_script, samplesheet, qsub_msg, qsub_key):
     """Call this function when the user gives the --submit flag to the
     bulk_rnaseq pipeline."""
     msg = CREDITS + """----------
@@ -307,6 +307,7 @@ samplesheet are given at the paths below:
 
 Pipeline script: {pn}
 Samplesheet: {ss}
+Qsub array key: {kn}
 
 Below is the output from qsub.
 Qsub stdout:\n"""
@@ -317,6 +318,7 @@ Qsub stdout:\n"""
         msg.format(
             pn=pipe_script,
             ss=samplesheet,
+            kn=qsub_key,
             qo=qsub_msg[0],
             qe=qsub_msg[1]))
     return
