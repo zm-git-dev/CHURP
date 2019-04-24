@@ -88,7 +88,7 @@ def brnaseq(args):
             DieGracefully.BRNASEQ_SUBMIT_OK,
             pipeline_fname,
             samplesheet_fname,
-            key_name
+            key_name,
             qsub_dat)
     return
 
