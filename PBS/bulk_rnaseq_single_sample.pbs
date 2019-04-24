@@ -211,7 +211,7 @@ mkdir -p "${OUTDIR}/Dup_Stats"
 # directory
 for fastqc_out_dir in $(find "${WORKDIR}/singlesamples/${SAMPLENM}" -maxdepth 1 -type d -name '*_fastqc')
 do
-    read_no=$(basename "${fastqc_out_dir}" | sed -nr 's/.*(R[1|2])_001_fastqc*/\\1/p')
+    read_no=$(basename "${fastqc_out_dir}" | sed -nr 's/.*(R?[1|2])_(001_)?fastqc*/\\1/p')
     if [ -z "${read_no}" ]
     then
         read_no="1"
