@@ -20,7 +20,7 @@ The following pipelines have been implemented:
 - Bulk RNAseq
 
 ## Current Version
-The current version is `0.2.0`.
+The current version is `0.2.0`, released on 2019-04-24.
 
 ### Old Versions?
 If you need to use an older version of the pipelines to reproduce an analysis,
