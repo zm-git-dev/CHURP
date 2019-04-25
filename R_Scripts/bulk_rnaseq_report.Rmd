@@ -1432,9 +1432,9 @@ if(!file.exists(insertsize_file)) {
 ### Subread Assignment Summary
 These plots will show the breakdown of read assignment by `featureCounts`.
 
-```{r subread_summary, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.1*nrow(sheet)}
+```{r subread_summary, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.9*nrow(sheet)}
 library(knitr)
-par(mar=c(5.1, 5, 3.1, 0.1))
+par(mar=c(5.1, 5, 5.1, 0.1))
 subread_sum <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt.summary", sep="/"), header=TRUE)
 plt_dat <- as.matrix(subread_sum[,-c(1)])
 # Combined the unassigned categories into one
@@ -1450,7 +1450,6 @@ at <- barplot(
     plt_dat_comb/1000000,
     beside=TRUE,
     col=bar_cols,
-    border=NA,
     axes=FALSE,
     xlim=c(0, maxct*1.2),
     ylab="",
