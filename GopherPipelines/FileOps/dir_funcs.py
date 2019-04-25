@@ -73,3 +73,42 @@ def make_dir(d, l):
     except OSError as e:
         l.error('Error making directory %s, disk full?', p)
         return False
+
+
+def sanitize_path(p, l):
+    """Escape characters that could be used to cause bad shell behavior. These
+    include quotes, spaces, semicolons, newlines, sigils, and brackets/braces.
+    We will just put a backslash in front of them."""
+    # We have to escape the backslash first, else we get double-escaping and we
+    # don't want that.
+    esc = [
+        '\\',
+        '\'',
+        '\"',
+        ' ',
+        '	',
+        '#',
+        '$',
+        '>',
+        '<',
+        '|',
+        '(',
+        ')',
+        '[',
+        ']',
+        '{',
+        '}',
+        '!',
+        '@',
+        '~',
+        '%',
+        ';',
+        '`'
+        ]
+    newp = p
+    for s_char in esc:
+        l.debug('Escaping character: %s', s_char)
+        newp = newp.replace(s_char, '\\'+s_char)
+    l.debug('Old path: %s', p)
+    l.debug('Escaped path: %s', newp)
+    return newp

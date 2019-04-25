@@ -8,6 +8,7 @@ import GopherPipelines
 from GopherPipelines.ArgHandling import group_template_args
 from GopherPipelines.ArgHandling import bulk_rnaseq_args
 from GopherPipelines.ArgHandling import sc_rnaseq_args
+from GopherPipelines import DieGracefully
 
 
 # Longer help messages as constants
@@ -46,6 +47,23 @@ Version: {version}
         msg.format(
             version=GopherPipelines.__version__,
             date=GopherPipelines.__date__))
+    return
+
+
+def check_for_bad(a):
+    """Check for bad characters in the args and throw an error if it detects
+    any of them. These are characters that let users terminate the current
+    command and start another, e.g., a file called 'sample_01; rm -rf ~'"""
+    v = vars(a)
+    bad_chars = [';', '#', '|', '$(', '<', '>', '`']
+    for option in v:
+        if not v[option]:
+            continue
+        else:
+            for bc in bad_chars:
+                if bc in str(v[option]):
+                    DieGracefully.die_gracefully(
+                        DieGracefully.NEFARIOUS_CHAR, str(v[option]))
     return
 
 
@@ -88,4 +106,5 @@ def pipeline_args():
     bulk_rnaseq_args.add_args(bulk_rnaseq_parser)
     sc_rnaseq_args.add_args(sc_rnaseq_parser)
     pargs = parser.parse_args()
+    check_for_bad(pargs)
     return vars(pargs)

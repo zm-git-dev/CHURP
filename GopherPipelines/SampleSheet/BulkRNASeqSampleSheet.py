@@ -111,6 +111,13 @@ class BulkRNASeqSampleSheet(SampleSheet.Samplesheet):
                 for index, line in enumerate(f):
                     if index == 0:
                         continue
+                    elif line.strip() == '':
+                        self.sheet_logger.warn(
+                            'Line %d in groups csv is empty, skipping.', index)
+                    elif len(line.strip().split(',')) < 2:
+                        self.sheet_logger.warn(
+                            ('Line %d in groups csv has fewer than 2 fields, '
+                             'skipping.'), index)
                     else:
                         tmp = line.strip().split(',')
                         csv_gps[tmp[0]] = tmp[1]

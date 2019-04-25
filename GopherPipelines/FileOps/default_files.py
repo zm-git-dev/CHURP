@@ -24,3 +24,11 @@ def default_group_csv(pipeline):
     gt_name = '.'.join([
         GopherPipelines.TODAY, GopherPipelines.UNAME, pipeline, 'groups.csv'])
     return gt_name
+
+
+def default_array_key(pipeline):
+    """Return a filename for a qsub array to samplename key."""
+    ak_name = '.'.join([
+        GopherPipelines.TODAY, GopherPipelines.UNAME, pipeline,
+        'qsub_array.txt'])
+    return ak_name

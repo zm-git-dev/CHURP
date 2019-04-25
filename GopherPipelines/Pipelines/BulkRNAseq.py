@@ -39,13 +39,14 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             'Validated args:\n%s', pprint.pformat(valid_args))
         self.real_out = valid_args['outdir']
         self.real_work = valid_args['workdir']
-        self.submit = valid_args['auto_submit']
+        self.nosubmit = valid_args['no_auto_submit']
 
         # Set the minimum gene length
         self.min_gene_len = str(valid_args['mingene'])
         # And the minimum depth
         self.min_cpm = str(valid_args['mincpm'])
         # Set the subsampling level
+        self.rrna_screen = str(valid_args['rrna_screen'])
         self.subsample = str(valid_args['subsample'])
 
         # And make a sample sheet from the args
@@ -118,7 +119,14 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             DieGracefully.die_gracefully(
                 DieGracefully.BAD_NUMBER, '--min-cpm')
         try:
+            assert a['rrna_screen'] >= 0
+        except AssertionError:
+            DieGracefully.die_gracefully(
+                DieGracefully.BAD_NUMBER, '--rrna_screen')
+        try:
             assert a['subsample'] >= 0
+            if a['subsample'] > 0:
+                assert a['subsample'] >= a['rrna_screen']
         except AssertionError:
             DieGracefully.die_gracefully(
                 DieGracefully.BAD_NUMBER, '--subsample')
@@ -166,6 +174,9 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         self._validate_fastq_folder(a['fq_folder'])
         # Validate the hisat2 index
         self._validate_hisat_idx(a['hisat2_idx'])
+        # Sanitize the hisat2 index path
+        a['hisat2_idx'] = dir_funcs.sanitize_path(
+            a['hisat2_idx'], self.pipe_logger)
         return a
 
     def _validate_fastq_folder(self, d):
@@ -219,8 +230,8 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         dictionary that will hold all samplesheet data, and then write it into
         the output directory."""
         self._run_checks()
-        self.sheet.compile(self.outdir, self.workdir)
-        ss_path = self.sheet.write_sheet(self.outdir, self.pipe_name, '|')
+        self.sheet.compile(self.real_out, self.real_work)
+        ss_path = self.sheet.write_sheet(self.real_out, self.pipe_name, '|')
         return ss_path
 
     def qsub(self):
@@ -230,9 +241,26 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         than in the main Pipeline class because the exact form of the qsub
         command depends on which pipeline we are running."""
         ss = self._prepare_samplesheet()
+        # Make the qsub array key
+        keyname = default_files.default_array_key(self.pipe_name)
+        keyname = os.path.join(self.real_out, keyname)
+        if os.path.isfile(keyname):
+            self.pipe_logger.warning(
+                'Qsub key file %s exists. Overwriting!', keyname)
+        try:
+            handle = open(keyname, 'w')
+        except OSError:
+            DieGracefully.die_gracefully(DieGracefully.BAD_OUTDIR)
+        # The sheet is sorted in this way before it is written to disk, so it
+        # should be safe to sort it this way
+        handle.write('Qsub.Index\tSampleName\n')
+        for index, samplename in enumerate(sorted(self.sheet.final_sheet)):
+            handle.write(str(index+1) + '\t' + samplename + '\n')
+        handle.flush()
+        handle.close()
         # Make the script filename
         pname = default_files.default_pipeline(self.pipe_name)
-        pname = os.path.join(self.outdir, pname)
+        pname = os.path.join(self.real_out, pname)
         if os.path.isfile(pname):
             self.pipe_logger.warning(
                 'Submission script %s already exists. Overwriting!', pname)
@@ -269,14 +297,16 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             qsub_array += '-' + str(len(self.sheet.final_sheet))
         # Write a few variables into the header of the script so they are
         # easy to find
+        handle.write('KEYFILE=' + '"' + keyname + '"\n')
         handle.write('QSUB_ARRAY=' + '"' + qsub_array + '"\n')
-        handle.write('OUTDIR=' + '"' + str(self.outdir) + '"\n')
-        handle.write('WORKDIR=' + '"' + str(self.workdir) + '"\n')
+        handle.write('OUTDIR=' + '"' + str(self.real_out) + '"\n')
+        handle.write('WORKDIR=' + '"' + str(self.real_work) + '"\n')
         handle.write('DE_SCRIPT=' + '"' + self.de_script + '"\n')
         handle.write('REPORT_SCRIPT=' + '"' + self.report_script + '"\n')
         handle.write('SAMPLESHEET=' + '"' + ss + '"\n')
         handle.write('PURGE=' + '"' + self.purge + '"\n')
-        handle.write('SUBSAMP=' + '"' + self.subsample + '"\n')
+        handle.write('RRNA_SCREEN=' + '"' + self.rrna_screen + '"\n')
+        handle.write('SUBSAMPLE=' + '"' + self.subsample + '"\n')
         handle.write('PIPE_SCRIPT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )/$(basename $0)"\n')
         aln_cmd = [
             'qsub',
@@ -288,7 +318,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
             '-e', '"${OUTDIR}"',
             '-l', qsub_resources,
             '-t', '"${QSUB_ARRAY}"',
-            '-v', '"SampleSheet=${SAMPLESHEET},PURGE=${PURGE},SUBSAMP=${SUBSAMP}"',
+            '-v', '"SampleSheet=${SAMPLESHEET},PURGE=${PURGE},RRNA_SCREEN=${RRNA_SCREEN},SUBSAMPLE=${SUBSAMPLE}"',
             self.single_sample_script,
             '||',
             'exit',
@@ -324,6 +354,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         # Write some echo statements for users' information
         handle.write('echo "Output and logs will be written to ${OUTDIR}"\n')
         handle.write('echo "Emails will be sent to ${user_email}"\n')
+        handle.write('echo "Qsub array to samplename key: ${KEYFILE}"\n')
         handle.write('echo "Single samples job array ID: ${single_id}"\n')
         handle.write('echo "Summary job ID: ${summary_id}"\n')
         self.pipe_logger.debug('qsub:\n%s', ' '.join(aln_cmd))
@@ -331,7 +362,9 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         handle.flush()
         handle.close()
         # Check if we want to automatically submit the script
-        if self.submit:
+        if self.nosubmit:
+            qsub_dat = None
+        else:
             import subprocess
             qsub_cmd = ['bash', pname]
             qsub_proc = subprocess.Popen(
@@ -341,6 +374,4 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
                 stderr=subprocess.PIPE)
             qsub_stdout, qsub_stderr = qsub_proc.communicate()
             qsub_dat = (qsub_stdout, qsub_stderr, qsub_proc)
-        else:
-            qsub_dat = None
-        return (pname, ss, qsub_dat)
+        return (pname, ss, keyname, qsub_dat)

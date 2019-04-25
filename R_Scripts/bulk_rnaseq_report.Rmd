@@ -1,5 +1,5 @@
 ---
-title: "CHURP: Bulk RNAseq Pipeline Summary"
+title: "PURR Summary"
 output:
     html_document:
         smart: false
@@ -28,7 +28,12 @@ read_summary <- read.table(paste(params["workdir"], "allsamples", "Read_Counts.t
 # Set NAs in read summary to 0
 read_summary[is.na(read_summary)] <- 0
 sheet <- read.table(as.character(params["samplesheet"]), sep="|", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
+# Subset the sheet for those that were run - these are the rows in the read count summary
+sheet <- sheet[sheet$V1 %in% read_summary$V1,]
 samplenames <- sheet$V1
+# Export the first sample in the read summary
+firstrun <- samplenames[1]
+Sys.setenv(firstrun=firstrun)
 nsamp <- length(samplenames)
 hisat_summary <- read.table(paste(params["workdir"], "allsamples", "HISAT_Stats.txt", sep="/"), header=F)
 names(hisat_summary) <- c("SampleName", "Total", "Unmapped", "UniqueMapped", "MultiMapped", "DiscoMapped")
@@ -43,12 +48,18 @@ names(picard_rnaseq_summary) <- c(
     "CORRECT_STRAND_READS", "INCORRECT_STRAND_READS", "PCT_RIBOSOMAL_BASES", "PCT_CODING_BASES", "PCT_UTR_BASES",
     "PCT_INTRONIC_BASES", "PCT_INTERGENIC_BASES", "PCT_USABLE_BASES", "PCT_CORRECT_STRAND_READS")
 # Assume that the first sample is part of the same dataset as the others
-first_samp <- as.character(sheet$V3[1])
-fastq_dir <- dirname(first_samp)
+first_read <- as.character(sheet$V3[1])
+fastq_dir <- dirname(first_read)
 ```
 
-CHURP was developed by the Research Informatics Solutions (RIS) group at MSI
-with funding provided by the University of Minnesota Informatics Institute
+# PURR: Pipeline for UMII/RIS RNASeq Analysis
+
+![](/home/msistaff/public/CHURP_Deps/Assets/UMII_Graphic_rs.png)
+
+PURR is the RNASeq analysis pipeline that is housed within CHURP, the
+**C**ollection of **H**ierarchical **U**MII/**R**IS **P**ipelines. CHURP is
+developed and maintained by the Research Informatics Solutions (RIS) group at
+MSI with funding provided by the University of Minnesota Informatics Institute
 (UMII).
 
 <https://www.msi.umn.edu/>
@@ -126,7 +137,7 @@ plotqual_first <- function(sn) {
     axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
 
     plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -137,7 +148,7 @@ plotqual_first <- function(sn) {
         axes=FALSE,
         main="Mean R1 Quality")
     mtext(side=2, font=2, cex=0.5, las=2, sn)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -154,7 +165,7 @@ plotqual_first <- function(sn) {
 }
 
 plotqual <- function(sn) {
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -164,7 +175,7 @@ plotqual <- function(sn) {
         col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
         axes=FALSE)
     mtext(side=2, font=2, cex=0.5, las=2, sn)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -180,7 +191,7 @@ plotqual <- function(sn) {
 }
 
 plotqual_last <- function(sn) {
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -191,7 +202,7 @@ plotqual_last <- function(sn) {
         axes=FALSE)
     mtext(side=2, font=2, cex=0.5, las=2, sn)
     axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -232,7 +243,7 @@ if(length(trim_samp) > 0) {
         axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
 
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -243,7 +254,7 @@ if(length(trim_samp) > 0) {
             axes=FALSE,
             main="Mean R1 Quality")
         mtext(side=2, font=2, cex=0.5, las=2, sn)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -260,7 +271,7 @@ if(length(trim_samp) > 0) {
     }
 
     plotqual <- function(sn) {
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -270,7 +281,7 @@ if(length(trim_samp) > 0) {
             col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
             axes=FALSE)
         mtext(side=2, font=2, cex=0.5, las=2, sn)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -286,7 +297,7 @@ if(length(trim_samp) > 0) {
     }
 
     plotqual_last <- function(sn) {
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -297,7 +308,7 @@ if(length(trim_samp) > 0) {
             axes=FALSE)
         mtext(side=2, font=2, cex=0.5, las=2, sn)
         axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -653,10 +664,9 @@ This is the full list of loaded modules for each single-sample job, which
 includes read trimming and read mapping.
 
 ```{bash single_sample_modules, echo=FALSE, comment=NA}
-first_sample=$(head -n 1 $samplesheet | cut -f 1 -d '|')
-log_name="${outdir}/Logs/${first_sample}_Analysis.log"
-log_start=$(($(grep -n '^#BEGIN_MODULE' "${log_name}" | cut -f 1 -d ':') + 2))
-log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
+log_name="${outdir}/Logs/${firstrun}_Analysis.log"
+log_start=$(($(grep -m 1 -n '^#BEGIN_MODULE' "${log_name}" | head -n 1 | cut -f 1 -d ':') + 2))
+log_end=$(($(grep -m 1 -n '^#END_MODULES' "${log_name}" | head -n 1 | cut -f 1 -d ':') - 1))
 head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
 ```
 ### Summary Job Modules
@@ -664,9 +674,9 @@ This is the full list of loaded modules for the summary job, which includes
 counting and differential expression testing.
 
 ```{bash summary_modules, echo=FALSE, comment=NA}
-log_name="${outdir}/Logs/BulkRNASeq_Summary.log"
-log_start=$(($(grep -n '^#BEGIN_MODULES' "${log_name}" | cut -f 1 -d ':') + 2))
-log_end=$(($(grep -n '^#END_MODULES' "${log_name}" | cut -f 1 -d ':') - 1))
+log_name="${outdir}/Logs/BulkRNASeq_Analysis.log"
+log_start=$(($(grep -n -m 1 '^#BEGIN_MODULES' "${log_name}" | head -n 1 | cut -f 1 -d ':') + 2))
+log_end=$(($(grep -n -m 1 '^#END_MODULES' "${log_name}" | head -n 1 | cut -f 1 -d ':') - 1))
 head -n "${log_end}" "${log_name}" | tail -n "+${log_start}"
 ```
 
@@ -692,31 +702,41 @@ summaries of rRNA contamination.
 ```{r bbduk_plot, echo=FALSE, message=FALSE}
 plt_dat <- as.numeric(gsub("%", "", as.character(bbduk_summary$rRNA_Pct)))
 at <- barplot(
-    plt_dat,
+    plt_dat/100,
     col="#e41a1c",
-    ylim=c(0, 110),
+    ylim=c(0, 0.75),
     xlab="",
-    ylab="Percent rRNA",
+    ylab="Proportion rRNA",
     main="K-mer Based rRNA Contamination",
-    axes=F)
+    axes=FALSE)
 axis(side=1, at=at, labels=as.character(bbduk_summary$SampleName), las=2, cex.axis=0.6)
-axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+axis(side=2, at=seq(0, 0.6, by=0.05), labels=seq(0, 0.6, by=0.05))
 rect(
     xleft=par("usr")[1],
     xright=par("usr")[2],
-    ybottom=20,
-    ytop=35,
+    ybottom=0.2,
+    ytop=0.35,
     col=rgb(255/255, 237/255, 160/255, 0.5),
     border=NA
     )
 rect(
     xleft=par("usr")[1],
     xright=par("usr")[2],
-    ybottom=35,
-    ytop=100,
+    ybottom=0.35,
+    ytop=0.6,
     col=rgb(228/255, 26/255, 28/255, 0.25),
     border=NA
     )
+# Dumb, but re-plot it to put it on the top
+barplot(
+    plt_dat/100,
+    col="#e41a1c",
+    ylim=c(0, 0.75),
+    xlab="",
+    ylab="Proportion rRNA",
+    main="K-mer Based rRNA Contamination",
+    axes=FALSE,
+    add=TRUE)
 ```
 
 ### Table
@@ -733,16 +753,16 @@ Click on the tab headers to show the various summaries.
 ```{r dup_overall, echo=FALSE, message=FALSE}
 plt_dat <- matrix(as.numeric(c(dup_summary$R1_Dup, dup_summary$R2_Dup)), nrow=2, byrow=TRUE)
 at <- barplot(
-    100-plt_dat,
+    (100-plt_dat)/100,
     beside=TRUE,
     axes=F,
     col=c("#d95f02", "#1b9e77"),
-    ylim=c(0, 110),
+    ylim=c(0, 1.1),
     xlab="",
-    ylab="Percent Duplicated",
+    ylab="Proportion Duplicated",
     main="Total Duplication")
 axis(side=1, at=apply(at, 2, mean), labels=as.character(dup_summary$SampleName), las=2, cex.axis=0.6)
-axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+axis(side=2, at=seq(0, 1, by=0.1), labels=seq(0, 1, by=0.1))
 legend("top", c("R1", "R2"), fill=c("#d95f02", "#1b9e77"), ncol=2)
 ```
 
@@ -750,22 +770,22 @@ legend("top", c("R1", "R2"), fill=c("#d95f02", "#1b9e77"), ncol=2)
 ```{r dup_hist, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.75*nrow(sheet)}
 par(mfrow=c(nrow(sheet), 2), mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 plot_dup <- function(sn) {
-    r1_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_R1_Dups.txt", sep=""), sep="/")
+    r1_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_1_Dups.txt", sep=""), sep="/")
     r1_dup <- read.table(r1_dfile, header=FALSE, stringsAsFactors=FALSE)
     plt_dat <- as.matrix(r1_dup[, c(2, 3)])
     at <- barplot(
-        t(plt_dat),
+        t(plt_dat)/100,
         axes=F,
         beside=TRUE,
         col=c("#a6cee3", "#1f78b4"),
-        ylim=c(0, 110),
+        ylim=c(0, 1),
         xlab="Duplication Level",
-        ylab="Percentage",
+        ylab="Proportion",
         main=paste("Duplication in ", sn, " R1", sep=""))
     axis(side=1, at=apply(at, 2, mean), labels=as.character(r1_dup$V1), las=2, cex.axis=0.6)
-    axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+    axis(side=2, at=seq(0, 1, by=0.05), labels=seq(0, 1, by=0.05))
     legend("top", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"), ncol=2)
-    r2_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_R2_Dups.txt", sep=""), sep="/")
+    r2_dfile <- paste(params["outdir"], "Dup_Stats", paste(sn, "_2_Dups.txt", sep=""), sep="/")
     if(!file.exists(r2_dfile)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
@@ -773,16 +793,16 @@ plot_dup <- function(sn) {
             r2_dup <- read.table(r2_dfile, header=FALSE, stringsAsFactors=FALSE)
             plt_dat <- as.matrix(r2_dup[, c(2, 3)])
             at <- barplot(
-                t(plt_dat),
+                t(plt_dat)/100,
                 axes=F,
                 beside=TRUE,
                 col=c("#a6cee3", "#1f78b4"),
-                ylim=c(0, 110),
+                ylim=c(0, 1),
                 xlab="Duplication Level",
-                ylab="Percentage",
+                ylab="Proportion",
                 main=paste("Duplication in ", sn, " R2", sep=""))
             axis(side=1, at=apply(at, 2, mean), labels=as.character(r2_dup$V1), las=2, cex.axis=0.6)
-            axis(side=2, at=seq(0, 100, by=10), labels=seq(0, 100, by=10))
+            axis(side=2, at=seq(0, 1, by=0.05), labels=seq(0, 1, by=0.05))
             legend("top", c("Of Deduplicated", "Of Total"), fill=c("#a6cee3", "#1f78b4"), ncol=2)
     }
 }
@@ -800,7 +820,7 @@ This plot will show the percentage of bases that map to off-target regions
 (i.e., non-exon regions). Note that the counts and proportions here *exclude*
 ribosomal mapping.
 
-```{r gdna_plot, echo=FALSE, message=FALSE}
+```{r gdna_plot, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.8*nrow(sheet)}
 par(mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 cts_dat <- matrix(
     c(
@@ -816,16 +836,19 @@ bar_cols <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c")
 at <- barplot(
     cts_dat,
     beside=TRUE,
-    axes=F,
-    ylim=c(0, max_ct*1.2),
-    ylab="Number of Bases in Primary Alignments (Millions)",
+    axes=FALSE,
+    horiz=TRUE,
+    xlim=c(0, max_ct*1.25),
+    xlab="Number of Bases in Primary Alignments (Millions)",
     main="Base Positions",
-    xlab="",
+    ylab="",
     col=bar_cols)
-axis(side=1, at=apply(at, 2, mean), labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
-axis(side=2)
-legend("top", c("Coding", "UTR", "Intron", "Intergenic"), fill=bar_cols, ncol=4)
+axis(side=2, at=apply(at, 2, mean), labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6, lty=0)
+axis(side=1)
+legend("right", c("Coding", "UTR", "Intron", "Intergenic"), fill=bar_cols, ncol=1)
+```
 
+```{r gdna_plot_prop, echo=FALSE, message=FALSE}
 prop_dat <- matrix(
     c(
         as.numeric(picard_rnaseq_summary$PCT_CODING_BASES),
@@ -857,16 +880,21 @@ will all be 0.
 ```{r strand_plot, echo=FALSE, message=FALSE}
 plot_dat <- as.numeric(picard_rnaseq_summary$PCT_CORRECT_STRAND_READS)
 par(mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
-at <- barplot(
-    plot_dat,
-    col="#1f78b4",
-    ylim=c(0, 1.1),
-    xlab="",
-    ylab="Proportion Correct Strand",
-    main="Strand Agreement",
-    axes=F)
-axis(side=1, at=at, labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
-axis(side=2)
+if(all(plot_dat == 0)) {
+    plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
+    text(x=0.5, y=0.5, "All strand agreement is 0:\nunstranded lib", cex=2, col="black")
+} else {
+    at <- barplot(
+        plot_dat,
+        col="#1f78b4",
+        ylim=c(0, 1.1),
+        xlab="",
+        ylab="Proportion Correct Strand",
+        main="Strand Agreement",
+        axes=F)
+    axis(side=1, at=at, labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
+    axis(side=2)
+}
 ```
 
 ### Mapping-based rRNA Contamination
@@ -878,11 +906,11 @@ par(mar=c(4, 3.5, 1, 0), mgp=c(2.5, 0.75, 0))
 at <- barplot(
     plot_dat,
     col="#e41a1c",
-    ylim=c(0, 1.1),
+    ylim=c(0, 0.75),
     xlab="",
     ylab="Proportion Ribosomal Bases",
     main="rRNA Contamination (Mapping)",
-    axes=F)
+    axes=FALSE)
 rect(
     xleft=par("usr")[1],
     xright=par("usr")[2],
@@ -895,12 +923,21 @@ rect(
     xleft=par("usr")[1],
     xright=par("usr")[2],
     ybottom=0.35,
-    ytop=1,
+    ytop=0.6,
     col=rgb(228/255, 26/255, 28/255, 0.25),
     border=NA
     )
 axis(side=1, at=at, labels=as.character(picard_rnaseq_summary$SampleName), las=2, cex.axis=0.6)
-axis(side=2)
+axis(side=2, at=seq(0, 0.6, by=0.05), labels=seq(0, 0.6, by=0.05))
+barplot(
+    plot_dat,
+    col="#e41a1c",
+    ylim=c(0, 0.75),
+    xlab="",
+    ylab="Proportion Ribosomal Bases",
+    main="rRNA Contamination (Mapping)",
+    axes=FALSE,
+    add=TRUE)
 ```
 
 ### Coverage Bias
@@ -956,7 +993,7 @@ plotqual_first <- function(sn) {
     axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
 
     plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -967,7 +1004,7 @@ plotqual_first <- function(sn) {
         axes=FALSE,
         main="Mean R1 Quality")
     mtext(side=2, font=2, cex=0.5, las=2, sn)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -984,7 +1021,7 @@ plotqual_first <- function(sn) {
 }
 
 plotqual <- function(sn) {
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -994,7 +1031,7 @@ plotqual <- function(sn) {
         col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
         axes=FALSE)
     mtext(side=2, font=2, cex=0.5, las=2, sn)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -1010,7 +1047,7 @@ plotqual <- function(sn) {
 }
 
 plotqual_last <- function(sn) {
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a plot
@@ -1021,7 +1058,7 @@ plotqual_last <- function(sn) {
         axes=FALSE)
     mtext(side=2, font=2, cex=0.5, las=2, sn)
     axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -1062,7 +1099,7 @@ if(length(trim_samp) > 0) {
         axis(side=1, at=seq(0, 1, length.out=46)[c(TRUE, FALSE)], labels=as.character(0:45)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
 
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -1073,7 +1110,7 @@ if(length(trim_samp) > 0) {
             axes=FALSE,
             main="Mean R1 Quality")
         mtext(side=2, font=2, cex=0.5, las=2, sn)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -1090,7 +1127,7 @@ if(length(trim_samp) > 0) {
     }
 
     plotqual <- function(sn) {
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -1100,7 +1137,7 @@ if(length(trim_samp) > 0) {
             col=c("darkred", "indianred", "yellow", "gold", "darkgreen", "green"),
             axes=FALSE)
         mtext(side=2, font=2, cex=0.5, las=2, sn)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -1116,7 +1153,7 @@ if(length(trim_samp) > 0) {
     }
 
     plotqual_last <- function(sn) {
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a plot
@@ -1127,7 +1164,7 @@ if(length(trim_samp) > 0) {
             axes=FALSE)
         mtext(side=2, font=2, cex=0.5, las=2, sn)
         axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2", cex=1, col="black")
@@ -1165,7 +1202,7 @@ lines show the 10th-90th percentile range.
 
 ```{r raw_read_quals_fastqc, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.75*nrow(sheet)}
 plotqual <- function(sn) {
-    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_raw_quals.txt", sep=""), sep="/")
+    qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.raw_quals.txt", sep=""), sep="/")
     dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
     names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
     # Make a dummy variable for position because some of the classes are binned
@@ -1179,7 +1216,7 @@ plotqual <- function(sn) {
     axis(side=2)
     axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
     title(paste(sn, "R1", sep=" "))
-    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_raw_quals.txt", sep=""), sep="/")
+    qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.raw_quals.txt", sep=""), sep="/")
     if(!file.exists(qr2_file)) {
         plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
         text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
@@ -1212,7 +1249,7 @@ lines show the 10th-90th percentile range.
 ```{r trim_read_quals_fastqc, echo=FALSE, message=FALSE, fig.width=8, fig.height=1.75*nrow(sheet)}
 if(length(trim_samp) > 0) {
     plotqual <- function(sn) {
-        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R1_trim_quals.txt", sep=""), sep="/")
+        qr1_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_1.trim_quals.txt", sep=""), sep="/")
         dat <- read.table(qr1_file, header=F, stringsAsFactors=FALSE)
         names(dat) <- c("Base", "QMean", "QMedian", "Q25", "Q75", "Q10", "Q90")
         # Make a dummy variable for position because some of the classes are binned
@@ -1226,7 +1263,7 @@ if(length(trim_samp) > 0) {
         axis(side=2)
         axis(side=1, at=dat$X[c(TRUE, FALSE)], labels=dat$Base[c(TRUE, FALSE)], las=2, cex.axis=0.75)
         title(paste(sn, "R1", sep=" "))
-        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_R2_trim_quals.txt", sep=""), sep="/")
+        qr2_file <- paste(params["workdir"], "singlesamples", sn, paste(sn, "_2.trim_quals.txt", sep=""), sep="/")
         if(!file.exists(qr2_file)) {
             plot(c(0, 1), c(0, 1), ann=F, bty="n", type="n", xaxt="n", yaxt="n")
             text(x=0.5, y=0.5, "No R2 file found.", cex=1.5, col="black")
@@ -1395,40 +1432,38 @@ if(!file.exists(insertsize_file)) {
 ### Subread Assignment Summary
 These plots will show the breakdown of read assignment by `featureCounts`.
 
-```{r subread_summary, echo=FALSE, message=FALSE}
+```{r subread_summary, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.9*nrow(sheet)}
 library(knitr)
+par(mar=c(5.1, 5, 5.1, 0.1))
 subread_sum <- read.table(paste(params["workdir"], "allsamples", "subread_counts.txt.summary", sep="/"), header=TRUE)
 plt_dat <- as.matrix(subread_sum[,-c(1)])
-colnames(plt_dat) <- NULL
-categories <- c(
-    "Assigned",
-    "Unmapped",
-    "MQ<10",
-    "Chimera",
-    "TooShort",
-    "Duplicate",
-    "MultiMap",
-    "Secondary",
-    "Nonjunction",
-    "NoFeatures",
-    "Overlapping",
-    "Ambiguity")
-bar_cols <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928")
-maxct <- max(plt_dat)/1000000
+# Combined the unassigned categories into one
+plt_dat_comb <- matrix(
+    c(plt_dat[1,], as.numeric(apply(plt_dat[-c(1),], 2, sum))),
+    byrow=TRUE,
+    ncol=nsamp)
+colnames(plt_dat_comb) <- NULL
+categories <- c("Assigned", "Unassigned")
+bar_cols <- c("#1f78b4", "#999999")
+maxct <- max(plt_dat_comb)/1000000
 at <- barplot(
-    plt_dat/1000000,
+    plt_dat_comb/1000000,
     beside=TRUE,
     col=bar_cols,
     axes=FALSE,
-    ylim=c(0, maxct*1.4),
-    xlab="",
-    ylab="Fragment Count (Millions)",
-    main="Subread Summary")
-axis(side=1, at=apply(at, 2, mean), labels=colnames(subread_sum[-c(1)]), las=2, cex.axis=0.6)
-axis(side=2)
-legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
+    xlim=c(0, maxct*1.2),
+    ylab="",
+    xlab="Fragment Count (Millions)",
+    main="Subread Summary",
+    horiz=TRUE)
+axis(side=2, at=apply(at, 2, mean), labels=colnames(subread_sum[-c(1)]), las=2, cex.axis=0.6, lty=0)
+axis(side=1)
+legend("top", categories, fill=bar_cols, ncol=2, xpd=TRUE)
+```
 
-plt_dat_prop <- t(plt_dat)
+
+```{r subread_summary_prop, echo=FALSE, message=FALSE}
+plt_dat_prop <- t(plt_dat_comb)
 plt_dat_prop <- plt_dat_prop/rowSums(plt_dat_prop)
 plt_dat_prop <- t(plt_dat_prop)
 at <- barplot(
@@ -1436,23 +1471,22 @@ at <- barplot(
     beside=FALSE,
     col=bar_cols,
     axes=FALSE,
-    ylim=c(0, 1.4),
+    ylim=c(0, 1.2),
     xlab="",
     ylab="Fragment Proportions",
     main="Subread Summary")
 axis(side=1, at=at, labels=colnames(subread_sum[-c(1)]), las=2, cex.axis=0.6)
 axis(side=2, at=seq(0, 1, by=0.2), labels=seq(0, 1, by=0.2))
-legend("top", categories, fill=bar_cols, cex=0.75, ncol=6)
+legend("top", categories, fill=bar_cols, ncol=2)
 
 # We want to transpose this table so that it scales vertically with the number
 # of samples.
 hdr <- as.character(subread_sum$Status)
 samples <- colnames(subread_sum)[-c(1)]
 t_subread <- as.data.frame(t(subread_sum[,-c(1)]))
-rownames(t_subread) <- NULL
+rownames(t_subread) <- samples
 colnames(t_subread) <- hdr
-t_subread <- cbind("Sample Name"=samples, t_subread)
-kable(t_subread, caption="Summary of subread featureCounts assignment.")
+t_subread
 ```
 
 ### Number of Expressed Features

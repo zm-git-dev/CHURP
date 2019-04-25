@@ -26,6 +26,7 @@ BRNASEQ_SUBMIT_FAIL = 29
 GROUP_NO_PIPE = 50
 GROUP_BAD_COL = 51
 BRNASEQ_GROUP_SUCCESS = 52
+NEFARIOUS_CHAR = 99
 
 # We will prepend a little message to the end that says the pipelines were
 # developed by RIS and funded by UMII
@@ -96,7 +97,7 @@ and 62000. The walltime should be specified in hours as an integer between 1 and
     return
 
 
-def brnaseq_success(pipe_script, samplesheet):
+def brnaseq_success(pipe_script, samplesheet, qsubkey):
     """Call this function when the bulk RNAseq pipeline finishes successfully.
     It will include the pipeline script and the samplesheet paths in the
     output message."""
@@ -108,13 +109,14 @@ below:
 
 Pipeline script: {pn}
 Samplesheet: {ss}
+Qsub array key: {kn}
 
 Verify the information in the samplesheet, and run the pipeline script with
 bash while logged into Mesabi. You will recieve email notifications of job
 start/completion/error at your UMN X500 email address. If you need to submit
 an error report, please contact help[at]msi.umn.edu. Please include the
 samplesheet, pipeline script, and the error message with your report.\n"""
-    sys.stderr.write(msg.format(pn=pipe_script, ss=samplesheet))
+    sys.stderr.write(msg.format(pn=pipe_script, ss=samplesheet, kn=qsubkey))
     return
 
 
@@ -294,7 +296,7 @@ option to enable group testing.\n"""
     return
 
 
-def brnaseq_auto_submit_ok(pipe_script, samplesheet, qsub_msg):
+def brnaseq_auto_submit_ok(pipe_script, samplesheet, qsub_key, qsub_msg):
     """Call this function when the user gives the --submit flag to the
     bulk_rnaseq pipeline."""
     msg = CREDITS + """----------
@@ -305,6 +307,7 @@ samplesheet are given at the paths below:
 
 Pipeline script: {pn}
 Samplesheet: {ss}
+Qsub array key: {kn}
 
 Below is the output from qsub.
 Qsub stdout:\n"""
@@ -315,6 +318,7 @@ Qsub stdout:\n"""
         msg.format(
             pn=pipe_script,
             ss=samplesheet,
+            kn=qsub_key,
             qo=qsub_msg[0],
             qe=qsub_msg[1]))
     return
@@ -334,6 +338,20 @@ The output from qsub is shown below:\n"""
     msg += qsub_msg[1].decode('utf-8')
     msg += '\n'
     sys.stderr.write(msg)
+    return
+
+
+def nefarious_cmd(c):
+    """Call this function when the user sends an input file with some nasty
+    characters written into it."""
+    msg = CREDITS + """----------
+ERROR
+
+You provided a file or an option that has illegal characters in it. These
+characters can either be used to execute processes maliciously, or will break
+the formatting of CHURP internal files. Please rename your files with
+appropriate characters. The offending string found is: '{badstr}'\n"""
+    sys.stderr.write(msg.format(badstr=c))
     return
 
 
@@ -371,7 +389,8 @@ def die_gracefully(e, *args):
         BRNASEQ_GROUP_SUCCESS: brnaseq_group_success,
         BRNASEQ_SUCCESS: brnaseq_success,
         BRNASEQ_SUBMIT_OK: brnaseq_auto_submit_ok,
-        BRNASEQ_SUBMIT_FAIL: brnaseq_auto_submit_fail
+        BRNASEQ_SUBMIT_FAIL: brnaseq_auto_submit_fail,
+        NEFARIOUS_CHAR: nefarious_cmd,
         }
     try:
         err_dict[e](*args)
