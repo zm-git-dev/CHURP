@@ -1439,18 +1439,18 @@ subread_sum <- read.table(paste(params["workdir"], "allsamples", "subread_counts
 plt_dat <- as.matrix(subread_sum[,-c(1)])
 # Combined the unassigned categories into one
 plt_dat_comb <- matrix(
-    c(plt_dat[,1]),
+    c(plt_dat[1,]),
     as.numeric(
-        apply(plt_dat[,-c(1)], 1, sum)
+        apply(plt_dat[-c(1),], 2, sum)
         ),
-    byrow=FALSE,
-    ncol=2)
-colnames(plt_dat) <- NULL
+    byrow=TRUE,
+    ncol=nsamp)
+colnames(plt_dat_comb) <- NULL
 categories <- c("Assigned", "Unassigned")
 bar_cols <- c("#1f78b4", "#999999")
-maxct <- max(plt_dat)/1000000
+maxct <- max(plt_dat_comb)/1000000
 at <- barplot(
-    plt_dat/1000000,
+    plt_dat_comb/1000000,
     beside=TRUE,
     col=bar_cols,
     axes=FALSE,
@@ -1466,7 +1466,7 @@ legend("top", categories, fill=bar_cols, ncol=2, xpd=TRUE)
 
 
 ```{r subread_summary_prop, echo=FALSE, message=FALSE}
-plt_dat_prop <- t(plt_dat)
+plt_dat_prop <- t(plt_dat_comb)
 plt_dat_prop <- plt_dat_prop/rowSums(plt_dat_prop)
 plt_dat_prop <- t(plt_dat_prop)
 at <- barplot(
