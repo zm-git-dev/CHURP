@@ -125,7 +125,7 @@ def add_args(ap):
         choices=['RF', 'FR', 'U'],
         default='RF')
     ap_opt.add_argument(
-        '--rrna_screen',
+        '--rrna-screen',
         metavar='<num pairs for rRNA screen>',
         dest='rrna_screen',
         help=('Number of read pairs to subsample for rRNA estimation. This '
