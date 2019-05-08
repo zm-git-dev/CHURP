@@ -50,11 +50,23 @@ names(picard_rnaseq_summary) <- c(
 # Assume that the first sample is part of the same dataset as the others
 first_read <- as.character(sheet$V3[1])
 fastq_dir <- dirname(first_read)
+
+# Set a "large dataset" flag
+if(nsamp > 24) {
+    large_dataset <- TRUE
+} else {
+    large_dataset <- FALSE
+}
+
+# Generate the chunk offsets that we will use in the case of large datasets
+if(large_dataset) {
+    chunks <- cut(1:nsamp, breaks=unique(c(seq(0, nsamp, by=24), nsamp)), include.lowest=TRUE)
+}
 ```
 
 # PURR: Pipeline for UMII/RIS RNASeq Analysis
 
-![](/home/msistaff/public/CHURP_Deps/Assets/UMII_Graphic_rs.png)
+[//]: # (![](/home/msistaff/public/CHURP_Deps/Assets/UMII_Graphic_rs.png)
 
 PURR is the RNASeq analysis pipeline that is housed within CHURP, the
 **C**ollection of **H**ierarchical **U**MII/**R**IS **P**ipelines. CHURP is
@@ -69,6 +81,8 @@ MSI with funding provided by the University of Minnesota Informatics Institute
 # Key Figures and Summaries
 ## Experiment Summary
 The location of the FASTQ files for this run is ``r fastq_dir``
+
+This run consists of ``r nsamp`` samples.
 
 A tabular summary of the samples and reads that were analyzed is shown below:
 
@@ -101,31 +115,50 @@ names(sumsheet) <- c(
 sumsheet
 ```
 
-## Fragment Counts Plot
-```{r counts_sum, echo=FALSE, message=FALSE}
+```{r counts_sum, echo=FALSE, results='asis'}
 read_dat <- matrix(
     c(read_summary$V2, read_summary$V4)/1000000,
     byrow=FALSE,
     nrow=nrow(read_summary)
     )
 max_reads <- max(read_dat)
-at <- barplot(
-    t(read_dat),
-    beside=TRUE,
-    ylim=c(0, max_reads*1.2),
-    axes=FALSE,
+if(large_dataset) {
+    cat("## Fragment Counts Plots {.tabset}\n")
+    for(i in unique(chunks)) {
+        idx <- which(chunks == i)
+        cat("### Samples ", idx[1], " to ", idx[length(idx)], "\n")
+        subdat <- read_dat[idx,]
+        at <- barplot(
+            t(subdat),
+            beside=TRUE,
+            ylim=c(0, max_reads*1.2),
+            axes=FALSE,
+        col=c("#d95f02", "#1b9e77"),
+        ylab="Fragment Count (Millions)",
+        main="Fragment Counts")
+        legend("top", c("Raw", "Trimmed"), fill=c("#d95f02", "#1b9e77"), ncol=2)
+        axis(side=2)
+        axis(side=1, at=apply(at, 2, mean), labels=as.character(read_summary$V1[idx]), cex.axis=0.6, las=2)
+        cat("\n\n")
+    }
+} else {
+    cat("## Fragment Counts Plot\n")
+    at <- barplot(
+        t(read_dat),
+        beside=TRUE,
+        ylim=c(0, max_reads*1.2),
+        axes=FALSE,
     col=c("#d95f02", "#1b9e77"),
     ylab="Fragment Count (Millions)",
     main="Fragment Counts")
-legend("top", c("Raw", "Trimmed"), fill=c("#d95f02", "#1b9e77"), ncol=2)
-axis(side=2)
-axis(side=1, at=apply(at, 2, mean), labels=as.character(read_summary$V1), cex.axis=0.6, las=2)
+    legend("top", c("Raw", "Trimmed"), fill=c("#d95f02", "#1b9e77"), ncol=2)
+    axis(side=2)
+    axis(side=1, at=apply(at, 2, mean), labels=as.character(read_summary$V1), cex.axis=0.6, las=2)
+}
 ```
 
-## Read Quality Plots {.tabset}
-### Raw Reads
-
-```{r raw_qual_sum, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.7*nrow(sheet)}
+## Read Quality Plots
+```{r raw_qual_sum, echo=FALSE, fig.width=8, fig.height=0.8*24, results='asis'}
 plotqual_first <- function(sn) {
     allquals <- matrix(0:45)
     image(
@@ -218,18 +251,39 @@ plotqual_last <- function(sn) {
         axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
     }
 }
-par(mfrow=c(nsamp+1, 2))
-# Set the margins of the top to be high on the first two so we can add the R1/R2 labels
-par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
-dummy <- plotqual_first(samplenames[1])
-par(mar=c(1.1, 5, 1.1, 0.1))
-dummy <- sapply(samplenames[3:nsamp-1], plotqual)
-par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
-dummy <- plotqual_last(samplenames[nsamp])
+
+if(large_dataset) {
+    cat("### Raw Reads {.tabset}\n")
+    for(i in unique(chunks)) {
+        idx <- which(chunks == i)
+        cat("#### Samples ", idx[1], " to ", idx[length(idx)], "\n")
+        subsamp <- samplenames[idx]
+        nsubsamp <- length(subsamp)
+        cat("\n\n")
+        par(mfrow=c(nsubsamp+1, 2))
+        # Set the margins of the top to be high on the first two so we can add the R1/R2 labels
+        par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
+        dummy <- plotqual_first(subsamp[1])
+        par(mar=c(1.1, 5, 1.1, 0.1))
+        dummy <- sapply(subsamp[3:nsubsamp-1], plotqual)
+        par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
+        dummy <- plotqual_last(subsamp[nsubsamp])
+        cat("\n\n")
+    }
+} else {
+    par(mfrow=c(nsamp+1, 2))
+    # Set the margins of the top to be high on the first two so we can add the R1/R2 labels
+    par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
+    dummy <- plotqual_first(samplenames[1])
+    par(mar=c(1.1, 5, 1.1, 0.1))
+    dummy <- sapply(samplenames[3:nsamp-1], plotqual)
+    par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
+    dummy <- plotqual_last(samplenames[nsamp])
+}
 ```
 
 ### Trimmed Reads
-```{r trim_qual_sum, echo=FALSE, message=FALSE, fig.width=8, fig.height=0.7*nrow(sheet)}
+```{r trim_qual_sum, echo=FALSE, fig.width=8, fig.height=0.8*24, results='asis'}
 trim_samp <- sheet$V1[sheet$V7 == "yes"]
 if(length(trim_samp) > 0) {
     plotqual_first <- function(sn) {
@@ -324,16 +378,35 @@ if(length(trim_samp) > 0) {
             axis(side=1, at=seq(0, 1, length.out=nrow(dat))[c(TRUE, FALSE)], labels=as.character(dat$Base)[c(TRUE, FALSE)], las=2, cex.axis=0.75, tck=-0.05)
         }
     }
-    nsamp <- length(trim_samp)
-    par(mfrow=c(nsamp+1, 2))
-    # Set the margins of the top to be high on the first two so we can add the R1/R2 labels
-    par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
-    dummy <- plotqual_first(trim_samp[1])
-    par(mar=c(1.1, 5, 1.1, 0.1))
-    dummy <- sapply(trim_samp[3:nsamp-1], plotqual)
-    par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
-    dummy <- plotqual_last(trim_samp[nsamp])
+    if(large_dataset) {
+        cat("### Trimmed Reads {.tabset}\n")
+        for(i in unique(chunks)) {
+            idx <- which(chunks == i)
+            cat("#### Samples ", idx[1], " to ", idx[length(idx)], "\n")
+            subsamp <- trim_samp[idx]
+            nsubsamp <- length(subsamp)
+            cat("\n\n")
+            par(mfrow=c(nsubsamp+1, 2))
+            # Set the margins of the top to be high on the first two so we can add the R1/R2 labels
+            par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
+            dummy <- plotqual_first(subsamp[1])
+            par(mar=c(1.1, 5, 1.1, 0.1))
+            dummy <- sapply(subsamp[3:nsubsamp-1], plotqual)
+            par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
+            dummy <- plotqual_last(subsamp[nsubsamp])
+            cat("\n\n")
+        }
     } else {
+        par(mfrow=c(nsamp+1, 2))
+        # Set the margins of the top to be high on the first two so we can add the R1/R2 labels
+        par(mar=c(1.1, 5, 1.1, 0.1), mgp=c(1.25, 0.15, 0))
+        dummy <- plotqual_first(trim_samp[1])
+        par(mar=c(1.1, 5, 1.1, 0.1))
+        dummy <- sapply(trim_samp[3:nsamp-1], plotqual)
+        par(mar=c(2.5, 5, 0.1, 0.1), mgp=c(1.25, 0.15, 0))
+        dummy <- plotqual_last(trim_samp[nsamp])
+    }
+} else {
         print("No trimming performed.")
     }
 ```
