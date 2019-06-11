@@ -61,6 +61,7 @@ echo "# $(date '+%F %T'): Analysis started for ${SAMPLENM}" >> "${LOG_FNAME}"
 echo "# $(date '+%F %T'): Job ID: ${PBS_JOBID}" >> "${LOG_FNAME}"
 # This is annoying to see, so we will exclude it from verbose outout
 # load necessary modules
+module load python3/3.6.3_anaconda5.0.1
 module load hisat2/2.1.0
 module load fastqc/0.11.7
 module load trimmomatic/0.33
@@ -89,6 +90,9 @@ SILVA_REF="${DEPS_DIR}/db/SILVA_132_LSU_SSU_Ref_Dedup_Kmers_min100.fasta.gz"
 BBDUK="${DEPS_DIR}/Supp/bbmap/bbduk.sh"
 SEQTK="${DEPS_DIR}/Supp/seqtk-1.3/seqtk"
 GTFTOGENEPRED="${DEPS_DIR}/Supp/UCSC/gtfToGenePred"
+CONDA_ENV="${DEPS_DIR}/Conda/envs/RNASeQC_RefPrep"
+COLLAPSE_GTF="${DEPS_DIR}/Supp/GTEx_Pipeline/collapse_annotation.py"
+RNASEQC="${DEPS_DIR}/Supp/RNASeQC/rnaseqc.v2.3.4.linux"
 
 # Check if we are running in paired or single end mode
 if [ -z "${R2FILE}" ]
@@ -471,56 +475,29 @@ else
     echo "# ${PBS_JOBID} $(date '+%F %T'): Found raw BAM stats." >> "${LOG_FNAME}"
 fi
 
-# Use picard to collect RNAseq metrics
+# Try the RNASeQC metrics gathering
 echo "# $(date '+%F %T'): Finished section ${LOG_SECTION}" >> /dev/stderr
-LOG_SECTION="RNASeqMetrics"
+LOG_SECTION="RNASeQC"
 echo "# $(date '+%F %T'): Entering section ${LOG_SECTION}" >> /dev/stderr
-if [ ! -f rnaseq_metrics.done ]; then
-    echo "# ${PBS_JOBID} $(date '+%F %T'): Collecting RNAseq metrics with Picard CollectRnaSeqMetrics." >> "${LOG_FNAME}"
+if [ ! -f rnaseqc.done ]; then
+    echo "# ${PBS_JOBID} $(date '+%F %T'): 'Collapsing' gene models in GTF for use with RNASeQC." >> "${LOG_FNAME}"
+    source activate "${CONDA_ENV}"
+    python "${COLLAPSE_GTF}" <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") "${WORKDIR}/singlesamples/${SAMPLENM}/collapsed.gtf"
+    source deactivate
+    echo "# ${PBS_JOBID} $(date '+%F %T'): Collecting RNAseq metrics with RNASeQC." >> "${LOG_FNAME}"
+    RNASEQC_OPTIONS="-v -v --sample=${SAMPLENM} --legacy"
     if [ "${STRAND}" = "2" ]; then
-        PICARD_STRAND="SECOND_READ_TRANSCRIPTION_STRAND"
+        RNASEQC_OPTIONS="${RNASEQC_OPTIONS} --stranded=RF"
     elif [ "${STRAND}" = "1" ]; then
-        PICARD_STRAND="FIRST_READ_TRANSCRIPTION_STRAND"
-    else
-        PICARD_STRAND="NONE"
+        RNASEQC_OPTIONS="${RNASEQC_OPTIONS} --stranded=FR"
     fi
-    echo "# ${PBS_JOBID} $(date '+%F %T'): Converting the GTF to a refFlat file for Picard CollectRnaSeqMetrics." >> "${LOG_FNAME}"
-    ${GTFTOGENEPRED} -genePredExt -geneNameAsName2 <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt"
-    paste \
-        <(cut -f 12 "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt") \
-        <(cut -f 1-10 "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat_tmp.txt") \
-        | gzip -c > "${WORKDIR}/singlesamples/${SAMPLENM}/refFlat.txt.gz"
-    echo "# ${PBS_JOBID} $(date '+%F %T'): Generating rRNA interval list file from GTF and raw BAM." >> "${LOG_FNAME}"
-    samtools view \
-        -H \
+    "${RNASEQC}" \
+        "${WORKDIR}/singlesamples/${SAMPLENM}/collapsed.gtf" \
         "${WORKDIR}/singlesamples/${SAMPLENM}/${RAW_COORD}" \
-        > "${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list"
-    # We have to do this weird grep call because grep returns 1 on nomatch, which should not kill the script
-    (grep 'gene_biotype "rRNA"' <(gzip -cd "${GTFFILE}" || cat "${GTFFILE}") || test $? = 1 )\
-        | awk '$3 == "gene"' \
-        | cut -f 1,4,5,7,9 \
-        >> "${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list"
-    mkdir -p "${OUTDIR}/RNASeqMetrics"
-    mkdir -p "${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp"
-    echo "# ${PBS_JOBID} $(date '+%F %T'): Collecting RNAseq Metrics for ${SAMPLENM}" >> "${LOG_FNAME}"
-    _JAVA_OPTIONS="-Djava.io.tmpdir=${WORKDIR}/singlesamples/${SAMPLENM}/picard_tmp" ${PTOOL}/picard.jar \
-        CollectRnaSeqMetrics \
-        I="${WORKDIR}/singlesamples/${SAMPLENM}/${RAW_COORD}" \
-        O="${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Metrics.txt" \
-        REF_FLAT="${WORKDIR}/singlesamples/${SAMPLENM}/refFlat.txt.gz" \
-        RIBOSOMAL_INTERVALS="${WORKDIR}/singlesamples/${SAMPLENM}/rrna.list" \
-        MINIMUM_LENGTH="0" \
-        CHART_OUTPUT="${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Coverage_Bias.pdf" \
-        STRAND_SPECIFICITY="${PICARD_STRAND}" \
+        "${WORKDIR}/singlesamples/${SAMPLENM}/RNASeQC_Out" \
+        ${RNASEQC_OPTIONS}
         2>> "${LOG_FNAME}"
-    # Collect the relevant parts out of the metrics file. The fields that are of the
-    # most import are duplication, rRNA pct, PCT_USABLE, PCT_CODING, PCT_INTRONIC
-    # and the bias into a file
-    grep -A 1 '^PF_BASES' "${OUTDIR}/RNASeqMetrics/${SAMPLENM}_Metrics.txt" \
-        | tail -n 1 \
-        | cut -f 3,4,5,6,7,9,10,16,17,18,19,20,22,23 \
-        > "${WORKDIR}/singlesamples/${SAMPLENM}/rnaseq_metrics.txt"
-    touch rnaseq_metrics.done
+    touch rnaseqc.done
 else
     echo "# ${PBS_JOBID} $(date '+%F %T'): Found RNAseq metrics." >> "${LOG_FNAME}"
 fi

@@ -307,7 +307,7 @@ class BulkRNAseqPipeline(Pipeline.Pipeline):
         handle.write('PURGE=' + '"' + self.purge + '"\n')
         handle.write('RRNA_SCREEN=' + '"' + self.rrna_screen + '"\n')
         handle.write('SUBSAMPLE=' + '"' + self.subsample + '"\n')
-        handle.write('PIPE_SCRIPT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )/$(basename $0)"\n')
+        handle.write('PIPE_SCRIPT="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )/$(basename $0)"\n')
         aln_cmd = [
             'qsub',
             '-q', 'mesabi',

@@ -287,7 +287,7 @@ do
         echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/IS_Stats.txt)" >> "${WORKDIR}/allsamples/IS_Stats.txt"
     fi
     # And collect the RNAseq metrics into a single file for summarization
-    echo -e "${sample}\\t$(cat ${WORKDIR}/singlesamples/${sample}/rnaseq_metrics.txt)" >> "${WORKDIR}/allsamples/RNASeq_Metrics.txt"
+    sed -e "s/^/${sample}\\t/g" <(tail -n +2 "${WORKDIR}/singlesamples/${sample}/RNASeQC_Out/${sample}.metrics.tsv") >> "${WORKDIR}/allsamples/RNASeq_Metrics.txt"
 done
 
 # We will generate an HTML report
